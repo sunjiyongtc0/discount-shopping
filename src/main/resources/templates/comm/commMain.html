@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>ssssss</title>
+    <script th:src="@{/js/jQuery.js}"></script>
+    <script th:src="@{/vue/vue.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/element/element-index.css}">
+    <script  th:src="@{/element/element-index.js}"  ></script>
+
+</head>
+<div id="app">
+    <el-container>
+        <el-aside width="200px">
+            <el-menu
+                    default-active="1"
+                    class="el-menu-vertical-demo"
+                    @open="handleOpen"
+                    @close="handleClose"
+                    background-color="#545c64"
+                    text-color="#fff"
+                    active-text-color="#ffd04b">
+                <el-submenu index="1" >
+                    <template slot="title" >
+                        <i class="el-icon-setting"></i>
+                        <span>商品配置</span>
+                    </template>
+                    <el-menu-item-group>
+                        <template slot="title">商品信息</template>
+                        <el-menu-item index="1-1" @click="changeComm(true)">新建商品</el-menu-item>
+                        <el-menu-item index="1-2" @click="changeComm(false)">商品列表</el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
+                <el-menu-item index="2" @click="changeType(0)">
+                    <i class="el-icon-setting"></i>
+                    <span slot="title" >商品根类</span>
+                </el-menu-item>
+                <el-menu-item index="3"  @click="changeType(1)">
+                    <i class="el-icon-setting"></i>
+                    <span slot="title">一级商品名称</span>
+                </el-menu-item>
+                <el-menu-item index="4" @click="changeType(2)">
+                    <i class="el-icon-setting"></i>
+                    <span slot="title" >二级商品名称</span>
+                </el-menu-item>
+            </el-menu>
+
+
+
+        </el-aside>
+        <el-container>
+            <el-main>
+
+
+                <div v-if="ct==0"><type ref="typeId"></type></div>
+                <div v-else-if="ct==1"><category></category></div>
+                <div v-else-if="ct==2"><item></item></div>
+
+                <div v-if="commShow">
+                    <div v-if="commAdd"><addcomm></addcomm></div>
+                    <div v-else><showcomm></showcomm></div>
+                </div>
+            </el-main>
+            <el-footer  >Footer</el-footer>
+        </el-container>
+    </el-container>
+
+
+</div>
+<body>
+
+</body>
+
+<script>
+    //-----------vue控件 新建商品
+    Vue.component("addcomm",{
+        template:" <el-row :gutter='20'>\n" +
+            "                    <el-col :span=\"24\"><div class=\"grid-content bg-purple\">\n" +
+            "                        <el-card class=\"box-card\" style=\"height: 800px\">\n" +
+            "                            <h5 align=\"center\"> 新建商品</h5>\n" +
+            "                            <el-form ref=\"form\" :model=\"form\" label-width=\"80px\">\n" +
+            "                                <el-form-item label=\"商品名称\">\n" +
+            "                                    <el-input v-model=\"form.name\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"商品价格\">\n" +
+            "                                    <el-input v-model=\"form.price\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"商品根类\">\n" +
+            "                                  <el-radio-group v-model=\"form.type\">\n" +
+            "                                   <el-radio v-for='(t,index) in type' :label=\"t.name\" :key='index'></el-radio>\n" +
+            "                                   </el-radio-group>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"一类名称\">\n" +
+            "                                  <el-radio-group v-model=\"form.category\">\n" +
+            "                                   <el-radio v-for='(c,index) in category ' :label=\"c.name\" :key='index'></el-radio>\n" +
+
+            "                                   </el-radio-group>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"二类名称\">\n" +
+            "                                  <el-radio-group v-model=\"form.item\">\n" +
+            "                                   <el-radio v-for='(i,index ) in item' :label=\"i.name\" :key='index'></el-radio>\n" +
+
+            "                                   </el-radio-group>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"概图上传\">\n" +
+            "<el-upload\n" +
+            "  action=\"/img/uplode\"\n" +
+            "  list-type=\"picture-card\" " +
+            "  :auto-upload=\"false\" " +
+            "   ref=\"upload0\"  " +
+            "            :limit='6'\n" +
+            "            accept=\".jpg,.jpeg,.png,.gif,.bmp,.JPG,.JPEG,.GIF,.BMP\"" +
+            "  :before-upload=\"beforeUpload\"\n" +
+            "  :on-change=\"handleChange\" " +
+            "  :on-success=\"handleAvatarSuccess\" >" +
+            "  <i slot=\"default\" class=\"el-icon-plus\"></i>\n" +
+            "    <div slot=\"file\" slot-scope=\"{file}\">\n" +
+            "      <img\n" +
+            "        class=\"el-upload-list__item-thumbnail\"\n" +
+            "        :src=\"file.url\" alt=\"\"\n" +
+            "      >\n" +
+            "      <span class=\"el-upload-list__item-actions\">\n" +
+            "        <span\n" +
+            "          class=\"el-upload-list__item-preview\"\n" +
+            "          @click=\"handlePictureCardPreview(file)\"\n" +
+            "        >\n" +
+            "          <i class=\"el-icon-zoom-in\"></i>\n" +
+            "        </span>\n" +
+            "        <span\n" +
+            "          v-if=\"!disabled\"\n" +
+            "          class=\"el-upload-list__item-delete\"\n" +
+            "          @click=\"handleRemove(file)\"\n" +
+            "        >\n" +
+            "          <i class=\"el-icon-delete\"></i>\n" +
+            "        </span>\n" +
+            "      </span>\n" +
+            "    </div> " +
+            "</el-upload> " +
+            "<el-dialog :visible.sync=\"dialogVisible\">\n" +
+            "  <img width=\"100%\" :src=\"dialogImageUrl\" alt=\"\">\n" +
+            "</el-dialog>" +
+            "                                </el-form-item>\n" +
+            "                               <el-form-item label=\"商品备注\">\n" +
+            "                                    <el-input v-model=\"form.remarks\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"商品状态\">\n" +
+            "                                    <el-input v-model=\"form.state\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item>\n" +
+            "                                    <el-button type=\"primary\" @click=\"onSubmit()\">立即创建</el-button>\n" +
+            "                                    <el-button  @click='onCancel()' >取消</el-button>\n" +
+            "                                </el-form-item>\n" +
+            "                            </el-form>\n" +
+            "                        </el-card>\n" +
+            "                    </div></el-col>" +
+            "   </el-row>",
+        data:function () {
+            return {
+                type:[],
+                category:[],
+                item:[],
+                form: {
+                    name:'',
+                    price: '',
+                    type:'',
+                    category:'',
+                    item:'',
+                    state:'',
+                    remarks:'',
+                    filepath:'',
+                },
+                fileLIst: [],
+                dialogImageUrl: '',
+                dialogVisible: false,
+                disabled: false,
+                fileName:''
+            }
+        },
+        methods:{
+            onSubmit:function() {
+                this.$refs.upload0.submit();
+                console.log(this.$refs.upload0)
+            },
+            handleChange:function (file, fileList) {
+                this.fileLIst=fileList;
+            },
+            //图片删除
+            handleRemove:function(file){
+                this.fileLIst.remove(file);
+            },
+            //图片放大镜
+            handlePictureCardPreview:function(file) {
+                this.dialogImageUrl = file.url;
+                this.dialogVisible = true;
+            },
+            beforeUpload:function(file) {
+                return true;
+            },
+            handleAvatarSuccess:function(response, file, fileList) {
+                var _this=this;
+                if(response!='') {
+                    this.form.filepath += response+",";
+                    if(this.form.filepath.split(",").length-1==this.fileLIst.length){
+                    $.post("/comm/addComm",this.form,function (data) {
+                        if(data=='ok'){
+                            _this.onCancel();
+
+                        }
+                    })
+                    }
+                }
+            },
+            onCancel:function () {
+                this.form={
+                    name:'',
+                    price: '',
+                    type:'',
+                    category:'',
+                    item:'',
+                    state:'',
+                    remarks:'',
+                    filepath:''
+                };
+                this.$refs.upload0.clearFiles();
+            }
+
+        },
+        created() {
+            var _this = this;
+            $.get("/commType/itemList", function (data0) {
+                _this.item = data0;
+            });
+            $.get("/commType/categoryList", function (data0) {
+                _this.category = data0;
+            });
+            $.get("/commType/typeList", function (data0) {
+                _this.type = data0;
+            });
+        }
+    });
+
+    // -------------查看商品列表
+    Vue.component("showcomm",{
+        template:" <el-row :gutter='20'>\n" +
+            "                    <el-col :span=\"24\"><div class=\"grid-content bg-purple\">\n" +
+            "                        <el-table\n" +
+            "                                :data=\"tableData\"\n" +
+            "                                height=\"400\"\n" +
+            "                                border\n" +
+            "                                style=\"width: 100%\" >\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"order\"\n" +
+            "                                    label=\"序号\"\n" +
+            "                                    width=\"180\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"name\"\n" +
+            "                                    label=\"商品名\"\n" +
+            "                                    width=\"180\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"img\"\n" +
+            "                                    label=\"商品图片\"\n" +
+            "                                    width=\"180\">\n" +
+            "<template slot-scope=\"scope\"> " +
+            "<el-image style=\"width: 40px; height: 40px\"\n" +
+            "      :src=\"scope.row.img\"\n" +
+            "      fit=\"cover\"></el-image>  </template>" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"price\"\n" +
+            "                                    label=\"商品价格\"\n" +
+            "                                    width=\"180\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"state\"\n" +
+            "                                    label=\"商品状态\"\n" +
+            "                                    width=\"180\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column label=\"操作\">\n" +
+            "                                <template slot-scope=\"scope\">\n" +
+            "                                    <el-button\n" +
+            "                                            size=\"mini\"\n" +
+            "                                            @click=\"handleEdit(scope.$index, scope.row)\">编辑</el-button>\n" +
+            "                                    <el-button\n" +
+            "                                            size=\"mini\"\n" +
+            "                                            type=\"danger\"\n" +
+            "                                            @click=\"handleDelete(scope.$index, scope.row)\">删除</el-button>\n" +
+            "                                </template>\n" +
+            "                            </el-table-column>\n" +
+            "                        </el-table>\n" +
+            "                    </div></el-col>\n" +
+            "   </el-row>",
+        data:function () {
+            return {
+                tableData: [
+
+                ],
+                form: {
+                    order:'',
+                    name: ''
+                }
+            }
+        },
+        methods:{
+
+            handleEdit:function(index, row) {
+                console.log(index, row);
+            },
+            handleDelete:function(index, row) {
+                console.log(index, row);
+            },
+
+            handleClick:function(row) {
+                console.log(row);
+            },
+            onSubmit:function() {
+                console.log('submit!');
+            }
+        },
+        created() {
+            var _this = this;
+            $.get("/comm/commList",function (data) {
+                _this.tableData=data;
+            })
+        }
+    });
+
+
+
+
+
+
+    //vue组件化编写
+
+    //-----------------------vue控件商品根类
+    Vue.component("type",{
+        template:" <el-row :gutter='20'>\n" +
+            "                    <el-col :span=\"16\"><div class=\"grid-content bg-purple\">\n" +
+            "                        <el-table\n" +
+            "                                :data=\"tableData\"\n" +
+            "                                height=\"400\"\n" +
+            "                                border\n" +
+            "                                style=\"width: 100%\" >\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"order\"\n" +
+            "                                    label=\"序号\"\n" +
+            "                                    width=\"180\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"name\"\n" +
+            "                                    label=\"商品根类\"\n" +
+            "                                    width=\"180\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column label=\"操作\">\n" +
+            "                                <template slot-scope=\"scope\">\n" +
+            "                                    <el-button\n" +
+            "                                            size=\"mini\"\n" +
+            "                                            @click=\"handleEdit(scope.$index, scope.row)\">编辑</el-button>\n" +
+            "                                    <el-button\n" +
+            "                                            size=\"mini\"\n" +
+            "                                            type=\"danger\"\n" +
+            "                                            @click=\"handleDelete(scope.$index, scope.row)\">删除</el-button>\n" +
+            "                                </template>\n" +
+            "                            </el-table-column>\n" +
+            "                        </el-table>\n" +
+            "                    </div></el-col>\n" +
+            "                    <el-col :span=\"8\"><div class=\"grid-content bg-purple\">\n" +
+            "                        <el-card class=\"box-card\" style=\"height: 400px\">\n" +
+            "                            <h5 align=\"center\"> 新建根类</h5>\n" +
+            "                            <el-form ref=\"form\" :model=\"form\" label-width=\"80px\">\n" +
+            "                                <el-form-item label=\"根类序号\">\n" +
+            "                                    <el-input v-model=\"form.order\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"根类名称\">\n" +
+            "                                    <el-input v-model=\"form.name\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item>\n" +
+            "                                    <el-button type=\"primary\" @click=\"onSubmit\">立即创建</el-button>\n" +
+            "                                    <el-button>取消</el-button>\n" +
+            "                                </el-form-item>\n" +
+            "                            </el-form>\n" +
+            "                        </el-card>\n" +
+            "                    </div></el-col>" +
+            "   </el-row>",
+        data () {
+            return {
+                tableData: [],
+                form: {
+                    order: '',
+                    name: ''
+                }
+            }
+        },
+        methods:{
+
+            handleEdit:function(index, row) {
+                console.log(index, row);
+            },
+            handleDelete:function(index, row) {
+                console.log(index, row);
+            },
+
+            handleClick:function(row) {
+                console.log(row);
+            },
+            onSubmit:function() {
+                var _this=this;
+                $.post("/commType/typeAdd",this.form,function (data) {
+                    if(data=='ok'){
+                        $.get("/commType/typeList",function (data0) {
+                            _this.tableData=data0 ;
+                            _this.form={ order: '',
+                                name: '' }
+                        });
+                    }
+                });
+
+            }
+        },
+        created() {
+            var _this = this;
+            $.get("/commType/typeList", function (data0) {
+                _this.tableData = data0;
+            });
+        }
+    });
+    //-----------vue控件 商品一级分类
+    Vue.component("category",{
+        template:" <el-row :gutter='20'>\n" +
+            "                    <el-col :span=\"16\"><div class=\"grid-content bg-purple\">\n" +
+            "                        <el-table\n" +
+            "                                :data=\"tableData\"\n" +
+            "                                height=\"400\"\n" +
+            "                                border\n" +
+            "                                style=\"width: 100%\">\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"order\"\n" +
+            "                                    label=\"序号\"\n" +
+            "                                    width=\"180\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"name\"\n" +
+            "                                    label=\"一类名称\"\n" +
+            "                                    width=\"180\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"type\"\n" +
+            "                                    label=\"所属根类\"\n" +
+            "                                    width=\"180\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column label=\"操作\">\n" +
+            "                                <template slot-scope=\"scope\">\n" +
+            "                                    <el-button\n" +
+            "                                            size=\"mini\"\n" +
+            "                                            @click=\"handleEdit(scope.$index, scope.row)\">编辑</el-button>\n" +
+            "                                    <el-button\n" +
+            "                                            size=\"mini\"\n" +
+            "                                            type=\"danger\"\n" +
+            "                                            @click=\"handleDelete(scope.$index, scope.row)\">删除</el-button>\n" +
+            "                                </template>\n" +
+            "                            </el-table-column>\n" +
+            "                        </el-table>\n" +
+            "                    </div></el-col>\n" +
+            "                    <el-col :span=\"8\"><div class=\"grid-content bg-purple\">\n" +
+            "                        <el-card class=\"box-card\" style=\"height: 400px\">\n" +
+            "                            <h5 align=\"center\"> 新建一级分类</h5>\n" +
+            "                            <el-form ref=\"form\" :model=\"form\" label-width=\"80px\">\n" +
+            "                                <el-form-item label=\"一类序号\">\n" +
+            "                                    <el-input v-model=\"form.order\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"一类名称\">\n" +
+            "                                    <el-input v-model=\"form.name\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"根类名称\">\n" +
+            "                                  <el-radio-group v-model=\"form.type\">\n" +
+            "                                   <el-radio v-for='(t,index) in type'  :label=\"t.name\" :key=\"index\"></el-radio>\n" +
+            "                                   </el-radio-group>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item>\n" +
+            "                                    <el-button type=\"primary\" @click=\"onSubmit\">立即创建</el-button>\n" +
+            "                                    <el-button>取消</el-button>\n" +
+            "                                </el-form-item>\n" +
+            "                            </el-form>\n" +
+            "                        </el-card>\n" +
+            "                    </div></el-col>" +
+            "   </el-row>",
+        data:function () {
+            return {
+                type:[],
+                tableData: [],
+                form: {
+                    order:'',
+                    name: '',
+                    type:''
+                }
+            }
+        },
+        methods:{
+
+            handleEdit:function(index, row) {
+                console.log(index, row);
+            },
+            handleDelete:function(index, row) {
+                console.log(index, row);
+            },
+
+            handleClick:function(row) {
+                console.log(row);
+            },
+            onSubmit:function() {
+                var _this=this;
+                $.post("/commType/categoryAdd",this.form,function (data) {
+                    if(data=='ok'){
+                        $.get("/commType/categoryList",function (data0) {
+                            _this.tableData=data0 ;
+                            _this.form={ order: '',
+                                name: '',
+                                type:''}
+                        });
+                    }
+                });
+            }
+        },
+        created() {
+            var _this = this;
+            $.get("/commType/categoryList", function (data0) {
+                _this.tableData = data0;
+            });
+            $.get("/commType/typeList", function (data0) {
+                _this.type = data0;
+            });
+        }
+    });
+
+    //-----------vue控件 商品二级分类
+    Vue.component("item",{
+        template:" <el-row :gutter='20'>\n" +
+            "                    <el-col :span=\"16\"><div class=\"grid-content bg-purple\">\n" +
+            "                        <el-table\n" +
+            "                                :data=\"tableData\"\n" +
+            "                                height=\"400\"\n" +
+            "                                border\n" +
+            "                                style=\"width: 100%\">\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"order\"\n" +
+            "                                    label=\"序号\"\n" +
+            "                                    width=\"180\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"name\"\n" +
+            "                                    label=\"二类名称\"\n" +
+            "                                    width=\"180\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"category\"\n" +
+            "                                    label=\"所属一类\"\n" +
+            "                                    width=\"180\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column label=\"操作\">\n" +
+            "                                <template slot-scope=\"scope\">\n" +
+            "                                    <el-button\n" +
+            "                                            size=\"mini\"\n" +
+            "                                            @click=\"handleEdit(scope.$index, scope.row)\">编辑</el-button>\n" +
+            "                                    <el-button\n" +
+            "                                            size=\"mini\"\n" +
+            "                                            type=\"danger\"\n" +
+            "                                            @click=\"handleDelete(scope.$index, scope.row)\">删除</el-button>\n" +
+            "                                </template>\n" +
+            "                            </el-table-column>\n" +
+            "                        </el-table>\n" +
+            "                    </div></el-col>\n" +
+            "                    <el-col :span=\"8\"><div class=\"grid-content bg-purple\">\n" +
+            "                        <el-card class=\"box-card\" style=\"height: 400px\">\n" +
+            "                            <h5 align=\"center\"> 新建二级分类</h5>\n" +
+            "                            <el-form ref=\"form\" :model=\"form\" label-width=\"80px\">\n" +
+            "                                <el-form-item label=\"二类序号\">\n" +
+            "                                    <el-input v-model=\"form.order\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"二类名称\">\n" +
+            "                                    <el-input v-model=\"form.name\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"一类名称\">\n" +
+            "                                  <el-radio-group v-model=\"form.category\">\n" +
+            "                                   <el-radio v-for='c in category' :label=\"c.name\"></el-radio>\n" +
+            "                                   </el-radio-group>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item>\n" +
+            "                                    <el-button type=\"primary\" @click=\"onSubmit\">立即创建</el-button>\n" +
+            "                                    <el-button>取消</el-button>\n" +
+            "                                </el-form-item>\n" +
+            "                            </el-form>\n" +
+            "                        </el-card>\n" +
+            "                    </div></el-col>" +
+            "   </el-row>",
+        data:function () {
+            return {
+                category:[],
+                tableData: [],
+                form: {
+                    order:'',
+                    name: '',
+                    category:''
+                }
+            }
+        },
+        methods:{
+
+            handleEdit:function(index, row) {
+                console.log(index, row);
+            },
+            handleDelete:function(index, row) {
+                console.log(index, row);
+            },
+
+            handleClick:function(row) {
+                console.log(row);
+            },
+            onSubmit:function() {
+                var _this=this;
+                $.post("/commType/itemAdd",this.form,function (data) {
+                    if(data=='ok'){
+                        $.get("/commType/itemList",function (data0) {
+                            _this.tableData=data0 ;
+                            _this.form={ order: '',
+                                name: '',
+                                type:''}
+                        });
+                    }
+                });
+            }
+        },
+        created() {
+            var _this = this;
+            $.get("/commType/itemList", function (data0) {
+                _this.tableData = data0;
+            });
+            $.get("/commType/categoryList", function (data0) {
+                _this.category = data0;
+            });
+        }
+    });
+
+
+
+    // vue 可以直接通过对象.的方式直接调用属性：data，computed；但是el,data也是属性，叫实例属性
+    new Vue({
+        el: '#app',
+        data: {
+            ct:-1,
+            commShow:true,
+            commAdd:true
+        },
+        methods: {
+            //点击事件，切换分类选择
+            changeType:function(data){
+                this.ct = data;
+                this.commShow=false;
+            },
+            changeComm:function(data){
+                this.commShow=true;
+                this.ct =-1
+                this.commAdd=data;
+            },
+            handleOpen:function(key, keyPath) {
+                this.commShow=true;
+                this.ct =-1
+                console.log(this.commShow)
+                console.log(key, keyPath);
+            },
+            handleClose:function(key, keyPath) {
+                this.commShow=true;
+                this.ct =-1
+                console.log(key, keyPath);
+            },
+            handleEdit:function(index, row) {
+                console.log(index, row);
+            },
+            handleClick:function(row) {
+                console.log(row);
+            },
+        }
+    });
+
+
+    //定义方法，，数组删除特定元素
+    Array.prototype.remove = function(val) {
+        var index = this.indexOf(val);
+        if (index > -1) {
+            this.splice(index, 1);
+        }
+    };
+</script>
+</html>
