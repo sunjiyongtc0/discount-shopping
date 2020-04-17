@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.glisten.discount.shopping.Domain.TCommodityCategory;
+import com.glisten.discount.shopping.Domain.TCommodityItem;
 import com.glisten.discount.shopping.Domain.TCommodityType;
 import com.glisten.discount.shopping.Service.Commodity.CommodityTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,29 +99,46 @@ public class CommodityTypeController {
         return "ok";
     }
 
+    //寻找指定根类下的所有一类
+    @GetMapping("/categoryListByType/{id}")
+    @ResponseBody
+    public JSONArray  categoryListByType(@PathVariable("id") long id){
+        List<Map<String,Object>>  lc=cts.findByType(id);
+        JSONArray tableData= JSONArray.parseArray(JSON.toJSONString(lc));
+        return tableData;
+    }
+
+
 //商品二级类列表
     @GetMapping("/itemList")
     @ResponseBody
     public JSONArray itemList(){
-        JSONArray tableData=new JSONArray();
-        for (int i=0;i<2;i++){
-            JSONObject jb = new JSONObject();
-            jb.put("order",i);
-            jb.put("name","二级分类"+i);
-            jb.put("category",i%2);
-            tableData.add(jb);
-        }
+        List<Map<String,Object>>  li=cts.findAllItem();
+        JSONArray tableData= JSONArray.parseArray(JSON.toJSONString(li));
         return tableData;
     }
-    //商品二级类添加
+
+
+    //商品二级类添加/修改
     @PostMapping("/itemAdd")
     @ResponseBody
-    public String  itemAdd( @RequestParam("order") String  order,@RequestParam("name") String name,@RequestParam("category") String category ){
-        System.out.println(order);
-        System.out.println(name);
-        System.out.println(category);
+    public String  itemAdd(@ModelAttribute TCommodityItem ci){
+        if(ci.getId()==null){
+            cts.saveItem(ci);
+        }else{
+            cts.updateItem(ci);
+        }
+
         return "ok";
     }
+
+    @GetMapping("/delItem/{id}")
+    @ResponseBody
+    public  String delItem(@PathVariable("id") long id){
+        cts.delItem(id);
+        return "ok";
+    }
+
 
     //商品概述列表
     /**
@@ -129,37 +147,30 @@ public class CommodityTypeController {
      *  				ORDER BY t.type_order,c.id,i.id
      * */
     @GetMapping("/allType")
+    @ResponseBody
     public JSONArray allType(){
         JSONArray ja=new JSONArray();
-        String[][] sd={{"男子","鞋类","运动鞋"},{"男子","鞋类","休闲鞋"},{"男子","服饰","卫衣"},{"男子","服饰","球服"},{"女子","鞋类","瓢鞋"},{"女子","鞋类","高跟鞋"},{"女子","服饰","裙子"},{"女子","服饰","短裤"},{"儿童","男装","短裤"},{"儿童","男鞋","休闲鞋"},{"儿童","女装",""},{"儿童","女鞋","休闲鞋"},{"儿童","挂件",""},{"手绘","",""},{"流行","",""}};
-//        String type="";
-//        String category="";
-//        String item="";
-//        for(int  i=0;i<sd.length;i++){
-//            if(!type.equals(sd[i][1])){
-//                JSONObject jb1=new JSONObject();
-//                JSONArray ja1=new JSONArray();
-//                type=sd[i][1];
-//                jb1.put("type",type);
-//                if(!category.equals(sd[i][2])){
-//                    JSONObject jb2=new JSONObject();
-//                    JSONArray ja2=new JSONArray();
-//                    category= sd[i][2];
-//                    jb2.put("name",category);
-//                    if(!item.equals(sd[i][3])){
-//                        JSONObject jb3=new JSONObject();
-//                        item= sd[i][3];
-//                        jb3.put("name",category);
-//                        ja2.add(jb3);
-//                    }
-//                    jb2.put("item",ja2);
-//                    ja1.add(jb2);
-//                }
-//                jb1.put("category",ja1);
-//            }
-//
-//       }
-
+        List<Map<String,Object>> lt=cts.findAllType();
+        for (Map<String,Object> map:lt) {
+            JSONObject jo=new JSONObject();
+            jo.put("type",map.get("typeName"));
+            List<Map<String,Object>> lc=cts.findByType(Long.valueOf(map.get("id")+""));
+            JSONArray category=new JSONArray();
+            for (Map<String,Object> mp:lc) {
+                JSONObject categoryJSONObj=new JSONObject();
+                categoryJSONObj.put("name",mp.get("categoryName"));
+                List<Map<String,Object>> li=cts.findItemByCategory(Long.valueOf(mp.get("id")+""));
+                JSONArray item=new JSONArray();
+                for (Map<String,Object> m:li) {
+                    JSONObject itemJSONObj = JSONObject.parseObject(JSON.toJSONString(m));
+                    item.add(itemJSONObj);
+                }
+                categoryJSONObj.put("item",item);
+                category.add(categoryJSONObj);
+            }
+            jo.put("category",category);
+            ja.add(jo);
+            }
         return  ja;
     }
 }

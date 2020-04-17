@@ -2,8 +2,10 @@ package com.glisten.discount.shopping.Service.Commodity;
 
 
 import com.glisten.discount.shopping.Domain.TCommodityCategory;
+import com.glisten.discount.shopping.Domain.TCommodityItem;
 import com.glisten.discount.shopping.Domain.TCommodityType;
 import com.glisten.discount.shopping.Mapper.TCommodityCategoryMapper;
+import com.glisten.discount.shopping.Mapper.TCommodityItemMapper;
 import com.glisten.discount.shopping.Mapper.TCommodityTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ public class CommodityTypeService {
     private TCommodityTypeMapper commodityTypeMapper;
     @Autowired
     private TCommodityCategoryMapper commodityCategoryMapper;
+    @Autowired
+    private TCommodityItemMapper commodityItemMapper;
 
     // type类操作
 
@@ -61,4 +65,28 @@ public class CommodityTypeService {
     public int delCategory(long id){
         return  commodityCategoryMapper.deleteByPrimaryKey(id);
     }
+
+
+    //Item类操作
+    public List<Map<String,Object>>  findAllItem(){
+     return commodityItemMapper.findAllItem();
+    }
+
+    public List<Map<String,Object>>  findItemByCategory(long id){
+     return commodityItemMapper.findItemByCategory(id);
+    }
+
+    public int   saveItem(TCommodityItem ci){
+        return commodityItemMapper.insert(ci);
+    }
+    public int   updateItem(TCommodityItem ci){
+        return  commodityItemMapper.updateByPrimaryKey(ci);
+    }
+
+    public int   delItem(long id){
+        return  commodityItemMapper.deleteByPrimaryKey(id);
+    }
+
+
+
 }

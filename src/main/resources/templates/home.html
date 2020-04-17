@@ -33,11 +33,13 @@
                         fit="cover"></el-image></el-menu-item>
                 <el-submenu  :index="i+''" v-for="(t,i) in type" v-if="t.category.length>0">
                     <template slot="title"   ><span>{{t.type}}</span></template>
-                    <el-submenu :index="i+'-'+j"   v-for="(c,j) in t.category ">
-                        <template slot="title"  ><span>{{c.name}}</span></template>
-                        <el-menu-item    :index="i+'-'+j+'-'+k"  v-for="(it,k) in c.item "  ><span>{{it.name}}</span></el-menu-item>
+                    <el-submenu :index="i+'-'+j"   v-for="(c,j) in t.category  " >
+                        <template          slot="title"  ><span>{{c.name}}</span></template>
+                        <el-menu-item    :index="i+'-'+j+'-'+k"  v-for="(it,k) in c.item "  ><span>{{it.itemName}}</span></el-menu-item>
                     </el-submenu>
                 </el-submenu>
+
+
                 <el-menu-item  v-for="(t,i) in type"  :index="i+''"  v-if="t.category.length ==0"><span>{{t.type}}</span></el-menu-item>
 
                 <el-menu-item :index="type.length+''" >
@@ -65,7 +67,7 @@
                             <span>{{c.name}}</span>
                         </template>
                         <el-menu-item-group>
-                            <el-menu-item :index="i+'-'+j" v-for="(it,j) in c.item" >{{it.name}}</el-menu-item>
+                            <el-menu-item :index="i+'-'+j" v-for="(it,j) in c.item" >{{it.itemName}}</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
                 </el-menu>
@@ -144,94 +146,7 @@
         el:'#app',
         data:{
             drawershow:false,
-            type:[{
-                "type": "男子",
-                "category": [{
-                    "name": "鞋",
-                    "item": [{
-                        "name": "足球",
-                        "url": "#"
-                    }, {
-                        "name": "篮球",
-                        "url": "#"
-                    }]
-                }, {
-                    "name": "服装",
-                    "item": [{
-                        "name": "球服",
-                        "url": "#"
-                    }, {
-                        "name": "休闲裤",
-                        "url": "#"
-                    }]
-                }]
-            }, {
-                "type": "女子",
-                "category": [{
-                    "name": "鞋",
-                    "item": [{
-                        "name": "拖鞋",
-                        "url": "#"
-                    }, {
-                        "name": "跑步",
-                        "url": "#"
-                    }]
-                }, {
-                    "name": "服装",
-                    "item": [{
-                        "name": "短裤",
-                        "url": "#"
-                    }, {
-                        "name": "裙子",
-                        "url": "#"
-                    }]
-                }]
-            }, {
-                "type": "儿童",
-                "category": [{
-                    "name": "男鞋",
-                    "item": [{
-                        "name": "拖鞋",
-                        "url": "#"
-                    }, {
-                        "name": "跑步",
-                        "url": "#"
-                    }]
-                }, {
-                    "name": "女服",
-                    "item": [{
-                        "name": "短裤",
-                        "url": "#"
-                    }, {
-                        "name": "裙子",
-                        "url": "#"
-                    }]
-                }, {
-                    "name": "女鞋",
-                    "item": [{
-                        "name": "休闲",
-                        "url": "#"
-                    }, {
-                        "name": "运动",
-                        "url": "#"
-                    }]
-                }, {
-                    "name": "男服",
-                    "item": [{
-                        "name": "短裤",
-                        "url": "#"
-                    }, {
-                        "name": "外套",
-                        "url": "#"
-                    }]
-                }]
-            }, {
-                "type": "手绘",
-                "category": []
-            }, {
-                "type": "流行",
-                "category": []
-            }],
+            type:[],
             search:"",
             activeIndex: '1',
             activeIndex2: '1',
@@ -339,6 +254,9 @@
             $.get("/comm/commListByKeyword/0",function (data) {
                 _this.showData=data;
             });
+            $.get("/commType/allType",function (data) {
+                _this.type=data;
+            })
         }
 
     });
@@ -392,6 +310,7 @@
         },
         created(){
             this.table0=this.table;
+
         }
     });
 </script>

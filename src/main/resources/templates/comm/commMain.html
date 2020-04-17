@@ -750,19 +750,24 @@
             "                                border\n" +
             "                                style=\"width: 100%\">\n" +
             "                            <el-table-column\n" +
-            "                                    prop=\"order\"\n" +
+            "                                    prop=\"itemOrder\"\n" +
             "                                    label=\"序号\"\n" +
-            "                                    width=\"180\">\n" +
+            "                                    width=\"80\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
-            "                                    prop=\"name\"\n" +
-            "                                    label=\"二类名称\"\n" +
-            "                                    width=\"180\">\n" +
+            "                                    prop=\"typeName\"\n" +
+            "                                    label=\"所属根类\"\n" +
+            "                                    width=\"150\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
-            "                                    prop=\"category\"\n" +
+            "                                    prop=\"categoryName\"\n" +
             "                                    label=\"所属一类\"\n" +
-            "                                    width=\"180\">\n" +
+            "                                    width=\"150\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"itemName\"\n" +
+            "                                    label=\"二类名称\"\n" +
+            "                                    width=\"150\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column label=\"操作\">\n" +
             "                                <template slot-scope=\"scope\">\n" +
@@ -779,18 +784,24 @@
             "                    </div></el-col>\n" +
             "                    <el-col :span=\"8\"><div class=\"grid-content bg-purple\">\n" +
             "                        <el-card class=\"box-card\" style=\"height: 400px\">\n" +
-            "                            <h5 align=\"center\"> 新建二级分类</h5>\n" +
+            "                            <h5 align=\"center\" v-if='form.id==null'> 新建二级分类</h5>\n" +
+            "                            <h5 align=\"center\" v-else='' > 修改二级分类</h5>\n" +
             "                            <el-form ref=\"form\" :model=\"form\" label-width=\"80px\">\n" +
             "                                <el-form-item label=\"二类序号\">\n" +
-            "                                    <el-input v-model=\"form.order\"></el-input>\n" +
+            "                                    <el-input v-model=\"form.itemOrder\"></el-input>\n" +
             "                                </el-form-item>\n" +
-            "                                <el-form-item label=\"二类名称\">\n" +
-            "                                    <el-input v-model=\"form.name\"></el-input>\n" +
+            "                                <el-form-item label=\"跟类名称\">\n" +
+            "                                  <el-radio-group v-model=\"form.typeName\" @change=\"findcategory\">\n" +
+            "                                   <el-radio v-for='(t,i) in type' :label=\"t.typeName\" :key='i' ></el-radio>\n" +
+            "                                   </el-radio-group>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"一类名称\">\n" +
-            "                                  <el-radio-group v-model=\"form.category\">\n" +
-            "                                   <el-radio v-for='c in category' :label=\"c.name\"></el-radio>\n" +
+            "                                  <el-radio-group v-model=\"form.categoryName\"  @change=\"takecategory\">\n" +
+            "                                   <el-radio v-for='(c,j) in category' :label=\"c.categoryName\" ::key='j'></el-radio>\n" +
             "                                   </el-radio-group>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"二类名称\">\n" +
+            "                                    <el-input v-model=\"form.itemName\"></el-input>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item>\n" +
             "                                    <el-button type=\"primary\" @click=\"onSubmit\">立即创建</el-button>\n" +
@@ -804,20 +815,66 @@
             return {
                 category:[],
                 tableData: [],
+                type:[],
                 form: {
-                    order:'',
-                    name: '',
-                    category:''
-                }
+                    id:'',
+                    itemOrder:'',
+                    itemName: '',
+                    categoryName:'',
+                    typeName:'',
+                    categoryId:''
+                },
+
             }
         },
         methods:{
-
+            showItemList:function(){
+            var _this=this;
+                $.get("/commType/itemList",function (data0) {
+                    _this.tableData=data0 ;
+                    _this.form={
+                        id:'',
+                            itemOrder:'',
+                            itemName: '',
+                            categoryName:'',
+                            typeName:'',
+                            categoryId:''
+                    }
+                });
+            },
+            findcategory:function(data){
+                var _this=this;
+                for(var i=0;i<this.type.length;i++){
+                    var  t=    this.type[i];
+                    if(t.typeName==data){
+                        $.get("/commType/categoryListByType/"+t.id, function (data0) {
+                            _this.category = data0;
+                            if(data0==null||data0==[]){
+                                _this.form.categoryId=''
+                            }
+                        });
+                    }
+                }
+            },
+            takecategory:function(val){
+                var _this=this;
+                for(var i=0;i<this.category.length;i++){
+                    var  c=    this.category[i];
+                    if(c.categoryName==val){
+                        this.form.categoryId=c.id;
+                    }
+                }
+            },
             handleEdit:function(index, row) {
-                console.log(index, row);
+                this.form=row;
             },
             handleDelete:function(index, row) {
-                console.log(index, row);
+                var _this=this;
+                $.get("/commType/delItem/"+row.id,function (data0) {
+                    if(data0=='ok'){
+                        _this.showItemList();
+                    }
+                });
             },
 
             handleClick:function(row) {
@@ -827,23 +884,23 @@
                 var _this=this;
                 $.post("/commType/itemAdd",this.form,function (data) {
                     if(data=='ok'){
-                        $.get("/commType/itemList",function (data0) {
-                            _this.tableData=data0 ;
-                            _this.form={ order: '',
-                                name: '',
-                                type:''}
-                        });
+                        _this.showItemList();
                     }
                 });
             }
+        },
+        watch:{//监控属性；监控参数
         },
         created() {
             var _this = this;
             $.get("/commType/itemList", function (data0) {
                 _this.tableData = data0;
             });
-            $.get("/commType/categoryList", function (data0) {
+            $.get("/commType/categoryListByType/1", function (data0) {
                 _this.category = data0;
+            });
+            $.get("/commType/typeList", function (data0) {
+                _this.type = data0;
             });
         }
     });
