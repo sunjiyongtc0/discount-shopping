@@ -1,14 +1,20 @@
 package com.glisten.discount.shopping.Controller.Commodity;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.glisten.discount.shopping.Domain.TCommodityCategory;
+import com.glisten.discount.shopping.Domain.TCommodityType;
+import com.glisten.discount.shopping.Service.Commodity.CommodityTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/commType")
@@ -19,50 +25,79 @@ public class CommodityTypeController {
     @Autowired
     private HttpServletResponse response;
 
-    //商品根类添加
+    @Autowired
+    private CommodityTypeService cts;
+
+
+    //商品根类添加/修改
     @PostMapping("/typeAdd")
     @ResponseBody
-    public String  typeAdd( @RequestParam("order") String  order,@RequestParam("name") String name ){
-        System.out.println(order);
-        System.out.println(name);
-        return "ok";
+    public String  typeAdd( @ModelAttribute TCommodityType type ){
+        String msg="error";
+        System.out.println(type.toString());
+        if(type.getId()==null){
+            int i= cts.saveType(type);
+            if(i==1){
+                msg="ok";
+            }
+        }else{
+            int i=cts.updateType(type);
+            if(i==1){
+                msg="ok";
+            }
+        }
+        return msg;
     }
+
     //商品根类列表
     @GetMapping("/typeList")
     @ResponseBody
     public JSONArray typeList(){
-        JSONArray tableData=new JSONArray();
-        for (int i=0;i<4;i++){
-            JSONObject jb = new JSONObject();
-            jb.put("order",i);
-            jb.put("name","根类"+i);
-            tableData.add(jb);
-        }
+        List<Map<String,Object>> lt= cts.findAllType();
+        JSONArray tableData= JSONArray.parseArray(JSON.toJSONString(lt));
         return tableData;
     }
+
+    //商品根类删除
+    @GetMapping("/typedel/{id}")
+    @ResponseBody
+    public String typeDel(@PathVariable("id") long id ){
+        cts.delType(id);
+        return "ok";
+    }
+
+
     //商品一级类列表
     @GetMapping("/categoryList")
     @ResponseBody
     public JSONArray categoryList(){
-        JSONArray tableData=new JSONArray();
-        for (int i=0;i<2;i++){
-            JSONObject jb = new JSONObject();
-            jb.put("order",i);
-            jb.put("name","一级分类"+i);
-            jb.put("type",i%2);
-            tableData.add(jb);
-        }
+        List<Map<String,Object>> lc= cts.findAllCategory();
+        JSONArray tableData= JSONArray.parseArray(JSON.toJSONString(lc));
         return tableData;
     }
-    //商品一级类添加
+
+    //商品一级类添加/修改
     @PostMapping("/categoryAdd")
     @ResponseBody
-    public String  categoryAdd( @RequestParam("order") String  order,@RequestParam("name") String name,@RequestParam("type") String type ){
-        System.out.println(order);
-        System.out.println(name);
-        System.out.println(type);
+    public String  categoryAdd(@ModelAttribute TCommodityCategory cc){
+          String typeName=      request.getParameter("typeName");
+        System.out.println(cc.toString()+typeName);
+        if(cc.getId()==null){
+            cts.AddCategory(cc,typeName);
+        }else{
+            cts.updateCategory(cc,typeName);
+        }
         return "ok";
     }
+
+    //一级商品删除
+    @GetMapping("/categorydel/{id}")
+    @ResponseBody
+    public String categoryDel(@PathVariable("id") long id){
+        cts.delCategory(id);
+        return "ok";
+    }
+
 //商品二级类列表
     @GetMapping("/itemList")
     @ResponseBody

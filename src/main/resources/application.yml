@@ -7,3 +7,18 @@ spring:
     encoding: UTF-8
     servlet:
       content-type: text/html
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://39.105.145.184:3306/DiscountShopping?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 6000000
+      maximum-pool-size: 10
+      auto-commit: true
+      pool-name: MyHikariCP
+      max-lifetime: 1800000
+      connection-test-query: select 1
+      connection-timeout: 3000

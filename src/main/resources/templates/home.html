@@ -15,60 +15,60 @@
 <style>
     .el-row {
         margin-bottom: 20px;
-        &:last-child {
+    &:last-child {
          margin-bottom: 0;
-        }
+     }
     }
-    </style>
+</style>
 <body>
 <div id="app">
 
     <el-container>
         <el-header>
             <!-- 上导航 ---------------------------------------------------------------------------------------------------------------------------------- -->
-                <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-                    <el-menu-item style="width: 20%" index="-1"><el-image
-                            style="width: 40px; height: 40px"
-                            :src="logoPath"
-                            fit="cover"></el-image></el-menu-item>
-                    <el-submenu  :index="i+''" v-for="(t,i) in type" v-if="t.category.length>0">
-                        <template slot="title"   ><span>{{t.type}}</span></template>
-                        <el-submenu :index="i+'-'+j"   v-for="(c,j) in t.category ">
-                            <template slot="title"  ><span>{{c.name}}</span></template>
-                            <el-menu-item    :index="i+'-'+j+'-'+k"  v-for="(it,k) in c.item "  ><span>{{it.name}}</span></el-menu-item>
-                        </el-submenu>
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                <el-menu-item style="width: 20%" index="-1"><el-image
+                        style="width: 40px; height: 40px"
+                        :src="logoPath"
+                        fit="cover"></el-image></el-menu-item>
+                <el-submenu  :index="i+''" v-for="(t,i) in type" v-if="t.category.length>0">
+                    <template slot="title"   ><span>{{t.type}}</span></template>
+                    <el-submenu :index="i+'-'+j"   v-for="(c,j) in t.category ">
+                        <template slot="title"  ><span>{{c.name}}</span></template>
+                        <el-menu-item    :index="i+'-'+j+'-'+k"  v-for="(it,k) in c.item "  ><span>{{it.name}}</span></el-menu-item>
                     </el-submenu>
-                    <el-menu-item  v-for="(t,i) in type"  :index="i+''"  v-if="t.category.length ==0"><span>{{t.type}}</span></el-menu-item>
+                </el-submenu>
+                <el-menu-item  v-for="(t,i) in type"  :index="i+''"  v-if="t.category.length ==0"><span>{{t.type}}</span></el-menu-item>
 
-                    <el-menu-item :index="type.length+''" >
-                        <div class="el-input el-input--small">
-                            <el-input
+                <el-menu-item :index="type.length+''" >
+                    <div class="el-input el-input--small">
+                        <el-input
                                 placeholder="快速搜索"
                                 v-model="search"  @keyup.enter.native="findPage">
                             <i slot="prefix" class="el-input__icon el-icon-search"></i>
                         </el-input></div>
-                    </el-menu-item>
-                </el-menu>
+                </el-menu-item>
+            </el-menu>
 
 
         </el-header>
         <el-container>
             <el-aside width="200px"  v-show="showleft">
                 <!--  侧导航  ---------------------------------------------------------------------------------------------------------------------------------- -->
-                             <h5>正品商品</h5>
-                            <el-menu
-                                    :default-active="indexJ"
-                                    class="el-menu-vertical-demo">
-                                <el-submenu :index="i+''" v-for="(c,i) in type[indexI].category"   >
-                                    <template slot="title">
-                                        <i class="el-icon-menu"></i>
-                                        <span>{{c.name}}</span>
-                                    </template>
-                                    <el-menu-item-group>
-                                        <el-menu-item :index="i+'-'+j" v-for="(it,j) in c.item" >{{it.name}}</el-menu-item>
-                                    </el-menu-item-group>
-                                </el-submenu>
-                            </el-menu>
+                <h5>正品商品</h5>
+                <el-menu
+                        :default-active="indexJ"
+                        class="el-menu-vertical-demo">
+                    <el-submenu :index="i+''" v-for="(c,i) in type[indexI].category"   >
+                        <template slot="title">
+                            <i class="el-icon-menu"></i>
+                            <span>{{c.name}}</span>
+                        </template>
+                        <el-menu-item-group>
+                            <el-menu-item :index="i+'-'+j" v-for="(it,j) in c.item" >{{it.name}}</el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                </el-menu>
 
             </el-aside>
             <el-main>
@@ -76,10 +76,10 @@
                 <template v-if="showleft" >
                     <div class="infinite-list-wrapper"  v-infinite-scroll="load"
                          infinite-scroll-disabled="disabled"   >
-                            <!--<el-row  :gutter="20" v-for="i in count"  >-->
-                            <el-row  :gutter="20" v-for="(item,index) in listTemp" :key="index"  >
-                                <el-col :span="8" v-for="(cell,i) in item" :key="i"><div class="grid-content bg-purple" >
-                                    <el-card class="box-card">
+                        <!--<el-row  :gutter="20" v-for="i in count"  >-->
+                        <el-row  :gutter="20" v-for="(item,index) in listTemp" :key="index"  >
+                            <el-col :span="8" v-for="(cell,i) in item" :key="i"><div class="grid-content bg-purple"  @click="drawerinfo(true,cell)" >
+                                <el-card class="box-card" >
                                     <div class="demo-image__placeholder">
                                         <div class="block">
                                             <el-image :src="cell.img"></el-image>
@@ -88,9 +88,9 @@
                                             <br><span class="demonstration">{{cell.color}}</span>
                                         </div>
                                     </div>
-                                    </el-card>
-                                </div></el-col>
-                            </el-row>
+                                </el-card>
+                            </div></el-col>
+                        </el-row>
                         <p v-if="loading">加载中...</p>
                         <p v-if="noMore">没有更多了</p>
                     </div>
@@ -115,6 +115,9 @@
         </el-container>
     </el-container>
 
+
+    <!--  抽屉显示图片    父类值传给子类-->
+    <div  v-if="drawershow"> <drawerimg :table="drawershow"  @sendvaule="getvalue"></drawerimg></div>
     <!--  下方  ---------------------------------------------------------------------------------------------------------------------------------- -->
     <footer>
         <el-collapse v-model="activeNames" @change="handleChange">
@@ -132,10 +135,15 @@
 </body>
 
 <script>
-// vue 可以直接通过对象.的方式直接调用属性：data，computed；但是el,data也是属性，叫实例属性
-new Vue({
+
+
+
+
+    // vue 可以直接通过对象.的方式直接调用属性：data，computed；但是el,data也是属性，叫实例属性
+    new Vue({
         el:'#app',
         data:{
+            drawershow:false,
             type:[{
                 "type": "男子",
                 "category": [{
@@ -157,7 +165,7 @@ new Vue({
                         "url": "#"
                     }]
                 }]
-                }, {
+            }, {
                 "type": "女子",
                 "category": [{
                     "name": "鞋",
@@ -178,7 +186,7 @@ new Vue({
                         "url": "#"
                     }]
                 }]
-                }, {
+            }, {
                 "type": "儿童",
                 "category": [{
                     "name": "男鞋",
@@ -217,13 +225,13 @@ new Vue({
                         "url": "#"
                     }]
                 }]
-                }, {
+            }, {
                 "type": "手绘",
                 "category": []
-                }, {
+            }, {
                 "type": "流行",
                 "category": []
-                }],
+            }],
             search:"",
             activeIndex: '1',
             activeIndex2: '1',
@@ -243,87 +251,148 @@ new Vue({
             //logo
             logoPath:"../img/logo.jpg",
             showData:[]
-    },
-    methods:{//方法属性；
+        },
+        methods:{//方法属性；
+            drawerinfo:function(data,cell){
+                console.log(cell);
+                this.drawershow=data;
+            },
+            getvalue:function (val) {
+                this.drawershow=val;
+            },
             // 导航点击事件
-        handleSelect:function(key, keyPath) {
-            // console.log(key, keyPath);
-            this.indexA=key;
-            //>表示存在子节点，=表示所取值为最大（即搜索栏）
-            if(this.indexA!=this.type.length){
-                this.showleft=(this.indexA.length>1);
-                if( this.showleft){
-                    this.indexI=this.indexA.split("-")[0];
-                    this.indexJ=this.indexA.substring(2);
+            handleSelect:function(key, keyPath) {
+                // console.log(key, keyPath);
+                this.indexA=key;
+                //>表示存在子节点，=表示所取值为最大（即搜索栏）
+                if(this.indexA!=this.type.length){
+                    this.showleft=(this.indexA.length>1);
+                    if( this.showleft){
+                        this.indexI=this.indexA.split("-")[0];
+                        this.indexJ=this.indexA.substring(2);
+                    }
+                }
+            },
+            //无线固滚动设置
+            load:function(){
+                this.loading = true
+                setTimeout(() => {
+                    this.count += 2
+                    this.loading = false
+                }, 2000)
+            },
+            //底部折叠页
+            handleChange:function(val) {
+                console.log(val);
+            },
+            findPage:function () {
+                if(this.search=='管理'||this.search=='guanli'){
+                    window.location.href='/comm/index';
+                }else{
+                    var _this=this;
+                    $.get("/comm/commListByKeyword/"+this.search,function (data) {
+                        _this.showData=data;
+                    })
+
                 }
             }
-        },
-        //无线固滚动设置
-        load:function(){
-            this.loading = true
-            setTimeout(() => {
-                this.count += 2
-                this.loading = false
-            }, 2000)
-        },
-        //底部折叠页
-        handleChange:function(val) {
-            console.log(val);
-        },
-        findPage:function () {
-           if(this.search=='管理'||this.search=='guanli'){
-               window.location.href='/comm/index';
-           }else{
-               var _this=this;
-    $.get("/comm/commListByKeyword/"+this.search,function (data) {
-        _this.showData=data;
-    })
 
-           }
-        }
-
-    },
-    computed:{//计算属性；有计算能力的属性，即，将计算结果缓存起来的属性，将行为转化为静态属性
-        findSize:function(data){
-            console.log(data)
-            return data.size>0;
         },
-        //无线滚动设置
-        noMore:function () {
-            return this.count >= 20
-        },
-        disabled:function () {
-            return this.loading || this.noMore
-        },
-        listTemp:function(){
-            let index =0;
-            let count = 3;
-            let arrTemp = [];
-            let showData = this.showData;
-            for(let i=0;i<this.showData.length;i++){
-                index = parseInt(i/count);
-                if (arrTemp.length <= index) {
-                    arrTemp.push([]);
+        computed:{//计算属性；有计算能力的属性，即，将计算结果缓存起来的属性，将行为转化为静态属性
+            findSize:function(data){
+                console.log(data)
+                return data.size>0;
+            },
+            //无线滚动设置
+            noMore:function () {
+                return this.count >= 20
+            },
+            disabled:function () {
+                return this.loading || this.noMore
+            },
+            listTemp:function(){
+                let index =0;
+                let count = 3;
+                let arrTemp = [];
+                let showData = this.showData;
+                for(let i=0;i<this.showData.length;i++){
+                    index = parseInt(i/count);
+                    if (arrTemp.length <= index) {
+                        arrTemp.push([]);
+                    }
+                    arrTemp[index].push(showData[i])
                 }
-                arrTemp[index].push(showData[i])
+                return arrTemp
             }
-            return arrTemp
-        }
-    },
-    watch:{//监控属性；监控参数
-        indexA:function (newValue,oldValue) {
-                 console.log("indexA！！"+oldValue+"变成了"+newValue)
+        },
+        watch:{//监控属性；监控参数
+            indexA:function (newValue,oldValue) {
+                console.log("indexA！！"+oldValue+"变成了"+newValue)
                 showleft=(newValue!='');
-             }
-    },
-    created(){
-        var _this=this;
-        $.get("/comm/commListByKeyword/0",function (data) {
-        _this.showData=data;
+            },
+            drawershow:function (newValue,oldValue) {
+                console.log("drawershow！！"+oldValue+"变成了"+newValue)
+            }
+        },
+        created(){
+            var _this=this;
+            $.get("/comm/commListByKeyword/0",function (data) {
+                _this.showData=data;
+            });
+        }
+
     });
-    }
 
-});
 
+    //图片选择抽屉显示图片
+    Vue.component("drawerimg", {
+        template: "<el-drawer\n" +
+            "  title=\"我嵌套了表格!\"\n" +
+            "  :visible.sync=\"table0\" " +
+            "  :before-close=\"handleClose\"" +
+            "  direction=\"rtl\"\n" +
+            "  size=\"50%\">\n" +
+            "   <el-table :data=\"gridData\">\n" +
+            "      <el-table-column property=\"date\" label=\"日期\" width=\"150\"></el-table-column>\n" +
+            "      <el-table-column property=\"name\" label=\"姓名\" width=\"200\"></el-table-column>\n" +
+            "      <el-table-column property=\"address\" label=\"地址\"></el-table-column>\n" +
+            "    </el-table>\n" +
+            "</el-drawer>",
+        data: function () {
+            return {
+                table0:false,
+                loading: false,
+                gridData: [{
+                    date: '2016-05-02',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1518 弄'
+                }],
+                formLabelWidth: '80px',
+                timer: null,
+            };
+        },
+        //获取父给的值
+        props:['table'],
+        methods: {
+            handleClose: function (done) {
+                this.$emit('sendvaule', false);
+                document.body.style.overflow="auto";
+                done();
+            }
+
+        },
+        watch:{//监控属性；监控参数
+            table0:function (newValue,oldValue) {
+                if(!newValue){
+                    console.log("===="+newValue)
+                    this.$emit('sendvaule', false);
+                }
+
+            }
+        },
+        created(){
+            this.table0=this.table;
+        }
+    });
 </script>
-  </html>
+</html>

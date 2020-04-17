@@ -14,7 +14,7 @@ public class CommodityController {
 
     @RequestMapping("/index")
     public String  index(){
-        return "/comm/commMain";
+        return "comm/commMain";
     }
 
     @PostMapping("/addComm")
@@ -33,11 +33,12 @@ public class CommodityController {
             JSONObject jb = new JSONObject();
             jb.put("order",i);jb.put("name","商品"+i);
             if(i%2==1) {
-                jb.put("img", "E://63ee5c97-1ac2-49be-a7f7-fcbcb99f9eca.jpg");
+                jb.put("filepath", "63ee5c97-1ac2-49be-a7f7-fcbcb99f9eca.jpg,4d3ea53c084bad6931a56d5158a48jpeg.jpeg");
             }else {
-                jb.put("img","https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg");
+                jb.put("filepath","https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg,4d3ea53c084bad6931a56d5158a48jpeg.jpeg");
             }
-            jb.put("price",240+i);jb.put("state",i%2);
+            jb.put("price",240+i);jb.put("state",i%2);jb.put("type","根类0");
+            jb.put("category","一级分类1");jb.put("item","二级分类0");jb.put("remarks","在修改时显示");
             ja.add(jb);
         }
         return ja;
