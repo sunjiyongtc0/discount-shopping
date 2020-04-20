@@ -12,6 +12,7 @@
         <result column="wares_remarks" jdbcType="varchar" property="waresRemarks" />
         <result column="wares_img" jdbcType="varchar" property="waresImg" />
         <result column="wares_state" jdbcType="INT" property="waresState" />
-
+        <result column="type_id" jdbcType="BIGINT" property="typeId" />
+        <result column="category_id" jdbcType="BIGINT" property="categoryId" />
     </resultMap>
 </mapper>

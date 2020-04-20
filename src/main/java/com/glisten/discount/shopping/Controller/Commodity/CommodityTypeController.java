@@ -139,6 +139,14 @@ public class CommodityTypeController {
         return "ok";
     }
 
+    //寻找指定根类下的所有二类
+    @GetMapping("/itemListByCategory/{cid}")
+    @ResponseBody
+    public JSONArray itemListByCategory(@PathVariable("cid") long cid){
+        List<Map<String,Object>>  lt=cts.findItemByCategory(cid);
+        JSONArray tableData= JSONArray.parseArray(JSON.toJSONString(lt));
+        return tableData;
+    }
 
     //商品概述列表
     /**

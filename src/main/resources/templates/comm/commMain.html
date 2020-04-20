@@ -80,36 +80,39 @@
 
     //----修改商品信息
     Vue.component("editcomm",{
-        template:"<el-dialog title=\"收货地址\" :visible.sync=\"dialogFormVisible\">\n" +
+        template:"<el-dialog title=\"修改商品信息\" :visible.sync=\"dialogFormVisible\"" +
+            " :before-close=\"handleClose\" >\n" +
             "                            <el-form ref=\"form\" :model=\"form\" label-width=\"80px\">\n" +
             "                                <el-form-item label=\"商品名称\">\n" +
-            "                                    <el-input v-model=\"form.name\"></el-input>\n" +
+            "                                    <el-input v-model=\"form.waresName\"></el-input>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"商品价格\">\n" +
-            "                                    <el-input v-model=\"form.price\"></el-input>\n" +
+            "                                    <el-input v-model=\"form.waresPrice\"></el-input>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"商品根类\">\n" +
-            "                                  <el-radio-group v-model=\"form.type\">\n" +
-            "                                   <el-radio v-for='(t,index) in type' :label=\"t.typeName\" :key='index'></el-radio>\n" +
+            "                                  <el-radio-group v-model=\"form.typeId\" @change='findcategory'>\n" +
+            "                                   <el-radio disabled  v-for='(t,index) in type' :label=\"t.id\" :key='index'>{{t.typeName}}</el-radio>\n" +
             "                                   </el-radio-group>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"一类名称\">\n" +
-            "                                  <el-radio-group v-model=\"form.category\">\n" +
-            "                                   <el-radio v-for='(c,index) in category ' :label=\"c.name\" :key='index'></el-radio>\n" +
+            "                                  <el-radio-group v-model=\"form.categoryId\"  @change='finditem'>\n" +
+            "                                   <el-radio disabled   v-for='(c,index) in category ' :label=\"c.id\" :key='index'>{{c.categoryName}}</el-radio>\n" +
 
             "                                   </el-radio-group>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"二类名称\">\n" +
-            "                                  <el-radio-group v-model=\"form.item\">\n" +
-            "                                   <el-radio v-for='(i,index ) in item' :label=\"i.name\" :key='index'></el-radio>\n" +
+            "                                  <el-radio-group v-model=\"form.itemId\"  @change='takeitem'>\n" +
+            "                                   <el-radio disabled v-for='(i,index ) in item' :label=\"i.id\" :key='index' >{{i.itemName}}</el-radio>\n" +
 
             "                                   </el-radio-group>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"概图上传\">\n" +
-            "<el-upload\n" +
+            "<el-upload   v-if='fileList.length>0'" +
             "  action=\"/img/uplode\"\n" +
             "  list-type=\"picture-card\" " +
-            "  :auto-upload=\"false\" " +
+            "  :auto-upload=\"false\"  " +
+            "  :on-preview=\"handlePreview\" " +
+            "  :file-list=\"fileList\" " +
             "   ref=\"upload0\"  " +
             "            :limit='6'\n" +
             "            accept=\".jpg,.jpeg,.png,.gif,.bmp,.JPG,.JPEG,.GIF,.BMP\"" +
@@ -144,14 +147,14 @@
             "</el-dialog>" +
             "                                </el-form-item>\n" +
             "                               <el-form-item label=\"商品备注\">\n" +
-            "                                    <el-input v-model=\"form.remarks\"></el-input>\n" +
+            "                                    <el-input v-model=\"form.waresRemarks\"></el-input>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"商品状态\">\n" +
-            "                                    <el-input v-model=\"form.state\"></el-input>\n" +
+            "                                    <el-input v-model=\"form.waresState\"></el-input>\n" +
             "                                </el-form-item>\n" +
             "                            </el-form>\n" +
             "  <div slot=\"footer\" class=\"dialog-footer\">\n" +
-            "    <el-button @click=\"dialogFormVisible = false\">取 消</el-button>\n" +
+            "    <el-button @click=\"handleClose\">取 消</el-button>\n" +
             "    <el-button type=\"primary\" @click=\"onSubmit()\">确 定</el-button>\n" +
             "  </div>\n" +
             "</el-dialog>",
@@ -163,33 +166,90 @@
                 category:[],
                 item:[],
                 form: {
-                    name:'',
-                    price: '',
                     type:'',
                     category:'',
                     item:'',
-                    state:'',
-                    remarks:'',
-                    filepath:'',
+                    waresName:'',
+                    waresPrice: '',
+                    typeId:'',
+                    categoryId:'',
+                    itemId:'',
+                    waresState:'',
+                    waresRemarks:'',
+                    waresImg:''
                 },
-                fileLIst: [],
+                fileList: [],
                 dialogImageUrl: '',
                 dialogVisible: false,
                 disabled: false,
-                fileName:''
+                fileName:'',
+                //判断添加几个图片
+                imgNew:0,
+                imgNum:0
             }
         },
         methods:{
+            findcategory:function(val){
+                var _this=this;
+                $.get("/commType/categoryListByType/"+val, function (data0) {
+                    _this.category = data0;
+                    if(data0==null||data0==[]){
+                        _this.form.categoryId='';
+                    }
+                });
+                this.form.typeId=val;
+            },
+            finditem:function(val){
+                var _this=this;
+                $.get("/commType/itemListByCategory/"+val, function (data0) {
+                    _this.item = data0;
+                    if(data0==null||data0==[]){
+                        _this.form.itemId=''
+                    }
+                });
+                this.form.categoryId=val;
+            },
+            takeitem:function(val){
+                for(var i=0;i<this.item.length;i++){
+                    if(this.item[i].id==val){
+                        this.form.itemId=val;
+                    }
+                }
+            },
             onSubmit:function() {
-                this.$refs.upload0.submit();
-                console.log(this.$refs.upload0)
+                var imgnemes="";
+                    var imgs=this.form.waresImg.split(",");
+                    for(var i=0;i<imgs.length;i++){
+                        for(var j=0;j<this.fileList.length;j++){
+                            imgnemes+=this.fileList[j].name+",";
+                            if(imgs[i]==this.fileList[j].name){
+                                this.fileList.remove(this.fileList[j]);
+                            }
+                        }
+                    }
+                    this.imgNew=  this.fileList.length;
+                    if( this.imgNew>0){
+                        this.$refs.upload0.submit();
+                    }else{
+                        var _this=this;
+                        this.form.waresImg=imgnemes;
+                        $.post("/comm/addComm",this.form,function (data) {
+                            if(data=='ok'){
+                                _this.onCancel();
+                            }
+                        })
+                    }
+                // console.log(this.$refs.upload0)
+            },
+            handlePreview:function(file) {
+                console.log(file);
             },
             handleChange:function (file, fileList) {
-                this.fileLIst=fileList;
+                this.fileList=fileList;
             },
             //图片删除
             handleRemove:function(file){
-                this.fileLIst.remove(file);
+                this.fileList.remove(file);
             },
             //图片放大镜
             handlePictureCardPreview:function(file) {
@@ -201,13 +261,15 @@
             },
             handleAvatarSuccess:function(response, file, fileList) {
                 var _this=this;
+                this.imgNum+=1;
                 if(response!='') {
-                    this.form.filepath += response+",";
-                    if(this.form.filepath.split(",").length-1==this.fileLIst.length){
+                    this.form.waresImg += response+",";
+                    console.log(this.form.waresImg)
+                    console.log(this.fileList)
+                    if(this.imgNum==this.fileList.length){
                         $.post("/comm/addComm",this.form,function (data) {
                             if(data=='ok'){
-                                _this.onCancel();
-
+                                _this.handleClose();
                             }
                         })
                     }
@@ -216,36 +278,70 @@
             },
             onCancel:function () {
                 this.form={
-                    name:'',
-                    price: '',
                     type:'',
                     category:'',
                     item:'',
-                    state:'',
-                    remarks:'',
-                    filepath:''
+                    waresName:'',
+                    waresPrice: '',
+                    typeId:'',
+                    categoryId:'',
+                    itemId:'',
+                    waresState:'',
+                    waresRemarks:'',
+                    waresImg:''
+                };
+                this.fileList=[];
+                this.dialogFormVisible = false;
+            },
+            handleClose:function () {
+                this.form={
+                    type:'',
+                    category:'',
+                    item:'',
+                    waresName:'',
+                    waresPrice: '',
+                    typeId:'',
+                    categoryId:'',
+                    itemId:'',
+                    waresState:'',
+                    waresRemarks:'',
+                    waresImg:''
                 };
                 this.$refs.upload0.clearFiles();
+                this.fileList=[];
+                this.dialogFormVisible = false;
             }
 
         },
         created(){
             var _this=this;
-            comms.$on("sendrow",function (data) {
-                _this.form=data;
+            comms.$on("sendrow",function (val) {
+                _this.form=val;
+                $.get("/commType/typeList", function (data0) {
+                    _this.type=data0;
+                });
+                $.get("/commType/categoryListByType/"+val.typeId, function (data0) {
+                    _this.category=data0;
+
+                });
+                $.get("/commType/itemListByCategory/"+val.categoryId, function (data0) {
+                    _this.item=data0;
+                });
+                var  imgPath="http://localhost/images/upload/";
+                var imgnames=val.waresImg.split(",");
+                for(var i=0;i<imgnames.length;i++) {
+                    if (imgnames[i] != "") {
+                        var img = {};
+                        img.name = imgnames[i];
+                        img.url = imgPath + imgnames[i];
+                        _this.fileList[i] = img;
+                    }
+                }
             });
             comms.$on("sendshow",function (data) {
                 _this.dialogFormVisible=data;
             });
-            $.get("/commType/itemList", function (data0) {
-                _this.item = data0;
-            });
-            $.get("/commType/categoryList", function (data0) {
-                _this.category = data0;
-            });
-            $.get("/commType/typeList", function (data0) {
-                _this.type = data0;
-            });
+
         }
     });
 
@@ -257,25 +353,25 @@
             "                            <h5 align=\"center\"> 新建商品</h5>\n" +
             "                            <el-form ref=\"form\" :model=\"form\" label-width=\"80px\">\n" +
             "                                <el-form-item label=\"商品名称\">\n" +
-            "                                    <el-input v-model=\"form.name\"></el-input>\n" +
+            "                                    <el-input v-model=\"form.waresName\"></el-input>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"商品价格\">\n" +
-            "                                    <el-input v-model=\"form.price\"></el-input>\n" +
+            "                                    <el-input v-model=\"form.waresPrice\"></el-input>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"商品根类\">\n" +
-            "                                  <el-radio-group v-model=\"form.type\">\n" +
-            "                                   <el-radio v-for='(t,index) in type' :label=\"t.typeName\" :key='index'></el-radio>\n" +
+            "                                  <el-radio-group v-model=\"form.typeId\" @change='findcategory'>\n" +
+            "                                   <el-radio v-for='(t,index) in type' :label=\"t.id\" :key='index'>{{t.typeName}}</el-radio>\n" +
             "                                   </el-radio-group>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"一类名称\">\n" +
-            "                                  <el-radio-group v-model=\"form.category\">\n" +
-            "                                   <el-radio v-for='(c,index) in category ' :label=\"c.name\" :key='index'></el-radio>\n" +
+            "                                  <el-radio-group v-model=\"form.categoryId\" @change='finditem'>\n" +
+            "                                   <el-radio v-for='(c,index) in category ' :label=\"c.id\" :key='index'>{{c.categoryName}}</el-radio>\n" +
 
             "                                   </el-radio-group>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"二类名称\">\n" +
-            "                                  <el-radio-group v-model=\"form.item\">\n" +
-            "                                   <el-radio v-for='(i,index ) in item' :label=\"i.name\" :key='index'></el-radio>\n" +
+            "                                  <el-radio-group v-model=\"form.itemId\" @change='takeitem'>\n" +
+            "                                   <el-radio v-for='(i,index ) in item' :label=\"i.id\" :key='index'>{{i.itemName}}</el-radio>\n" +
 
             "                                   </el-radio-group>\n" +
             "                                </el-form-item>\n" +
@@ -318,10 +414,10 @@
             "</el-dialog>" +
             "                                </el-form-item>\n" +
             "                               <el-form-item label=\"商品备注\">\n" +
-            "                                    <el-input v-model=\"form.remarks\"></el-input>\n" +
+            "                                    <el-input v-model=\"form.waresRemarks\"></el-input>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"商品状态\">\n" +
-            "                                    <el-input v-model=\"form.state\"></el-input>\n" +
+            "                                    <el-input v-model=\"form.waresState\"></el-input>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item>\n" +
             "                                    <el-button type=\"primary\" @click=\"onSubmit()\">立即创建</el-button>\n" +
@@ -337,14 +433,14 @@
                 category:[],
                 item:[],
                 form: {
-                    name:'',
-                    price: '',
-                    type:'',
-                    category:'',
-                    item:'',
-                    state:'',
-                    remarks:'',
-                    filepath:'',
+                    waresName:'',
+                    waresPrice: '',
+                    typeId:'',
+                    categoryId:'',
+                    itemId:'',
+                    waresState:'',
+                    waresRemarks:'',
+                    waresImg:''
                 },
                 fileLIst: [],
                 dialogImageUrl: '',
@@ -354,6 +450,45 @@
             }
         },
         methods:{
+            findcategory:function(val){
+                var _this=this;
+                // for(var i=0;i<this.type.length;i++){
+                    // var  t=  this.type[i];
+                    // if(t.typeName==data){
+                        $.get("/commType/categoryListByType/"+val, function (data0) {
+                            _this.category = data0;
+                            if(data0==null||data0==[]){
+                                _this.form.categoryId='';
+                            }
+                        });
+                this.form.typeId=val;
+                        // this.form.typeId=t.id;
+                    // }
+                // }
+            },
+            finditem:function(val){
+                var _this=this;
+                // for(var i=0;i<this.category.length;i++){
+                //     var  t=    this.category[i];
+                //     if(t.categoryName==data){
+                        $.get("/commType/itemListByCategory/"+val, function (data0) {
+                            _this.item = data0;
+                            if(data0==null||data0==[]){
+                                _this.form.itemId=''
+                            }
+                        });
+                        this.form.categoryId=val;
+                    // }
+                // }
+            },
+            takeitem:function(val){
+                for(var i=0;i<this.item.length;i++){
+                    if(this.item[i].id==val){
+                        this.form.itemId=val;
+                    }
+                }
+
+            },
             onSubmit:function() {
                 this.$refs.upload0.submit();
                 console.log(this.$refs.upload0)
@@ -376,8 +511,8 @@
             handleAvatarSuccess:function(response, file, fileList) {
                 var _this=this;
                 if(response!='') {
-                    this.form.filepath += response+",";
-                    if(this.form.filepath.split(",").length-1==this.fileLIst.length){
+                    this.form.waresImg += response+",";
+                    if(this.form.waresImg.split(",").length-1==this.fileLIst.length){
                         $.post("/comm/addComm",this.form,function (data) {
                             if(data=='ok'){
                                 _this.onCancel();
@@ -389,14 +524,14 @@
             },
             onCancel:function () {
                 this.form={
-                    name:'',
-                    price: '',
-                    type:'',
-                    category:'',
-                    item:'',
-                    state:'',
-                    remarks:'',
-                    filepath:''
+                    waresName:'',
+                    waresPrice: '',
+                    typeId:'',
+                    categoryId:'',
+                    itemId:'',
+                    waresState:'',
+                    waresRemarks:'',
+                    waresImg:''
                 };
                 this.$refs.upload0.clearFiles();
             }
@@ -407,7 +542,8 @@
             $.get("/commType/itemList", function (data0) {
                 _this.item = data0;
             });
-            $.get("/commType/categoryList", function (data0) {
+
+            $.get("/commType/categoryListByType/1", function (data0) {
                 _this.category = data0;
             });
             $.get("/commType/typeList", function (data0) {
@@ -426,31 +562,31 @@
             "                                border\n" +
             "                                style=\"width: 100%\" >\n" +
             "                            <el-table-column\n" +
-            "                                    prop=\"order\"\n" +
+            "                                    prop=\"id\"\n" +
             "                                    label=\"序号\"\n" +
             "                                    width=\"180\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
-            "                                    prop=\"name\"\n" +
+            "                                    prop=\"waresName\"\n" +
             "                                    label=\"商品名\"\n" +
             "                                    width=\"180\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
-            "                                    prop=\"img\"\n" +
+            "                                    prop=\"waresImg\"\n" +
             "                                    label=\"商品图片\"\n" +
             "                                    width=\"180\">\n" +
-            "<template slot-scope=\"scope\"> " +
+            "<template slot-scope=\"scope\"  v-if='scope.row.waresImg!=null&scope.row.waresImg!=\"\"' > " +
             "<el-image style=\"width: 40px; height: 40px\"\n" +
-            "      :src=\"scope.row.filepath.split(',')[0]\"\n" +
+            "      :src=\"imgPath+scope.row.waresImg.split(',')[0]\"\n" +
             "      fit=\"cover\"></el-image>  </template>" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
-            "                                    prop=\"price\"\n" +
+            "                                    prop=\"waresPrice\"\n" +
             "                                    label=\"商品价格\"\n" +
             "                                    width=\"180\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
-            "                                    prop=\"state\"\n" +
+            "                                    prop=\"waresState\"\n" +
             "                                    label=\"商品状态\"\n" +
             "                                    width=\"180\">\n" +
             "                            </el-table-column>\n" +
@@ -471,11 +607,20 @@
         data:function () {
             return {
                 tableData: [
-
                 ],
+                imgPath:'',
                 form: {
-                    order:'',
-                    name: ''
+                    type:'',
+                    category:'',
+                    item:'',
+                    waresName:'',
+                    waresPrice: '',
+                    typeId:'',
+                    categoryId:'',
+                    itemId:'',
+                    waresState:'',
+                    waresRemarks:'',
+                    waresImg:''
                 }
             }
         },
@@ -485,12 +630,23 @@
                 //通过子组件向父组件发送开启弹出框命令
                 this.$emit('sendvaule', true);
                 //依靠父组件，将数据id发送给兄弟组件
-                comms.$emit('sendrow',row);
+                this.form=row;
+                var _this=this;
+
+
+                comms.$emit('sendrow', this.form);
                 comms.$emit('sendshow',true);
-                // console.log(index, row);
             },
             handleDelete:function(index, row) {
+                var _this=this;
                 console.log(index, row);
+                $.post("/comm/delComm",row,function (val) {
+                    if (val=="ok") {
+                        $.get("/comm/commList", function (data) {
+                            _this.tableData = data;
+                        })
+                    }
+                })
             },
 
             handleClick:function(row) {
@@ -504,6 +660,10 @@
             var _this = this;
             $.get("/comm/commList",function (data) {
                 _this.tableData=data;
+            })
+            $.get("/img/imgPath",function (data) {
+                // _this.imgPath=data;
+                _this.imgPath="../images/upload/";
             })
         }
     });
@@ -557,7 +717,7 @@
             "                                    <el-input v-model=\"form.typeName\"></el-input>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item>\n" +
-            "                                    <el-button type=\"primary\" @click=\"onSubmit\">立即创建</el-button>\n" +
+            "                                    <el-button type=\"primary\" @click=\"onSubmit\">提交</el-button>\n" +
             "                                    <el-button>取消</el-button>\n" +
             "                                </el-form-item>\n" +
             "                            </el-form>\n" +
@@ -673,7 +833,7 @@
             "                                   </el-radio-group>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item>\n" +
-            "                                    <el-button type=\"primary\" @click=\"onSubmit\">立即创建</el-button>\n" +
+            "                                    <el-button type=\"primary\" @click=\"onSubmit\">提交</el-button>\n" +
             "                                    <el-button>取消</el-button>\n" +
             "                                </el-form-item>\n" +
             "                            </el-form>\n" +
@@ -804,7 +964,7 @@
             "                                    <el-input v-model=\"form.itemName\"></el-input>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item>\n" +
-            "                                    <el-button type=\"primary\" @click=\"onSubmit\">立即创建</el-button>\n" +
+            "                                    <el-button type=\"primary\" @click=\"onSubmit\">提交</el-button>\n" +
             "                                    <el-button>取消</el-button>\n" +
             "                                </el-form-item>\n" +
             "                            </el-form>\n" +
@@ -952,7 +1112,7 @@
     });
 
 
-    //定义方法，，数组删除特定元素
+    //定义方法，，数组删除特定元素   -->用于图片删除功能
     Array.prototype.remove = function(val) {
         var index = this.indexOf(val);
         if (index > -1) {

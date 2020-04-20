@@ -34,9 +34,35 @@ public class TCommodityWares {
                 ", waresPrice=" + waresPrice +
                 ", waresRemarks='" + waresRemarks + '\'' +
                 ", waresImg='" + waresImg + '\'' +
+                ", typeId=" + typeId +
+                ", categoryId=" + categoryId +
                 ", waresState=" + waresState +
                 '}';
     }
+
+    public Long getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    @Column(name = "type_id")
+    private Long typeId;
+
+    @Column(name = "category_id")
+    private Long categoryId;
+
+
 
     public Long getId() {
         return id;
