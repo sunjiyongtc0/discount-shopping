@@ -61,7 +61,7 @@
 
         </el-header>
         <el-container>
-            <el-aside width="200px"  v-show="showleft">
+            <el-aside width="200px"  v-if="showleft">
                 <!--  侧导航  ---------------------------------------------------------------------------------------------------------------------------------- -->
                 <h5>正品商品</h5>
                 <el-menu
@@ -194,12 +194,16 @@
             handleSelect:function(key, keyPath) {
                 // console.log(key, keyPath);
                 this.indexA=key;
+                if(key==-1){
+                    this.showleft=false;
+                }else {
                 //>表示存在子节点，=表示所取值为最大（即搜索栏）
-                if(this.indexA!=this.type.length){
-                    this.showleft=(this.indexA.length>1);
-                    if( this.showleft){
-                        this.indexI=this.indexA.split("-")[0];
-                        this.indexJ=this.indexA.substring(2);
+                    if(this.indexA!=this.type.length){
+                        this.showleft=(this.indexA.length>1);
+                        if( this.showleft){
+                            this.indexI=this.indexA.split("-")[0];
+                            this.indexJ=this.indexA.substring(2);
+                        }
                     }
                 }
             },
@@ -223,7 +227,7 @@
                     $.get("/comm/commListByKeyword/0/0",function (data) {
                         _this.showData=data;
                     });
-
+                    this.showleft=true;
                 }
             }
 
