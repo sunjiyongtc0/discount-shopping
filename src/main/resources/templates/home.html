@@ -220,9 +220,9 @@
                     window.location.href='/comm/index';
                 }else{
                     var _this=this;
-                    $.get("/comm/commListByKeyword/"+this.search,function (data) {
+                    $.get("/comm/commListByKeyword/0/0",function (data) {
                         _this.showData=data;
-                    })
+                    });
 
                 }
             }
@@ -266,9 +266,7 @@
         },
         created(){
             var _this=this;
-            $.get("/comm/commListByKeyword/0/0",function (data) {
-                _this.showData=data;
-            });
+
             $.get("/commType/allType",function (data) {
                 _this.type=data;
             })
@@ -310,11 +308,6 @@
             return {
                 table0:false,
                 loading: false,
-                gridData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }],
                 formLabelWidth: '80px',
                 timer: null
             };
