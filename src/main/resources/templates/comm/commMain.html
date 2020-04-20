@@ -327,7 +327,8 @@
                 $.get("/commType/itemListByCategory/"+val.categoryId, function (data0) {
                     _this.item=data0;
                 });
-                var  imgPath="http://localhost/images/upload/";
+               // var  imgPath="http://localhost/images/upload/";
+                var  imgPath="http://"+location.host+"/images/upload/";
                 var imgnames=val.waresImg.split(",");
                 for(var i=0;i<imgnames.length;i++) {
                     if (imgnames[i] != "") {
