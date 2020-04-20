@@ -28,15 +28,12 @@ public class CommodityTypeService {
     public List<Map<String,Object>> findAllType(){
         return commodityTypeMapper.findAllType();
     }
-
     public  int  saveType(TCommodityType type){
          return commodityTypeMapper.insert(type);
     }
-
     public  int updateType(TCommodityType type){
         return commodityTypeMapper.updateByPrimaryKey(type);
     }
-
     public  int delType(long id){
         return commodityTypeMapper.deleteByPrimaryKey(id);
     }
@@ -49,19 +46,16 @@ public class CommodityTypeService {
     public List<Map<String,Object>> findAllCategory(){
         return commodityCategoryMapper.findAllCategory();
     }
-
     public int AddCategory(TCommodityCategory cc ,String name){
        Map<String,Object> m= commodityTypeMapper.findOneByTypeName(name);
        cc.setTypeId(Long.valueOf(m.get("id")+""));
        return  commodityCategoryMapper.insert(cc);
     }
-
     public int updateCategory(TCommodityCategory cc ,String name){
         Map<String,Object> m= commodityTypeMapper.findOneByTypeName(name);
         cc.setTypeId(Long.valueOf(m.get("id")+""));
         return  commodityCategoryMapper.updateByPrimaryKey(cc);
     }
-
     public int delCategory(long id){
         return  commodityCategoryMapper.deleteByPrimaryKey(id);
     }
@@ -82,7 +76,6 @@ public class CommodityTypeService {
     public int   updateItem(TCommodityItem ci){
         return  commodityItemMapper.updateByPrimaryKey(ci);
     }
-
     public int   delItem(long id){
         return  commodityItemMapper.deleteByPrimaryKey(id);
     }

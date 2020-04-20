@@ -22,3 +22,7 @@ spring:
       max-lifetime: 1800000
       connection-test-query: select 1
       connection-timeout: 3000
+mybatis:
+  configuration:
+    #自动驼峰注入
+    map-underscore-to-camel-case: true

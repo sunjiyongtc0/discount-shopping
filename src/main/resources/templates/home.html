@@ -19,6 +19,11 @@
          margin-bottom: 0;
      }
     }
+
+    .el-drawer__body {
+        overflow: auto;
+    }
+
 </style>
 <body>
 <div id="app">
@@ -33,10 +38,11 @@
                         fit="cover"></el-image></el-menu-item>
                 <el-submenu  :index="i+''" v-for="(t,i) in type" v-if="t.category.length>0">
                     <template slot="title"   ><span>{{t.type}}</span></template>
-                    <el-submenu :index="i+'-'+j"   v-for="(c,j) in t.category  " >
+                    <el-submenu :index="i+'-'+j"   v-for="(c,j) in t.category  " v-if="c.item.length>0" >
                         <template          slot="title"  ><span>{{c.name}}</span></template>
-                        <el-menu-item    :index="i+'-'+j+'-'+k"  v-for="(it,k) in c.item "  ><span>{{it.itemName}}</span></el-menu-item>
+                        <el-menu-item    :index="i+'-'+j+'-'+k"  v-for="(it,k) in c.item "  @click="findRightData('3',it.id)" ><span>{{it.itemName}}</span></el-menu-item>
                     </el-submenu>
+                    <el-menu-item   v-for="(c,k) in t.category  " v-if="c.item.length==0" :index="i+'-'+k" @click="findRightData('2',c.id)"  ><span>{{c.name}}</span></el-menu-item>
                 </el-submenu>
 
 
@@ -61,15 +67,16 @@
                 <el-menu
                         :default-active="indexJ"
                         class="el-menu-vertical-demo">
-                    <el-submenu :index="i+''" v-for="(c,i) in type[indexI].category"   >
-                        <template slot="title">
+                    <el-submenu :index="i+''" v-for="(c,i) in type[indexI].category"  v-if="c.item.length>0" >
+                        <template slot="title" v-if="c.item.length>0" >
                             <i class="el-icon-menu"></i>
                             <span>{{c.name}}</span>
                         </template>
-                        <el-menu-item-group>
-                            <el-menu-item :index="i+'-'+j" v-for="(it,j) in c.item" >{{it.itemName}}</el-menu-item>
+                        <el-menu-item-group  v-if="c.item.length>0">
+                            <el-menu-item :index="i+'-'+j" v-for="(it,j) in c.item"   @click="findRightData('3',it.id)" >{{it.itemName}}</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
+                    <el-menu-item  :index="i+''" v-for="(c,i) in type[indexI].category"  v-if="c.item.length==0"   @click="findRightData('2',c.id)" > {{c.name}}</el-menu-item>
                 </el-menu>
 
             </el-aside>
@@ -78,16 +85,15 @@
                 <template v-if="showleft" >
                     <div class="infinite-list-wrapper"  v-infinite-scroll="load"
                          infinite-scroll-disabled="disabled"   >
-                        <!--<el-row  :gutter="20" v-for="i in count"  >-->
                         <el-row  :gutter="20" v-for="(item,index) in listTemp" :key="index"  >
                             <el-col :span="8" v-for="(cell,i) in item" :key="i"><div class="grid-content bg-purple"  @click="drawerinfo(true,cell)" >
                                 <el-card class="box-card" >
                                     <div class="demo-image__placeholder">
                                         <div class="block">
-                                            <el-image :src="cell.img"></el-image>
-                                            <span class="demonstration">{{cell.name}}</span> <span style="width: 30px"></span><span class="demonstration">{{cell.price}}</span>
-                                            <br><span class="demonstration">女子短袖上衣</span>
-                                            <br><span class="demonstration">{{cell.color}}</span>
+                                            <el-image :src="imgPath+cell.waresImg.split(',')[0]"></el-image>
+                                            <br><span class="demonstration">{{cell.waresName}}</span> <span style="width: 30px"></span><span class="demonstration">{{cell.waresPrice}}</span>
+                                            <br><span class="demonstration">{{cell.waresRemarks}}</span>
+                                            <br><span class="demonstration">{{cell.waresState}}</span>
                                         </div>
                                     </div>
                                 </el-card>
@@ -119,7 +125,7 @@
 
 
     <!--  抽屉显示图片    父类值传给子类-->
-    <div  v-if="drawershow"> <drawerimg :table="drawershow"  @sendvaule="getvalue"></drawerimg></div>
+    <div  v-if="drawershow"> <drawerimg :table="drawershow" :wares="wares" :imgpath="imgPath" @sendvaule="getvalue"></drawerimg></div>
     <!--  下方  ---------------------------------------------------------------------------------------------------------------------------------- -->
     <footer>
         <el-collapse v-model="activeNames" @change="handleChange">
@@ -165,11 +171,20 @@
             activeNames: ['1'],
             //logo
             logoPath:"../img/logo.jpg",
-            showData:[]
+            showData:[],
+            //图片目录文件
+            imgPath:"../images/upload/",
+            wares:[]
         },
         methods:{//方法属性；
+            findRightData:function(type,id){
+                var _this=this;
+                $.get("/comm/commListByKeyword/"+type+"/"+id,function (data) {
+                    _this.showData=data;
+                });
+            },
             drawerinfo:function(data,cell){
-                console.log(cell);
+                this.wares=cell;
                 this.drawershow=data;
             },
             getvalue:function (val) {
@@ -242,16 +257,16 @@
         },
         watch:{//监控属性；监控参数
             indexA:function (newValue,oldValue) {
-                console.log("indexA！！"+oldValue+"变成了"+newValue)
+                // console.log("indexA！！"+oldValue+"变成了"+newValue)
                 showleft=(newValue!='');
             },
             drawershow:function (newValue,oldValue) {
-                console.log("drawershow！！"+oldValue+"变成了"+newValue)
+                // console.log("drawershow！！"+oldValue+"变成了"+newValue)
             }
         },
         created(){
             var _this=this;
-            $.get("/comm/commListByKeyword/0",function (data) {
+            $.get("/comm/commListByKeyword/0/0",function (data) {
                 _this.showData=data;
             });
             $.get("/commType/allType",function (data) {
@@ -264,17 +279,32 @@
 
     //图片选择抽屉显示图片
     Vue.component("drawerimg", {
-        template: "<el-drawer\n" +
-            "  title=\"我嵌套了表格!\"\n" +
+        template: "<el-drawer  class=\"abow_dialog\"" +
+            "  title=\"商品详情查看\"\n" +
             "  :visible.sync=\"table0\" " +
-            "  :before-close=\"handleClose\"" +
+            "  :before-close=\"handleClose\" " +
             "  direction=\"rtl\"\n" +
-            "  size=\"50%\">\n" +
-            "   <el-table :data=\"gridData\">\n" +
-            "      <el-table-column property=\"date\" label=\"日期\" width=\"150\"></el-table-column>\n" +
-            "      <el-table-column property=\"name\" label=\"姓名\" width=\"200\"></el-table-column>\n" +
-            "      <el-table-column property=\"address\" label=\"地址\"></el-table-column>\n" +
-            "    </el-table>\n" +
+            "  size=\"50%\"> " +
+            " <table > " +
+            "<tr><td width='20%'></td><td width='60%'><span><b>商品名称：</b>{{wares.waresName}}</span><br><span><b>商品价格：</b>{{wares.waresPrice}}</span><br><span><b>商品说明：</b>{{wares.waresRemarks}}</span></td><td width='20%' ></td></tr>" +
+            "  <tr v-for=\"url in wares.waresImg.split(',') \" v-if=\"url!=null&url!=''\"  ><td width='20%'></td>" +
+            "  <td style=\"width: 60%; height: 400px\" align='center' >" +
+            "    <el-image :src=\"imgpath+url\"   fit='cover' >" +
+            "      <div slot=\"placeholder\" class=\"image-slot\">\n" +
+            "        加载中<span class=\"dot\">...</span>\n" +
+            "      </div>\n" +
+            "    </el-image>\n" +
+            "</td><td width='20%'></td>" +
+            "  </tr>" +
+            "</table>" +
+            // "  <div class=\"block\"  v-for=\"url in wares.waresImg.split(',') \" v-if=\"url!=null&url!=''\" > " +
+            // "    <el-image :src=\"imgpath+url\" >" +
+            // "      <div slot=\"placeholder\" class=\"image-slot\">\n" +
+            // "        加载中<span class=\"dot\">...</span>\n" +
+            // "      </div>\n" +
+            // "    </el-image>\n" +
+            // "  </div>\n" +
+            // "</div> " +
             "</el-drawer>",
         data: function () {
             return {
@@ -286,11 +316,11 @@
                     address: '上海市普陀区金沙江路 1518 弄'
                 }],
                 formLabelWidth: '80px',
-                timer: null,
+                timer: null
             };
         },
         //获取父给的值
-        props:['table'],
+        props:['table','wares','imgpath'],
         methods: {
             handleClose: function (done) {
                 this.$emit('sendvaule', false);
@@ -310,7 +340,8 @@
         },
         created(){
             this.table0=this.table;
-
+            console.log(this.wares);
+            console.log(this.imgpath)
         }
     });
 </script>

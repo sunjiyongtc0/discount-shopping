@@ -35,4 +35,13 @@ public class CommodityService {
     public  int delWares(long id){
         return tCommodityWaresMapper.deleteByPrimaryKey(id);
     }
+
+    //home页展示效果数据
+     public  List<TCommodityWares>  findWaresByItemId(long id){
+        return tCommodityWaresMapper.findWaresByItemId(id);
+     }
+     public  List<TCommodityWares>  findWaresByCategoryId(long id){
+        return tCommodityWaresMapper.findWaresByCategoryId(id);
+     }
+
 }

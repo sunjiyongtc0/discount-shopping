@@ -65,10 +65,9 @@ public class CommodityController {
     @ResponseBody
     public  String delComm(@ModelAttribute TCommodityWares wares){
         String imgPath = wares.getWaresImg();
-
         if(cs.delWares(wares.getId())==1) {
            //图片附带删除
-            System.out.println(  DelFile.delImgs(imgPath));
+             DelFile.delImgs(imgPath);
         }
         return "ok";
     }
@@ -77,21 +76,26 @@ public class CommodityController {
 
 
 
-    @GetMapping("/commListByKeyword/{data}")
+    @GetMapping("/commListByKeyword/{type}/{id}")
     @ResponseBody
-    public JSONArray commListByKeyword(@PathVariable("data") String data){
-        System.out.println("data"+data);
+    public JSONArray commListByKeyword(@PathVariable("type") long type ,@PathVariable("id") long id){
         JSONArray ja =new JSONArray();
-        for (int i=0;i<19;i++){
-            JSONObject jb = new JSONObject();
-            jb.put("color",i);jb.put("name","商品"+i);
-            if(i%7==1) {
-                jb.put("img", "E://63ee5c97-1ac2-49be-a7f7-fcbcb99f9eca.jpg");
-            }else {
-                jb.put("img","https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg");
+        if (type==0) {
+            for (int i = 0; i < 19; i++) {
+                JSONObject jb = new JSONObject();
+                jb.put("waresRemarks", i);
+                jb.put("waresName", "商品" + i);
+                jb.put("waresImg", "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg");
+                jb.put("waresPrice", 240 + i);
+                jb.put("waresState", i % 2);
+                ja.add(jb);
             }
-            jb.put("price",240+i);jb.put("state",i%2);
-            ja.add(jb);
+        }else if(type==2){
+            List<TCommodityWares> lcw=cs.findWaresByCategoryId(id);
+            ja=JSONArray.parseArray(JSON.toJSONString(lcw));
+        }else if(type==3){
+            List<TCommodityWares> lcw=cs.findWaresByItemId(id);
+            ja=JSONArray.parseArray(JSON.toJSONString(lcw));
         }
         return ja;
     }

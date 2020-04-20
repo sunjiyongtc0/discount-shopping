@@ -12,13 +12,9 @@ public class HomeController {
 
     @RequestMapping("/index")
     public String index(){
-        System.out.println("aaaaaaaaaaaaa");
+
         return "home";
     }
 
-    @ResponseBody
-    @RequestMapping("/a")
-    public String  VALUE(){
-        return "adsasdsdadasdad";
-    }
+
 }

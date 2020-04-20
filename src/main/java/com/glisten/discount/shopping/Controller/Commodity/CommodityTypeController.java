@@ -162,11 +162,13 @@ public class CommodityTypeController {
         for (Map<String,Object> map:lt) {
             JSONObject jo=new JSONObject();
             jo.put("type",map.get("typeName"));
+            jo.put("id",map.get("id"));
             List<Map<String,Object>> lc=cts.findByType(Long.valueOf(map.get("id")+""));
             JSONArray category=new JSONArray();
             for (Map<String,Object> mp:lc) {
                 JSONObject categoryJSONObj=new JSONObject();
                 categoryJSONObj.put("name",mp.get("categoryName"));
+                categoryJSONObj.put("id",mp.get("id"));
                 List<Map<String,Object>> li=cts.findItemByCategory(Long.valueOf(mp.get("id")+""));
                 JSONArray item=new JSONArray();
                 for (Map<String,Object> m:li) {
