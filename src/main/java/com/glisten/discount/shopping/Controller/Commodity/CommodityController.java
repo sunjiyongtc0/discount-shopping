@@ -85,7 +85,7 @@ public class CommodityController {
                 JSONObject jb = new JSONObject();
                 jb.put("waresRemarks", i);
                 jb.put("waresName", "商品" + i);
-                jb.put("waresImg", "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg");
+                jb.put("waresImg", "f5010b4f-9c8d-4153-a340-0ac786c901c5.jpg");
                 jb.put("waresPrice", 240 + i);
                 jb.put("waresState", i % 2);
                 ja.add(jb);
