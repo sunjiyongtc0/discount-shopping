@@ -28,7 +28,7 @@ public class ImgController {
             File upload = new File(path.getAbsolutePath(),"static/images/upload/");
             if(!upload.exists()) upload.mkdirs();
             Imgpath=upload.getAbsolutePath()+"/";
-            System.out.println("upload url:"+Imgpath);
+//            System.out.println("upload url:"+Imgpath);
         }catch ( Exception e ){
             System.out.println(e.getMessage());
         }

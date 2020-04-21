@@ -44,4 +44,8 @@ public class CommodityService {
         return tCommodityWaresMapper.findWaresByCategoryId(id);
      }
 
+    public  List<TCommodityWares>  findWaresByKeyName(String key){
+        return tCommodityWaresMapper.findWaresByKeyName(key);
+    }
+
 }

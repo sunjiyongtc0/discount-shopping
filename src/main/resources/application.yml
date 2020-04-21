@@ -1,5 +1,9 @@
 server:
   port: 80
+  servlet:
+    session:
+      #设置session60分钟过期
+      timeout: PT60M
 spring:
   thymeleaf:
     cache: false

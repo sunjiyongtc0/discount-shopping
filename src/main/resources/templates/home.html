@@ -46,7 +46,7 @@
                 </el-submenu>
 
 
-                <el-menu-item  v-for="(t,i) in type"  :index="i+''"  v-if="t.category.length ==0"><span>{{t.type}}</span></el-menu-item>
+                <el-menu-item  v-for="(t,i) in type"  :index="i+''"  v-if="t.category.length ==0"  @click="open"><span>{{t.type}}</span></el-menu-item>
 
                 <el-menu-item :index="type.length+''" >
                     <div class="el-input el-input--small">
@@ -90,7 +90,7 @@
                                 <el-card class="box-card" >
                                     <div class="demo-image__placeholder">
                                         <div class="block">
-                                            <el-image :src="imgPath+cell.waresImg.split(',')[0]"></el-image>
+                                            <el-image style="width: 310px;height: 310px" :src="imgPath+cell.waresImg.split(',')[0]"></el-image>
                                             <br><span class="demonstration">{{cell.waresName}}</span> <span style="width: 30px"></span><span class="demonstration">{{cell.waresPrice}}</span>
                                             <br><span class="demonstration">{{cell.waresRemarks}}</span>
                                             <br><span class="demonstration">{{cell.waresState}}</span>
@@ -105,14 +105,16 @@
                 </template>
 
                 <template  v-if="!showleft">
-                    <div class="block">
-                        <span class="demonstration">默认 Hover 指示器触发</span>
-                        <el-carousel height="550px">
-                            <el-carousel-item v-for="item in 4" :key="item">
-                                <h3 class="small">{{ item }}</h3>
+
+                    <div align="center">
+                        <video src="../video/d1.mp4"width="100%" height="600px" type="video/mp4" loop="loop" autoplay="autoplay"  muted="muted" >
+                    </div>
+                    <div align="center">
+                        <el-carousel width="600px" height="600px">
+                            <el-carousel-item v-for="(item,i) in msgImgPath" :key="i">
                                 <div class="demo-image__placeholder">
                                     <div class="block">
-                                        <el-image :src="src"></el-image>
+                                        <el-image :src="item" style="height: 550px;width: 600px"></el-image>
                                     </div>
                                 </div>
                             </el-carousel-item>
@@ -171,12 +173,19 @@
             activeNames: ['1'],
             //logo
             logoPath:"../img/logo.jpg",
+            msgImgPath:["../img/m1.jpg","../img/m2.jpg","../img/m3.jpg"],
             showData:[],
             //图片目录文件
             imgPath:"../images/upload/",
             wares:[]
         },
         methods:{//方法属性；
+            open:function() {
+                this.$message({
+                    showClose: true,
+                    message: '敬请期待！'
+                });
+            },
             findRightData:function(type,id){
                 var _this=this;
                 $.get("/comm/commListByKeyword/"+type+"/"+id,function (data) {
@@ -221,13 +230,41 @@
             },
             findPage:function () {
                 if(this.search=='管理'||this.search=='guanli'){
-                    window.location.href='/comm/index';
-                }else{
+                    this.$prompt('请输入服务密码', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                    }).then(({ value }) => {
+                        if(value=='0'){
+                          var d=new Date();
+                          $.post("/comm/setSession",{time:d.getTime()},function (val) {
+                          if(val=="ok"){
+                              window.location.href="/comm/index";
+                          }
+                          })
+                        }else{
+                        this.$message.error("密码输入错误")
+                    }
+                }).catch(() => {
+                        // this.$message({
+                        //     type: 'info',
+                        //     message: '取消输入'
+                        // });
+                });
+
+
+                }else if(this.search==0){
                     var _this=this;
                     $.get("/comm/commListByKeyword/0/0",function (data) {
                         _this.showData=data;
                     });
                     this.showleft=true;
+                }else{
+                    var _this=this;
+                    $.get("/comm/commListByKeywords/"+this.search,function (data) {
+                        _this.showData=data;
+                    });
+                    this.showleft=true;
+
                 }
             }
 

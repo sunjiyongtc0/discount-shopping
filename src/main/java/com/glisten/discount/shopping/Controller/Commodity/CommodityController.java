@@ -7,10 +7,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.glisten.discount.shopping.Domain.TCommodityWares;
 import com.glisten.discount.shopping.Service.Commodity.CommodityService;
 import com.glisten.discount.shopping.Util.DelFile;
+import com.glisten.discount.shopping.Util.FindIp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -19,10 +24,28 @@ import java.util.Map;
 public class CommodityController {
 
     @Autowired
+    private HttpServletRequest request;
+
+    @Autowired
+    private HttpServletResponse response;
+
+    @Autowired
     private CommodityService cs;
 
+    @PostMapping("/setSession")
+    @ResponseBody
+    public String setSession(){
+        String t= request.getParameter("time");
+        if(Long.valueOf(t)>0){
+            String ip= FindIp.getIpAddr(request);
+            HttpSession session = request.getSession();
+            session.setAttribute(ip,t);
+        }
+        return "ok";
+    }
     @RequestMapping("/index")
-    public String  index(){
+    public String  CommIndex(){
+
         return "comm/commMain";
     }
 
@@ -99,5 +122,14 @@ public class CommodityController {
         }
         return ja;
     }
+
+    @GetMapping("/commListByKeywords/{key}")
+    @ResponseBody
+    public JSONArray commListByKeywords(@PathVariable("key") String key){
+        JSONArray ja =new JSONArray();
+        List<TCommodityWares> lcw=cs.findWaresByKeyName(key);
+        ja=JSONArray.parseArray(JSON.toJSONString(lcw));
+        return ja;
+}
 
 }
