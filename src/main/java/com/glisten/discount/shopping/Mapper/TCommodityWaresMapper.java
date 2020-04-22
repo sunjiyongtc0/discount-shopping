@@ -16,6 +16,9 @@ public interface TCommodityWaresMapper extends MyMapper<TCommodityWares> {
     @Select("select * from t_commodity_wares where category_id =#{cid} ")
     public List<TCommodityWares> findWaresByCategoryId(@Param("cid") long cid);
 
+    @Select("select * from t_commodity_wares where type_id =#{tid} ")
+    public List<TCommodityWares> findWaresByTypeId(@Param("tid") long cid);
+
 
     @Select("SELECT w.* FROM t_commodity_wares w INNER JOIN  t_commodity_type t  ON w.type_id=t.id " +
             " INNER JOIN t_commodity_category c ON c.id=w.category_id  " +

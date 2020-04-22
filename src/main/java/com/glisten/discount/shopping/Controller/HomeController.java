@@ -22,4 +22,8 @@ public class HomeController {
         return "m-home";
     }
 
+    @RequestMapping("/m-i")
+    public String mI(){
+        return "m-index";
+    }
 }

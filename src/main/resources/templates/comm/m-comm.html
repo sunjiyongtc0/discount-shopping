@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=640,user-scalable=no" />
+    <title>Title</title>
+    <title>Mobile phone</title>
+    <script th:src="@{/js/jQuery.js}"></script>
+    <script th:src="@{/vue/vue.js}"></script>
+    <script th:src="@{/MUI/mui.min.js}"></script>
+    <script th:src="@{/MUI/mui.view.js}"></script>
+    <script  th:src="@{/MUI/mui.zoom.js}"  ></script>
+    <script  th:src="@{/MUI/mui.previewimage.js}"  ></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.previewimage.css}">
+
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="mui-content">
+    <div class="mui-content-padded">
+        <p>这是图片放大预览示例，点击如下图片体验全屏预览功能</p>
+        <p>
+            <img src="../img/m1.jpg" data-preview-src="" data-preview-group="1">
+        </p>
+        <p>图片全屏后，双击或双指缩放均可对图片进行放大、缩小操作，左右滑动可查看同组(data-preview-group相同的图片为一组)其它图片，点击会关闭预览</p>
+        <p>
+            <img src="../img/m2.jpg" data-preview-src="" data-preview-group="1">
+        </p>
+        <p>第三张图片，纯粹为了占位： </p>
+        <p>
+            <img src="../img/m3.jpg" data-preview-src="" data-preview-group="1">
+        </p>
+    </div>
+</div>
+
+
+</body>
+</html>

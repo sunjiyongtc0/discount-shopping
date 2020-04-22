@@ -49,6 +49,12 @@ public class CommodityController {
         return "comm/commMain";
     }
 
+    @RequestMapping("/m-i")
+    public String  MI(){
+
+        return "comm/m-comm";
+    }
+
     @PostMapping("/addComm")
     @ResponseBody
 //    public String  addComm(@RequestParam Map<String, Object> params){
@@ -113,6 +119,10 @@ public class CommodityController {
                 jb.put("waresState", i % 2);
                 ja.add(jb);
             }
+        }else if(type==1){
+            List<TCommodityWares> lcw=cs.findWaresByTypeId(id);
+            ja=JSONArray.parseArray(JSON.toJSONString(lcw));
+
         }else if(type==2){
             List<TCommodityWares> lcw=cs.findWaresByCategoryId(id);
             ja=JSONArray.parseArray(JSON.toJSONString(lcw));
