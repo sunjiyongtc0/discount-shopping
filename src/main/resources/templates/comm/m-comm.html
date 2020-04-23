@@ -19,23 +19,31 @@
     </style>
 </head>
 <body>
-<div class="mui-content">
-    <div class="mui-content-padded">
-        <p>这是图片放大预览示例，点击如下图片体验全屏预览功能</p>
-        <p>
-            <img src="../img/m1.jpg" data-preview-src="" data-preview-group="1">
-        </p>
-        <p>图片全屏后，双击或双指缩放均可对图片进行放大、缩小操作，左右滑动可查看同组(data-preview-group相同的图片为一组)其它图片，点击会关闭预览</p>
-        <p>
-            <img src="../img/m2.jpg" data-preview-src="" data-preview-group="1">
-        </p>
-        <p>第三张图片，纯粹为了占位： </p>
-        <p>
-            <img src="../img/m3.jpg" data-preview-src="" data-preview-group="1">
-        </p>
+<div id="capp">
+    <input  type="hidden"   th:value="${w}"  id="w">
+    <div class="mui-content" align="center">
+        <div class="mui-content-padded">
+            <p>{{wares.waresName}}</p>
+            <p>{{wares.waresPrice}}</p>
+            <p  v-for=" (p,i) in wares.waresImg.split(',')">
+                <img v-if="p!=null&p!=''" :src="imgPath+p" data-preview-src="" data-preview-group="1">
+            </p>
+
+        </div>
     </div>
 </div>
-
-
 </body>
+<script th:inline="javascript">
+    new Vue({
+        el:'#capp',
+        data:{
+            imgPath :"/images/upload/",
+            wares:{}
+        },
+        created(){
+            this.wares=JSON.parse($("#w").val());
+        }
+    }) ;
+
+</script>
 </html>

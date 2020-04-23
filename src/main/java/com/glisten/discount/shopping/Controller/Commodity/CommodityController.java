@@ -11,6 +11,7 @@ import com.glisten.discount.shopping.Util.FindIp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -49,10 +50,12 @@ public class CommodityController {
         return "comm/commMain";
     }
 
-    @RequestMapping("/m-i")
-    public String  MI(){
-
-        return "comm/m-comm";
+    @RequestMapping("/m-i/{id}")
+    public ModelAndView MI(@PathVariable("id") long id){
+        ModelAndView mav=new ModelAndView();
+        mav.setViewName("comm/m-comm");
+        mav.addObject("w",JSON.toJSON(cs.findWaresById(id)));
+        return mav;
     }
 
     @PostMapping("/addComm")

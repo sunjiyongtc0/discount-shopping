@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <title>YOUNG-DEMO</title>
+</head>
+<body>
+<p>数据错误！！！！！</p>
+<br>异常时间：<span th:text="${nowDate}"></span>
+<br>异常内容：<span th:text="${errorMessage}"></span>
+<br>异常连接：<span th:text="${url}"></span>
+<br>异常详情：
+<p  th:each="line : ${stackTrace}" th:text="${line}">  </p>
+</body>
+</html>

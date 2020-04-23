@@ -3,112 +3,112 @@
 <!--<html>-->
 <!--<head>-->
 
-    <!--<meta charset="utf-8">-->
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
-    <!--<title>Mobile phone</title>-->
-    <!--<script th:src="@{/js/jQuery.js}"></script>-->
-    <!--<script th:src="@{/vue/vue.js}"></script>-->
-    <!--<script th:src="@{/MUI/mui.min.js}"></script>-->
-    <!--<script th:src="@{/MUI/mui.view.js}"></script>-->
-    <!--<script  th:src="@{/MUI/mui.zoom.js}"  ></script>-->
-    <!--<script  th:src="@{/MUI/mui.previewimage.js}"  ></script>-->
-    <!--<link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.min.css}">-->
-    <!--<link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.previewimage.css}">-->
+<!--<meta charset="utf-8">-->
+<!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
+<!--<title>Mobile phone</title>-->
+<!--<script th:src="@{/js/jQuery.js}"></script>-->
+<!--<script th:src="@{/vue/vue.js}"></script>-->
+<!--<script th:src="@{/MUI/mui.min.js}"></script>-->
+<!--<script th:src="@{/MUI/mui.view.js}"></script>-->
+<!--<script  th:src="@{/MUI/mui.zoom.js}"  ></script>-->
+<!--<script  th:src="@{/MUI/mui.previewimage.js}"  ></script>-->
+<!--<link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.min.css}">-->
+<!--<link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.previewimage.css}">-->
 
-    <!--<style>-->
-        <!--.mui-row.mui-fullscreen>[class*="mui-col-"] {-->
-            <!--height: 100%;-->
-        <!--}-->
-        <!--.mui-col-xs-3,-->
-        <!--.mui-control-content {-->
-            <!--overflow-y: auto;-->
-            <!--height: 100%;-->
-        <!--}-->
-        <!--.mui-segmented-control .mui-control-item {-->
-            <!--line-height: 50px;-->
-            <!--width: 100%;-->
-        <!--}-->
-        <!--.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {-->
-            <!--background-color: #fff;-->
-        <!--}-->
-    <!--</style>-->
+<!--<style>-->
+<!--.mui-row.mui-fullscreen>[class*="mui-col-"] {-->
+<!--height: 100%;-->
+<!--}-->
+<!--.mui-col-xs-3,-->
+<!--.mui-control-content {-->
+<!--overflow-y: auto;-->
+<!--height: 100%;-->
+<!--}-->
+<!--.mui-segmented-control .mui-control-item {-->
+<!--line-height: 50px;-->
+<!--width: 100%;-->
+<!--}-->
+<!--.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {-->
+<!--background-color: #fff;-->
+<!--}-->
+<!--</style>-->
 <!--</head>-->
 <!--<body>-->
-    <!--<div id="app">-->
-        <!--<div class="mui-content mui-row mui-fullscreen">-->
-            <!--<div class="mui-col-xs-3">-->
-                <!--<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">-->
-                    <!--<a class="mui-control-item" v-for="(t,index) in type"   href="#content1"  :index="i">{{t.type}}</a>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div id="segmentedControlContents" class="mui-col-xs-9" style="border-left: 1px solid #c8c7cc;">-->
-                <!--<div   id="content1"   class="mui-control-content">-->
-                    <!--<div class="mui-card-header mui-card-media" v-for="(j,index) in showData" :index="j">-->
-                        <!--<img :src="imgPath+j.waresImg.split(',')[0]" />-->
-                        <!--<div class="mui-media-body">-->
-                            <!--<b>{{j.waresName}}</b>-->
-                            <!--<p>{{j.waresPrice}}</p>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
+<!--<div id="app">-->
+<!--<div class="mui-content mui-row mui-fullscreen">-->
+<!--<div class="mui-col-xs-3">-->
+<!--<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">-->
+<!--<a class="mui-control-item" v-for="(t,index) in type"   href="#content1"  :index="i">{{t.type}}</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div id="segmentedControlContents" class="mui-col-xs-9" style="border-left: 1px solid #c8c7cc;">-->
+<!--<div   id="content1"   class="mui-control-content">-->
+<!--<div class="mui-card-header mui-card-media" v-for="(j,index) in showData" :index="j">-->
+<!--<img :src="imgPath+j.waresImg.split(',')[0]" />-->
+<!--<div class="mui-media-body">-->
+<!--<b>{{j.waresName}}</b>-->
+<!--<p>{{j.waresPrice}}</p>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
 <!--</body>-->
 <!--<script>-->
 
-    <!--// vue 可以直接通过对象.的方式直接调用属性：data，computed；但是el,data也是属性，叫实例属性-->
-    <!--new Vue({-->
-        <!--el:'#app',-->
-        <!--data:{-->
-            <!--type:[],-->
-            <!--msgImgPath:["../img/m1.jpg","../img/m2.jpg","../img/m3.jpg"],-->
-            <!--showData:[],-->
-            <!--//图片目录文件-->
-            <!--imgPath:"../images/upload/",-->
-            <!--RightShow:false-->
-        <!--},-->
-        <!--methods:{//方法属性；-->
-            <!--control:function (val) {-->
-                <!--console.log(val)-->
-            <!--},-->
-            <!--takeDate:function (val) {-->
-                <!--var _this=this;-->
-                <!--$.get("/comm/commListByKeyword/1/"+val,function (data) {-->
-                    <!--_this.showData=data;-->
-                    <!--_this.RightShow=true;-->
-                <!--});-->
-            <!--}-->
-        <!--},-->
-        <!--computed:{-->
-            <!--listTemp:function(){-->
-                <!--let index =0;-->
-                <!--let count = 1;-->
-                <!--let arrTemp = [];-->
-                <!--let showData = this.showData;-->
-                <!--for(let i=0;i<this.showData.length;i++){-->
-                    <!--index = parseInt(i/count);-->
-                    <!--if (arrTemp.length <= index) {-->
-                        <!--arrTemp.push([]);-->
-                    <!--}-->
-                    <!--arrTemp[index].push(showData[i])-->
-                <!--}-->
-                <!--return arrTemp-->
-            <!--}-->
+<!--// vue 可以直接通过对象.的方式直接调用属性：data，computed；但是el,data也是属性，叫实例属性-->
+<!--new Vue({-->
+<!--el:'#app',-->
+<!--data:{-->
+<!--type:[],-->
+<!--msgImgPath:["../img/m1.jpg","../img/m2.jpg","../img/m3.jpg"],-->
+<!--showData:[],-->
+<!--//图片目录文件-->
+<!--imgPath:"../images/upload/",-->
+<!--RightShow:false-->
+<!--},-->
+<!--methods:{//方法属性；-->
+<!--control:function (val) {-->
+<!--console.log(val)-->
+<!--},-->
+<!--takeDate:function (val) {-->
+<!--var _this=this;-->
+<!--$.get("/comm/commListByKeyword/1/"+val,function (data) {-->
+<!--_this.showData=data;-->
+<!--_this.RightShow=true;-->
+<!--});-->
+<!--}-->
+<!--},-->
+<!--computed:{-->
+<!--listTemp:function(){-->
+<!--let index =0;-->
+<!--let count = 1;-->
+<!--let arrTemp = [];-->
+<!--let showData = this.showData;-->
+<!--for(let i=0;i<this.showData.length;i++){-->
+<!--index = parseInt(i/count);-->
+<!--if (arrTemp.length <= index) {-->
+<!--arrTemp.push([]);-->
+<!--}-->
+<!--arrTemp[index].push(showData[i])-->
+<!--}-->
+<!--return arrTemp-->
+<!--}-->
 
-        <!--},-->
-        <!--created(){-->
-            <!--var _this=this;-->
-            <!--$.get("/commType/allType",function (data) {-->
-                <!--_this.type=data;-->
-            <!--});-->
+<!--},-->
+<!--created(){-->
+<!--var _this=this;-->
+<!--$.get("/commType/allType",function (data) {-->
+<!--_this.type=data;-->
+<!--});-->
 
-            <!--$.get("/comm/commListByKeywords/"+1,function (data) {-->
-                <!--_this.showData=data;-->
-            <!--});-->
+<!--$.get("/comm/commListByKeywords/"+1,function (data) {-->
+<!--_this.showData=data;-->
+<!--});-->
 
-        <!--}-->
-    <!--}) ;-->
+<!--}-->
+<!--}) ;-->
 <!--</script>-->
 <!--</html>-->
 
@@ -162,9 +162,9 @@
         <div id="segmentedControlContents" class="mui-col-xs-8" style="border-left: 1px solid #c8c7cc; overflow-y: auto;">
             <div class="mui-card" v-for="(j,ind) in showData" :index="ind" @click="openW(j)" style="width: 60vw;margin: 1vw auto;" >
                 <div class="mui-card-header mui-card-media" >
-                <div class="mui-card-content">
-                    <img  :src="imgPath+j.waresImg.split(',')[0]" alt width="100%" height="200vw" />
-                </div>
+                    <div class="mui-card-content">
+                        <img  :src="imgPath+j.waresImg.split(',')[0]" alt width="100%" height="200vw" />
+                    </div>
                     <div class="mui-card-footer">
                         <a class="mui-card-link">{{j.waresName}}</a>
                         <a class="mui-card-link">{{j.waresPrice}}</a>
@@ -187,7 +187,8 @@
             showData:[],
             //图片目录文件
             imgPath:"../images/upload/",
-            RightShow:false
+            RightShow:false,
+            alertName:""
         },
         methods:{//方法属性；
             control:function (val) {
@@ -199,15 +200,21 @@
                 $.get("/comm/commListByKeyword/1/"+val,function (data) {
                     _this.showData=data;
                     _this.RightShow=true;
+                    if(_this.showData.length==0){
+                        mui.alert('敬请期待！', '暂无数据', function() {
+                            // info.innerText = '你刚关闭了警告框';
+                        });
+                    }
                 });
                 if(val==5||val==9){
                     $(".mui-control-content").css("display","none");
+
                 }
+
             },
             openW:function(val){
-                console.log(val);
-                window.location="/comm/m-i";
-                }
+                window.location.href="/comm/m-i/"+val.id;
+            }
         },
         computed:{
             listTemp:function(){
