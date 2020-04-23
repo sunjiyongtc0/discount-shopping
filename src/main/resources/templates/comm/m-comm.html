@@ -21,6 +21,7 @@
 <body>
 <div id="capp">
     <input  type="hidden"   th:value="${w}"  id="w">
+   <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" ><span>返回</span></a>
     <div class="mui-content" align="center">
         <div class="mui-content-padded">
             <p>{{wares.waresName}}</p>
@@ -28,7 +29,9 @@
             <p  v-for=" (p,i) in wares.waresImg.split(',')">
                 <img v-if="p!=null&p!=''" :src="imgPath+p" data-preview-src="" data-preview-group="1">
             </p>
-
+            <div style="height: 13vw">
+                <span style=" color: #999">已经到底了</span>
+            </div>
         </div>
     </div>
 </div>

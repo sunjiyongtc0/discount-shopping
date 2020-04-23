@@ -157,6 +157,9 @@
         <div class="mui-col-xs-4">
             <div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
                 <span class="mui-control-item" v-for="(t,index) in type"  @click="takeDate(t.id)"   :index="index">{{t.type}}</span>
+                <div class="mui-input-row mui-search">
+                    <input type="search" class="mui-input-clear"  v-model="search"  @blur="findPage" @keydown="findPage"  placeholder="快速搜索">
+                </div>
             </div>
         </div>
         <div id="segmentedControlContents" class="mui-col-xs-8" style="border-left: 1px solid #c8c7cc; overflow-y: auto;">
@@ -188,7 +191,8 @@
             //图片目录文件
             imgPath:"../images/upload/",
             RightShow:false,
-            alertName:""
+            alertName:"",
+            search:""
         },
         methods:{//方法属性；
             control:function (val) {
@@ -214,6 +218,52 @@
             },
             openW:function(val){
                 window.location.href="/comm/m-i/"+val.id;
+            },
+            findPage:function () {
+                if(this.search!="") {
+                    if(this.search=='管理'||this.search=='guanli'){
+                        this.$prompt('请输入服务密码', '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                        }).then(({ value }) => {
+                            if(value=='0'){
+                            var d=new Date();
+                            $.post("/comm/setSession",{time:d.getTime()},function (val) {
+                                if(val=="ok"){
+                                    window.location.href="/comm/index";
+                                }
+                            })
+                        }else{
+                            this.$message.error("密码输入错误")
+                        }
+                    }).catch(() => {
+                            // this.$message({
+                            //     type: 'info',
+                            //     message: '取消输入'
+                            // });
+                        });
+
+
+                    }else if(this.search==0){
+                        var _this=this;
+                        $.get("/comm/commListByKeyword/0/0",function (data) {
+                            _this.showData=data;
+                        });
+                        this.showleft=true;
+                    }else{
+                        var _this=this;
+                        $.get("/comm/commListByKeywords/"+this.search,function (data) {
+                            _this.showData=data;
+                        });
+                        this.showleft=true;
+                    }
+                }else{
+                    var _this=this;
+                    $(".mui-control-content").css("display","block");
+                    $.get("/comm/commListByKeywords/"+1,function (data) {
+                        _this.showData=data;
+                    });
+                }
             }
         },
         computed:{

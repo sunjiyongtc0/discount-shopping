@@ -15,35 +15,50 @@
     <link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.previewimage.css}">
 
     <style>
-    .mui-backdrop{
-        z-index:99;
-        position: relative;
-    }
-    .mui-table-view{
-        z-index:100;
-        position: relative;
-    }
+        .mui-backdrop{
+        z-index: 8;
+        position: fixed;
+        }
+        .mui-btn{
+             background-color: #f7f7f7
+        }
     </style>
 </head>
 <body>
 <div id="mapp" >
     <header class="mui-bar mui-bar-nav" style="height: 10vw">
-        <a class="docs-nav-trigger mui-icon mui-icon-bars mui-pull-right js-docs-nav-trigger" href="#popover" id="openPopover" ></a>
-        <h1 class="mui-title" align="center">闪闪帮你买</h1>
-        <button @click="backHome"   class=" mui-action-back mui-btn mui-btn-blue mui-btn-link mui-btn-nav mui-pull-left"><span class="mui-icon mui-icon-left-nav"></span>首页</button>
-        <div id="popover" class="mui-popover">
-            <ul class="mui-table-view">
-                <!--<li class="mui-table-view-cell"><a @click="about()">关于我们</a></li>-->
-                <li class="mui-table-view-cell"><a href="#">联系我们</a></li>
-            </ul>
-        </div>
+        <!--<a class="docs-nav-trigger mui-icon mui-icon-bars mui-pull-right js-docs-nav-trigger" href="#popover" id="openPopover" ></a>-->
+        <h1 class="mui-title" align="center"><img align="center" style="width: 40px; height: 40px"  :src="logoPath"> 闪闪帮你买</h1>
+        <!--<button type="button" class=" mui-btn mui-icon mui-icon-home"  @click="backHome" >首页</button>-->
+        <!--<div id="popover" class="mui-popover">-->
+            <!--<ul class="mui-table-view">-->
+                <!--<li class="mui-table-view-cell"><a >关于我们</a></li>-->
+                <!--<li class="mui-table-view-cell"><a href="#">联系我们</a></li>-->
+            <!--</ul>-->
+        <!--</div>-->
     </header>
     <div class="mui-iframe-wrapper" style="top: 11vw; bottom: 0px; ">
         <iframe  v-if="alternate" th:src="@{/home/m-index}" id="list" name="list"></iframe>
         <div id="vi" align="center" v-if="!alternate">
-            <video   src="../video/d1.mp4"width="100%" height="600px" type="video/mp4" loop="loop" autoplay="autoplay"  muted="muted" >
-        </div>
+        <video   src="../video/d1.mp4"width="100%" height="600px" type="video/mp4" loop="loop" autoplay="autoplay"  muted="muted" >
     </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab" style="height:12vw">
+    <a class="mui-tab-item mui-active" @click="about()">
+        <span class="mui-icon mui-icon-home"></span><span>首页</span>
+    </a>
+    <a class="mui-tab-item " id="bars"  @click="backHome" >
+            <span class="mui-icon mui-icon-bars"   ></span><span>商品</span>
+    </a>
+     <a class="mui-tab-item ">
+         <span class="mui-icon mui-icon-spinner-cycle mui-spin"></span><span>活动</span>
+     </a>
+    <a class="mui-tab-item ">
+            <span class="mui-icon mui-icon-info"></span><span>关于我们</span>
+    </a>
+    </nav>
+
+
 </div>
 
 </body>
@@ -61,26 +76,28 @@
     new Vue({
         el: '#mapp',
         data:{
-            alternate:true
+            alternate:true,
+            logoPath:"../img/logo.jpg",
 
         },
         methods: {
             backHome:function () {
-                $("#list").src("/home/m-index");
+                mui('.mui-popover').popover('hide')
+                $("#list").attr("src","/home/m-index");
                 if(!this.alternate){
                     this.alternate=true;
                 }
 
             },
             about:function () {
-                // $("#list").src("/#");
+                mui('.mui-popover').popover('hide')
+                $("#list").attr("src","/#");
                 this.alternate=false;
 
             }
 
         },
         created() {
-
 
         }
     })
