@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.glisten.discount.shopping.Domain.TCommodityWares;
+import com.glisten.discount.shopping.Interceptor.Token;
 import com.glisten.discount.shopping.Service.Commodity.CommodityService;
 import com.glisten.discount.shopping.Util.DelFile;
 import com.glisten.discount.shopping.Util.FindIp;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import tk.mybatis.mapper.util.StringUtil;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -37,13 +39,26 @@ public class CommodityController {
     @ResponseBody
     public String setSession(){
         String t= request.getParameter("time");
-        if(Long.valueOf(t)>0){
-            String ip= FindIp.getIpAddr(request);
-            HttpSession session = request.getSession();
-            session.setAttribute(ip,t);
+        String secret= request.getParameter("secret");
+        if(secret.equals("0")){
+            if(Long.valueOf(t)>0){
+                String ip= FindIp.getIpAddr(request);
+                HttpSession session = request.getSession();
+                session.setAttribute(ip,t);
+            }
+            return "ok";
+        }else{
+            return "error";
         }
-        return "ok";
     }
+
+    @PostMapping("/getToken")
+    @ResponseBody
+    @Token(generate = true)
+    public String getToken(){
+        return  (String) request.getSession().getAttribute("token");
+    }
+
     @RequestMapping("/index")
     public String  CommIndex(){
 
@@ -60,11 +75,14 @@ public class CommodityController {
 
     @PostMapping("/addComm")
     @ResponseBody
-//    public String  addComm(@RequestParam Map<String, Object> params){
+    @Token(remove = true)
     public String  addComm(@ModelAttribute TCommodityWares wares){
-        System.out.println(wares.toString());
         if(wares.getId()==null){
-            cs.SaveWares(wares);
+           if( StringUtil.isNotEmpty(wares.getWaresName())){
+               cs.SaveWares(wares);
+           }else{
+               return "error";
+           }
         }else{
             cs.updateWares(wares);
         }

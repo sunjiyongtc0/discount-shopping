@@ -234,16 +234,16 @@
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                     }).then(({ value }) => {
-                        if(value=='0'){
+                        // if(value=='0'){
                           var d=new Date();
-                          $.post("/comm/setSession",{time:d.getTime()},function (val) {
+                          $.post("/comm/setSession",{time:d.getTime(),secret:value},function (val) {
                           if(val=="ok"){
                               window.location.href="/comm/index";
+                          }else{
+                              this.$message.error("密码输入错误");
                           }
-                          })
-                        }else{
-                        this.$message.error("密码输入错误")
-                    }
+                        });
+                    // }
                 }).catch(() => {
                         // this.$message({
                         //     type: 'info',

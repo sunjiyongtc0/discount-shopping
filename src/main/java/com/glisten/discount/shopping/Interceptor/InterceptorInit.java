@@ -22,9 +22,12 @@ public class InterceptorInit implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-
+        //404也跳主页
         registry.addInterceptor(new AuthorityInterceptor()).addPathPatterns("/**");
+        //图片防盗链
         registry.addInterceptor(new RefererInterceptor()).addPathPatterns("/images/upload/**");
+        //防表单重复注册
+        registry.addInterceptor(new TokenInterceptor()).addPathPatterns("/comm/*");
 
     }
 

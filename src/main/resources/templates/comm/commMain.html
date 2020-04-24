@@ -61,7 +61,7 @@
 
                 <div v-if="commShow">
                     <div v-if="editcomm"> <editcomm  ></editcomm></div>
-                    <div v-if="commAdd"><addcomm></addcomm></div>
+                    <div v-if="commAdd"><addcomm  :commadd="commAdd"></addcomm></div>
                     <!--   利用 sendvaule 方法，将子的值修改父类值 -->
                     <div v-else><showcomm @sendvaule="getvaule"> </showcomm></div>
                 </div>
@@ -352,7 +352,7 @@
             "                    <el-col :span=\"24\"><div class=\"grid-content bg-purple\">\n" +
             "                        <el-card class=\"box-card\" style=\"height: 800px\">\n" +
             "                            <h5 align=\"center\"> 新建商品</h5>\n" +
-            "                            <el-form ref=\"form\" :model=\"form\" label-width=\"80px\">\n" +
+            "                            <el-form ref=\"form\" :model=\"form\" label-width=\"80px\">" +
             "                                <el-form-item label=\"商品名称\">\n" +
             "                                    <el-input v-model=\"form.waresName\"></el-input>\n" +
             "                                </el-form-item>\n" +
@@ -447,9 +447,12 @@
                 dialogImageUrl: '',
                 dialogVisible: false,
                 disabled: false,
-                fileName:''
+                fileName:'',
+                token0:""
             }
         },
+        //获取父给的值
+        props:['commadd'],
         methods:{
             findcategory:function(val){
                 var _this=this;
@@ -514,10 +517,13 @@
                 if(response!='') {
                     this.form.waresImg += response+",";
                     if(this.form.waresImg.split(",").length-1==this.fileLIst.length){
-                        $.post("/comm/addComm",this.form,function (data) {
+                        var formData = this.form;
+                            formData.token=this.token0;
+                        $.post("/comm/addComm",formData,function (data) {
                             if(data=='ok'){
                                 _this.onCancel();
-
+                            }else{
+                                this.$message.error("数据提交异常");
                             }
                         })
                     }
@@ -535,8 +541,18 @@
                     waresImg:''
                 };
                 this.$refs.upload0.clearFiles();
+                var _this=this;
+                $.post("/comm/getToken",function (val) {
+                    _this.token0=val;
+                })
             }
 
+        },
+        watch: {//监控属性；监控参数
+            token0:function (newValue,oldValue) {
+            },
+            commadd:function (newValue,oldValue) {
+            }
         },
         created() {
             var _this = this;
@@ -550,6 +566,13 @@
             $.get("/commType/typeList", function (data0) {
                 _this.type = data0;
             });
+            //如果首次加载，，获取token值
+            if(this.commadd){
+                var _this=this;
+                $.post("/comm/getToken",function (val) {
+                    _this.token0=val;
+                })
+            }
         }
     });
 
@@ -664,7 +687,7 @@
             })
             $.get("/img/imgPath",function (data) {
                 // _this.imgPath=data;
-                _this.imgPath="../images/upload/";
+                _this.imgPath="/images/upload/";
             })
         }
     });
@@ -1074,7 +1097,7 @@
         data: {
             ct:-1,
             commShow:true,
-            commAdd:true,
+            commAdd:false,
             editcomm:false
         },
         methods: {
@@ -1089,8 +1112,9 @@
             },
             changeComm:function(data){
                 this.commShow=true;
-                this.ct =-1
+                this.ct =-1;
                 this.commAdd=data;
+
             },
             handleOpen:function(key, keyPath) {
                 this.commShow=true;
