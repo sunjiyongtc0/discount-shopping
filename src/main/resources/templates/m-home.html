@@ -288,7 +288,7 @@
             $.get("/commType/allType",function (data) {
                 _this.type=data;
             });
-            $.get("/comm/commListByKeywords/"+1,function (data) {
+            $.get("/comm/commListByKeywords/",function (data) {
                 _this.showData=data;
             });
         }

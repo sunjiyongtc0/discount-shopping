@@ -185,7 +185,8 @@
                 fileName:'',
                 //判断添加几个图片
                 imgNew:0,
-                imgNum:0
+                imgNum:0,
+                token0:""
             }
         },
         methods:{
@@ -221,8 +222,8 @@
                     var imgs=this.form.waresImg.split(",");
                     for(var i=0;i<imgs.length;i++){
                         for(var j=0;j<this.fileList.length;j++){
-                            imgnemes+=this.fileList[j].name+",";
                             if(imgs[i]==this.fileList[j].name){
+                                imgnemes+=this.fileList[j].name+",";
                                 this.fileList.remove(this.fileList[j]);
                             }
                         }
@@ -232,8 +233,12 @@
                         this.$refs.upload0.submit();
                     }else{
                         var _this=this;
-                        this.form.waresImg=imgnemes;
-                        $.post("/comm/addComm",this.form,function (data) {
+                        // this.form.waresImg=imgnemes;
+                        // $.post("/comm/addComm",this.form,function (data) {
+                        var formData = this.form;
+                        formData.token=this.token0;
+                        formData.waresImg=imgnemes;
+                        $.post("/comm/addComm",formData,function (data) {
                             if(data=='ok'){
                                 _this.onCancel();
                             }
@@ -264,14 +269,26 @@
                 this.imgNum+=1;
                 if(response!='') {
                     this.form.waresImg += response+",";
-                    console.log(this.form.waresImg)
-                    console.log(this.fileList)
+
                     if(this.imgNum==this.fileList.length){
-                        $.post("/comm/addComm",this.form,function (data) {
+                        var formData = this.form;
+                            formData.token=this.token0;
+                            $.post("/comm/addComm",formData,function (data) {
                             if(data=='ok'){
-                                _this.handleClose();
+                                _this.$message({
+                                    message: '创建完成！',
+                                    type: 'success'
+                                });
+                                _this.onCancel();
+                            }else{
+                                this.$message.error("数据提交异常");
                             }
                         })
+                        // $.post("/comm/addComm",this.form,function (data) {
+                        //     if(data=='ok'){
+                        //         _this.handleClose();
+                        //     }
+                        // })
                     }
                 }
                 _this.dialogFormVisible = false
@@ -292,6 +309,10 @@
                 };
                 this.fileList=[];
                 this.dialogFormVisible = false;
+                var _this=this;
+                $.post("/comm/getToken",function (val) {
+                    _this.token0=val;
+                })
             },
             handleClose:function () {
                 this.form={
@@ -342,7 +363,9 @@
             comms.$on("sendshow",function (data) {
                 _this.dialogFormVisible=data;
             });
-
+            $.post("/comm/getToken",function (val) {
+                _this.token0=val;
+            })
         }
     });
 
@@ -517,8 +540,8 @@
                 if(response!='') {
                     this.form.waresImg += response+",";
                     if(this.form.waresImg.split(",").length-1==this.fileLIst.length){
-                        var formData = this.form;
-                            formData.token=this.token0;
+                            var formData = this.form;
+                                formData.token=this.token0;
                         $.post("/comm/addComm",formData,function (data) {
                             if(data=='ok'){
                                 _this.$message({

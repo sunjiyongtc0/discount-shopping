@@ -154,9 +154,12 @@ public class CommodityController {
         return ja;
     }
 
-    @GetMapping("/commListByKeywords/{key}")
+    @GetMapping(value = {"/commListByKeywords/{key}","/commListByKeywords/"})
     @ResponseBody
-    public JSONArray commListByKeywords(@PathVariable("key") String key){
+    public JSONArray commListByKeywords(@PathVariable(value = "key" ,required = false) String key){
+        if(StringUtil.isEmpty(key)){
+            key="";
+        }
         JSONArray ja =new JSONArray();
         List<TCommodityWares> lcw=cs.findWaresByKeyName(key);
         ja=JSONArray.parseArray(JSON.toJSONString(lcw));
