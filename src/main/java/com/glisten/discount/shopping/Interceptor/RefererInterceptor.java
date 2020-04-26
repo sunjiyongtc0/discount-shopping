@@ -37,7 +37,6 @@ public class RefererInterceptor implements HandlerInterceptor {
             return false;
         }
         // 首先判断请求域名和referer域名是否相同
-        System.out.println(url);
         if (!host.equals(url.getHost())) {
             // 如果不等，判断是否在白名单中
 //            if (properties.getRefererDomain() != null) {

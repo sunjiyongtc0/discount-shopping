@@ -521,6 +521,10 @@
                             formData.token=this.token0;
                         $.post("/comm/addComm",formData,function (data) {
                             if(data=='ok'){
+                                _this.$message({
+                                    message: '创建完成！',
+                                    type: 'success'
+                                });
                                 _this.onCancel();
                             }else{
                                 this.$message.error("数据提交异常");

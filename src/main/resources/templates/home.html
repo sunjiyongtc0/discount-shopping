@@ -233,6 +233,8 @@
                     this.$prompt('请输入服务密码', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
+                        inputPattern: /^[a-zA-Z0-9]{0,10}$/,
+                        inputErrorMessage: '密码格式不对'
                     }).then(({ value }) => {
                         // if(value=='0'){
                           var d=new Date();

@@ -46,7 +46,6 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
                     String formToken = UUID.randomUUID().toString();
                     session.setAttribute(TOKEN, formToken);
                     logger.info("创建表单提交令牌成功，token:" + formToken);
-                    System.out.println("创建表单提交令牌成功，token:" + formToken);
                     return true;
                 }
 

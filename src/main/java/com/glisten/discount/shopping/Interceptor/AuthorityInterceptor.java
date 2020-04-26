@@ -38,7 +38,6 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             if(session.getAttribute(ip)!=null){
                         return true;
             }else{
-                System.out.println("未获取到任何session");
                 response.sendRedirect("/home/index");
                 return false;
             }
