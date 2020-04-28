@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.glisten.discount.shopping.Domain.TCommodityWares;
+import com.glisten.discount.shopping.Interceptor.Log;
 import com.glisten.discount.shopping.Interceptor.Token;
 import com.glisten.discount.shopping.Service.Commodity.CommodityService;
 import com.glisten.discount.shopping.Util.DelFile;
@@ -59,6 +60,7 @@ public class CommodityController {
         return  (String) request.getSession().getAttribute("token");
     }
 
+    @Log("管理操作")
     @RequestMapping("/index")
     public String  CommIndex(){
 

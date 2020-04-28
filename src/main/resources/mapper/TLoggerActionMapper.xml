@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glisten.discount.shopping.Mapper.TLoggerActionMapper">
+    <resultMap id="BaseResultMap" type="com.glisten.discount.shopping.Domain.TLoggerAction">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="host_ip" jdbcType="varchar" property="hostIp" />
+        <result column="action_time" jdbcType="varchar" property="actionTime" />
+        <result column="action_name" jdbcType="varchar" property="actionName" />
+
+    </resultMap>
+</mapper>

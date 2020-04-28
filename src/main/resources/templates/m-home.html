@@ -158,7 +158,7 @@
             <div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
                 <span class="mui-control-item" v-for="(t,index) in type"  @click="takeDate(t.id)"   :index="index">{{t.type}}</span>
                 <div class="mui-input-row mui-search">
-                    <input type="search" class="mui-input-clear"  v-model="search"  @blur="findPage" @keydown="findPage"  placeholder="快速搜索">
+                    <input type="search"  v-model="search"  @blur="findPage" @keydown="findPage"  placeholder="快速搜索">
                 </div>
             </div>
         </div>
@@ -220,7 +220,7 @@
                 window.location.href="/comm/m-i/"+val.id;
             },
             findPage:function () {
-                if(this.search!="") {
+                // if(this.search!="") {
                     if(this.search=='管理'||this.search=='guanli'){
                         this.$prompt('请输入服务密码', '提示', {
                             confirmButtonText: '确定',
@@ -242,9 +242,7 @@
                             //     message: '取消输入'
                             // });
                         });
-
-
-                    }else if(this.search==0){
+                    }else if(this.search=="0"){
                         var _this=this;
                         $.get("/comm/commListByKeyword/0/0",function (data) {
                             _this.showData=data;
@@ -257,13 +255,13 @@
                         });
                         this.showleft=true;
                     }
-                }else{
-                    var _this=this;
-                    $(".mui-control-content").css("display","block");
-                    $.get("/comm/commListByKeywords/"+1,function (data) {
-                        _this.showData=data;
-                    });
-                }
+                // }else{
+                //     var _this=this;
+                //     $(".mui-control-content").css("display","block");
+                //     $.get("/comm/commListByKeywords/"+this.search,function (data) {
+                //         _this.showData=data;
+                //     });
+                // }
             }
         },
         computed:{
@@ -291,6 +289,8 @@
             $.get("/comm/commListByKeywords/",function (data) {
                 _this.showData=data;
             });
+
+
         }
     }) ;
 

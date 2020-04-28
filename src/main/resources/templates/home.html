@@ -93,7 +93,7 @@
                                             <el-image style="width: 310px;height: 310px" :src="imgPath+cell.waresImg.split(',')[0]"></el-image>
                                             <br><span class="demonstration">{{cell.waresName}}</span> <span style="width: 30px"></span><span class="demonstration">{{cell.waresPrice}}</span>
                                             <br><span class="demonstration">{{cell.waresRemarks}}</span>
-                                            <br><span class="demonstration">{{cell.waresState}}</span>
+                                            <br><span class="demonstration">{{cell.waresState==1?'热销':cell.waresState==2?'售罄':'下架'}}</span>
                                         </div>
                                     </div>
                                 </el-card>
@@ -134,7 +134,7 @@
             <el-collapse-item title="口号" name="1">
                 <div>{{slogan}}</div>
             </el-collapse-item>
-            <el-collapse-item title="联系我" name="2">
+            <el-collapse-item title="联系我们" name="2">
                 <div>{{contact}}</div>
 
             </el-collapse-item>

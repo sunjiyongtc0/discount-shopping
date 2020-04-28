@@ -26,7 +26,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
      */
     @Override
     public String getParameter(String name) {
-        System.out.println("对getParameter参数过滤==》"+name);
+//        System.out.println("对getParameter参数过滤==》"+name);
         if (("content".equals(name) || name.endsWith("WithHtml")) && !isIncludeRichText) {
             return super.getParameter(name);
         }
