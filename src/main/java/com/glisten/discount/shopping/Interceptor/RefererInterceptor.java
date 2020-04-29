@@ -22,9 +22,10 @@ public class RefererInterceptor implements HandlerInterceptor {
         String referer = request.getHeader("referer");
         String host = request.getServerName();
         if (referer == null) {
-            // 状态置为404
+            // 状态置为403
             logger.info("防盗链拦截");
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+//            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
         java.net.URL url = null;
@@ -32,8 +33,9 @@ public class RefererInterceptor implements HandlerInterceptor {
             url = new java.net.URL(referer);
         } catch (MalformedURLException e) {
             logger.error("非正常访问" + e.getMessage());
-            // URL解析异常，也置为404
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            // URL解析异常，也置为403
+//            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
         // 首先判断请求域名和referer域名是否相同

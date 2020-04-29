@@ -28,4 +28,9 @@ public class HomeController {
     public String mI(){
         return "m-index";
     }
+
+    @RequestMapping("/m-about")
+    public String mAbout(){
+        return "m-about";
+    }
 }

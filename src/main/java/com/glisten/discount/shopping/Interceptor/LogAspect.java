@@ -102,6 +102,7 @@ public class LogAspect {
         la.setActionName(log.value());
         la.setActionTime(dateString);
         la.setHostIp(ip);
+//        System.out.println(la.toString());
         LogService.SaveLog(la);
 //        if(concurrentHashMap.isEmpty()){
 //            concurrentHashMap.put(ip,new Date().getTime());

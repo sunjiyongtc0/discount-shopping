@@ -40,21 +40,23 @@
     <div class="mui-iframe-wrapper" style="top: 11vw; bottom: 0px; ">
         <iframe  v-if="alternate" th:src="@{/home/m-index}" id="list" name="list"></iframe>
         <div id="vi" align="center" v-if="!alternate">
-        <video   src="../video/d1.mp4"width="100%" height="600px" type="video/mp4" loop="loop" autoplay="autoplay"  muted="muted" >
+        <!--<video   src="../video/d1.mp4"width="100%" height="600px" type="video/mp4" loop="loop" autoplay="autoplay"  muted="muted" >-->
+       <img  src="../img/m1.jpg"    style=" width: 100%;height: auto;">
+       <div style="height:13vw "></div>
     </div>
     </div>
     <nav class="mui-bar mui-bar-tab" style="height:12vw">
-    <a class="mui-tab-item" @click="about()">
+    <a class="mui-tab-item" @click="backHome()">
         <span class="mui-icon mui-icon-home"></span><span>首页</span>
     </a>
-    <a class="mui-tab-item  mui-active" id="bars"  @click="backHome" >
+    <a class="mui-tab-item  mui-active" id="bars"  @click="commodity() " >
             <span class="mui-icon mui-icon-bars"   ></span><span>商品</span>
     </a>
      <a class="mui-tab-item ">
          <span class="mui-icon mui-icon-spinner-cycle mui-spin"></span><span>活动</span>
      </a>
-    <a class="mui-tab-item ">
-            <span class="mui-icon mui-icon-info"></span><span>关于我们</span>
+    <a class="mui-tab-item " @click="about()">
+            <span class="mui-icon mui-icon-info" ></span><span>关于我们</span>
     </a>
     </nav>
 
@@ -81,7 +83,7 @@
 
         },
         methods: {
-            backHome:function () {
+            commodity:function () {
                 mui('.mui-popover').popover('hide')
                 $("#list").attr("src","/home/m-index");
                 if(!this.alternate){
@@ -89,11 +91,18 @@
                 }
 
             },
-            about:function () {
+            backHome:function () {
                 mui('.mui-popover').popover('hide')
                 $("#list").attr("src","/#");
                 this.alternate=false;
 
+            },
+            about:function () {
+                mui('.mui-popover').popover('hide')
+                $("#list").attr("src","/home/m-about");
+                if(!this.alternate){
+                    this.alternate=true;
+                }
             }
 
         },

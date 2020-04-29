@@ -15,19 +15,27 @@
     <link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.previewimage.css}">
 
     <style>
-
+        .fixed_div{
+            position:fixed;
+            height:5vw;
+            top:0vw;
+            width:100%;
+            filter:alpha(Opacity=80);-moz-opacity:0.5;opacity: 0.5;z-index:100; background-color:#ffffff;
+        }
     </style>
 </head>
 <body>
 <div id="capp">
     <input  type="hidden"   th:value="${w}"  id="w">
-   <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" ><span>返回</span></a>
+   <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left fixed_div" ><span>返回</span></a>
+    <div style="height: 6vw"></div>
     <div class="mui-content" align="center">
         <div class="mui-content-padded">
             <p>{{wares.waresName}}</p>
             <p>{{wares.waresPrice}}</p>
+            <p>{{wares.waresRemarks}}</p>
             <p  v-for=" (p,i) in wares.waresImg.split(',')">
-                <img v-if="p!=null&p!=''" :src="imgPath+p" data-preview-src="" data-preview-group="1">
+                <img v-if="p!=null&p!=''" :src="imgPath+p" data-preview-src="" data-preview-group="1" style=" width: 100%;height: auto;">
             </p>
             <div style="height: 13vw">
                 <span style=" color: #999">已经到底了</span>

@@ -169,14 +169,22 @@
                         <img  :src="imgPath+j.waresImg.split(',')[0]" alt width="100%" height="200vw" />
                     </div>
                     <div class="mui-card-footer">
-                        <a class="mui-card-link">{{j.waresName}}</a>
-                        <a class="mui-card-link">{{j.waresPrice}}</a>
-                        <a class="mui-card-link">{{j.waresRemarks}}</a>
+                        <p>{{j.waresName}}</p><br>
+                        <p>{{j.waresPrice}}</p><br>
+                        <!--<p>{{j.waresRemarks}}</p>-->
+                        <!--  <a class="mui-card-link">{{j.waresName}}</a><br>
+                        <a class="mui-card-link">{{j.waresPrice}}</a><br>
+                        <a class="mui-card-link">{{j.waresRemarks}}</a>-->
                     </div>
                 </div>
             </div>
+            <div style="height: 15vw" align="center">
+                <span style=" color: #999" >已经到底了</span>
+            </div>
         </div>
+
     </div>
+
 </div>
 </body>
 <script>

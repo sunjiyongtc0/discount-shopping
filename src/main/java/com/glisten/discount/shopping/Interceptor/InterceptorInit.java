@@ -46,19 +46,15 @@ public class InterceptorInit implements WebMvcConfigurer {
         //如果上传目录为/static/images/upload/，则可以如下获取：
         File upload = new File(path.getAbsolutePath(),"static/images/upload/");
         String  Imgpath=upload.getAbsolutePath()+"/";
-        System.out.println(Imgpath);
-            System.out.println(os);
             if(os.toLowerCase().startsWith("win")){
                 //新增加一个类用来添加虚拟路径映射
                 registry.addResourceHandler("/images/upload/**").addResourceLocations("file:"+ Imgpath);
             }else{
                 registry.addResourceHandler("/images/upload/**").addResourceLocations("file:/JavaSpace/static/images/upload/");
             }
-
         }catch (Exception e){
             System.out.println("添加虚拟路径失败！");
         }
-
 //        File sysFolder = new File(sysfolder);
 //        if (!sysFolder.exists()) {
 //            sysFolder.mkdirs();
