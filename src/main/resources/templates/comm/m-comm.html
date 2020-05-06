@@ -17,42 +17,76 @@
     <style>
         .fixed_div{
             position:fixed;
+            bottom:30vw;
+            right: 2vw;
+            width:12vw;
             height:5vw;
-            top:0vw;
-            width:100%;
             filter:alpha(Opacity=80);-moz-opacity:0.5;opacity: 0.5;z-index:100; background-color:#ffffff;
+            text-align:center;
+            display:table-cell
         }
     </style>
 </head>
 <body>
 <div id="capp">
     <input  type="hidden"   th:value="${w}"  id="w">
-   <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left fixed_div" ><span>返回</span></a>
-    <div style="height: 6vw"></div>
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left fixed_div"  ><span style="top: 4vw;">返回</span></a>
+    <div style="height: 2vw"></div>
     <div class="mui-content" align="center">
         <div class="mui-content-padded">
-            <p>{{wares.waresName}}</p>
-            <p>{{wares.waresPrice}}</p>
-            <p>{{wares.waresRemarks}}</p>
-            <p  v-for=" (p,i) in wares.waresImg.split(',')">
-                <img v-if="p!=null&p!=''" :src="imgPath+p" data-preview-src="" data-preview-group="1" style=" width: 100%;height: auto;">
+            <p>
+                <!--<img v-if="p!=null&p!=''" :src="imgPath+p" data-preview-src="" data-preview-group="1" style=" width: 100%;height: auto;">-->
+            <div id="slider" class="mui-slider" >
+                <div class="mui-slider-group mui-slider-loop">
+                    <!--支持循环，需要重复图片节点-->
+                    <!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+                    <div class="mui-slider-item mui-slider-item-duplicate">
+                        <a href="#">
+                            <img :src="imgPath+wares.waresImg.split(',')[wares.waresImg.split(',').length-2]" style=" width: 100%;height:70vw; object-fit:cover">
+                        </a>
+                    </div>
+                    <div class="mui-slider-item" v-for=" (p,i) in wares.waresImg.split(',')"  v-if="p!=null&p!=''" ><a href="#">
+                        <img :src="imgPath+p"  style=" width: 100%;height:70vw;object-fit:cover">
+                    </a>
+                    </div>
+                    <!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+                    <div class="mui-slider-item mui-slider-item-duplicate">
+                        <a href="#">
+                            <img :src="imgPath+wares.waresImg.split(',')[0]" style=" width: 100%;height:70vw; object-fit:cover">
+                        </a>
+                    </div>
+                </div>
+            <div class="mui-slider-indicator">
+                <div class="mui-indicator"  v-for=" i in sliderNum" :index="i"  :class="i==0?'mui-active':''"></div>
+            </div>
+            </div>
             </p>
+            <p><b>{{wares.waresName}}</b></p>
+            <p><b>￥{{wares.waresPrice}}</b></p>
+            <p><b>{{wares.waresRemarks}}</b></p>
             <div style="height: 13vw">
-                <span style=" color: #999">已经到底了</span>
+                <!--<span style=" color: #999">已经到底了</span>-->
             </div>
         </div>
     </div>
 </div>
 </body>
 <script th:inline="javascript">
+    // var slider = mui("#slider");
+    // slider.slider({
+    //     interval: 5000
+    // });
+
     new Vue({
         el:'#capp',
         data:{
             imgPath :"/images/upload/",
-            wares:{}
+            wares:{},
+            sliderNum:1
         },
         created(){
             this.wares=JSON.parse($("#w").val());
+            this.sliderNum=this.wares.waresImg.split(',').length-1;
         }
     }) ;
 
