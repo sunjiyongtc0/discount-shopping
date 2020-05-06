@@ -27,36 +27,60 @@
 <body>
 <div id="mapp" >
     <header class="mui-bar mui-bar-nav" style="height: 10vw">
-        <!--<a class="docs-nav-trigger mui-icon mui-icon-bars mui-pull-right js-docs-nav-trigger" href="#popover" id="openPopover" ></a>-->
-        <h1 class="mui-title" align="center"><img align="center" style="width: 40px; height: 40px"  :src="logoPath"> 闪闪帮你买</h1>
-        <!--<button type="button" class=" mui-btn mui-icon mui-icon-home"  @click="backHome" >首页</button>-->
-        <!--<div id="popover" class="mui-popover">-->
-            <!--<ul class="mui-table-view">-->
-                <!--<li class="mui-table-view-cell"><a >关于我们</a></li>-->
-                <!--<li class="mui-table-view-cell"><a href="#">联系我们</a></li>-->
-            <!--</ul>-->
-        <!--</div>-->
+        <h1 class="mui-title" align="center"><img align="center" style="width: 40px; height: 40px"  :src="logoPath"> 闪闪商城</h1>
     </header>
     <div class="mui-iframe-wrapper" style="top: 11vw; bottom: 0px; ">
+
         <iframe  v-if="alternate" th:src="@{/home/m-index}" id="list" name="list"></iframe>
         <div id="vi" align="center" v-if="!alternate">
+<<<<<<< HEAD
+            <div class="mui-input-row mui-search">
+                <input type="search"  v-model="search"  @blur="findPage" @keydown="findPage"  placeholder="快速搜索">
+            </div>
+            <!--<video   src="../video/d1.mp4"width="100%" height="600px" type="video/mp4" loop="loop" autoplay="autoplay"  muted="muted" >-->
+           <img  src="../img/m1.jpg"    style=" width: 100%;height: auto;">
+            <ul class="mui-table-view" align="center">
+                <li class="mui-table-view-cell mui-media">
+                    <a href="javascript:;">
+                        <img class="mui-media-object mui-pull-left" style="width: 100%" src="../img/kf.jpg">
+                        <div class="mui-media-body">
+                            联系客服
+                            <p class='mui-ellipsis'>扫码添加</p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+           <div style="height:13vw "></div>
+        </div>
+
+
+
+        <div style="height: 15vw" align="center">
+            <span style=" color: #999" >已经到底了</span><br>
+            <span style=" color: #999;font-size:2px" >闪闪帮你买自主技术</span>
+        </div>
+=======
         <!--<video   src="../video/d1.mp4"width="100%" height="600px" type="video/mp4" loop="loop" autoplay="autoplay"  muted="muted" >-->
        <img  src="../img/m1.jpg"    style=" width: 100%;height: auto;">
        <div style="height:13vw "></div>
     </div>
+>>>>>>> origin/master
     </div>
+
+
+
     <nav class="mui-bar mui-bar-tab" style="height:12vw">
-    <a class="mui-tab-item" @click="backHome()">
+    <a class="mui-tab-item  mui-active" @click="backHome()">
         <span class="mui-icon mui-icon-home"></span><span>首页</span>
     </a>
-    <a class="mui-tab-item  mui-active" id="bars"  @click="commodity() " >
+    <a class="mui-tab-item " id="bars"  @click="commodity() " >
             <span class="mui-icon mui-icon-bars"   ></span><span>商品</span>
     </a>
      <a class="mui-tab-item ">
          <span class="mui-icon mui-icon-spinner-cycle mui-spin"></span><span>活动</span>
      </a>
-    <a class="mui-tab-item " @click="about()">
-            <span class="mui-icon mui-icon-info" ></span><span>关于我们</span>
+    <a class="mui-tab-item " ><!-- @click="about()" -->
+            <span class="mui-icon mui-icon-info" ></span><span>个人中心</span>
     </a>
     </nav>
 
@@ -78,11 +102,18 @@
     new Vue({
         el: '#mapp',
         data:{
-            alternate:true,
+            alternate:false,
             logoPath:"../img/logo.jpg",
-
+            search:""
         },
         methods: {
+            findPage:function () {
+                $("#list").attr("src","/home/m-index");
+                if(!this.alternate){
+                    this.alternate=true;
+                }
+
+            },
             commodity:function () {
                 mui('.mui-popover').popover('hide')
                 $("#list").attr("src","/home/m-index");
