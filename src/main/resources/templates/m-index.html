@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=640,user-scalable=no" />
-    <title>闪闪帮你买</title>
+    <title>闪购商城</title>
     <title>Mobile phone</title>
     <script th:src="@{/js/jQuery.js}"></script>
     <script th:src="@{/vue/vue.js}"></script>
@@ -16,65 +16,101 @@
 
     <style>
         .mui-backdrop{
-        z-index: 8;
-        position: fixed;
+            z-index: 8;
+            position: fixed;
         }
         .mui-btn{
-             background-color: #f7f7f7
+            background-color: #f7f7f7
+        }
+        .spjzp{
+            line-height: 8vw;/*让黄色div中的文字内容垂直居中*/
+            text-align: center;/*让文字水平居中*/
+            position: absolute;
+            top:50%;
+            margin-top: -50px;
+            margin-left: 50vw;
+        }
+        .scrollXclass{
+            height: 4vw;width: 90%;
+            float:left; border:1px solid #F00;
+            margin-left:10px;overflow-y:scroll;
+            over-flow:auto
         }
     </style>
 </head>
 <body>
 <div id="mapp" >
     <header class="mui-bar mui-bar-nav" style="height: 10vw">
-        <h1 class="mui-title" align="center"><img align="center" style="width: 40px; height: 40px"  :src="logoPath"> 闪闪商城</h1>
+        <h1 class="mui-title" align="center"><img align="center"  style="object-fit:cover;width: 26vw; height: 6vw"  :src="logoPath"> </h1>
     </header>
     <div class="mui-iframe-wrapper" style="top: 11vw; bottom: 0px; ">
-
         <iframe  v-if="alternate" th:src="@{/home/m-index}" id="list" name="list"></iframe>
         <div id="vi" align="center" v-if="!alternate">
             <div class="mui-input-row mui-search">
                 <input type="search"  v-model="search"  @blur="findPage" @keydown="findPage"  placeholder="快速搜索">
             </div>
-            <!--<video   src="../video/d1.mp4"width="100%" height="600px" type="video/mp4" loop="loop" autoplay="autoplay"  muted="muted" >-->
-           <img  src="../img/m1.jpg"    style=" width: 100%;height: auto;">
-            <ul class="mui-table-view" align="center">
-                <li class="mui-table-view-cell mui-media">
-                    <a href="javascript:;">
-                        <img class="mui-media-object mui-pull-left" style="width: 100%" src="../img/kf.jpg">
+            <h5 style="background-color:#efeff4" class="mui-pull-left mui-icon mui-icon-chat">公告</h5><br>
+            <div class="scrollXclass">
+                <marquee scrolldelay="5" scrollamount="5"><span style="font-size: 20px;color: red">{{notice}}</span></marquee>
+
+            </div>
+
+            <div  ><br>
+            <div style="height: 3vw"></div>
+            <!--<img  src="../img/sc.jpg" style=" width: 100%;height: 1vw;"   >-->
+            <ul class="mui-table-view" style="top: 1vw">
+                <li class="mui-table-view-cell mui-media" v-for="(t,i) in type" :index="i" style="height: 18vw">
+                    <a href="javascript:;"  @click="commodity() " >
+                        <img class="mui-media-object mui-pull-left" :src="logoPath">
                         <div class="mui-media-body">
-                            联系客服
-                            <p class='mui-ellipsis'>扫码添加</p>
+                            {{t.type}}
+                            <p class='mui-ellipsis'>点击查看该类商品</p>
                         </div>
                     </a>
                 </li>
             </ul>
-           <div style="height:13vw "></div>
+                <div style="height: 3vw"></div>
+            </div>
+            <ul class="mui-table-view" align="center" >
+                <li class="mui-table-view-cell " style="height: 22vw">
+                    <a href="javascript:;">
+                        <img class=" mui-pull-left" style="width: 20vw;height: 20vw" src="../img/kf.jpg">
+                        <div class="mui-media-body  spjzp" align="center">
+                            <p>联系客服</p>
+                            <p class='mui-ellipsis'>长按图片添加</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell " style="height: 22vw">
+                    <a href="javascript:;">
+                        <img class=" mui-pull-left" style="width: 20vw;height: 20vw" src="../img/gzh.jpg">
+                        <div class="mui-media-body  spjzp" align="center">
+                            <p>添加公众号</p>
+                            <p class='mui-ellipsis'>长按图片添加</p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <div style="height: 15vw" align="center">
+                <span style=" color: #999" >已经到底了</span><br>
+                <span style=" color: #999;font-size:3vw" >闪闪帮你买自主技术</span>
+            </div>
         </div>
-
-
-
-        <div style="height: 15vw" align="center">
-            <span style=" color: #999" >已经到底了</span><br>
-            <span style=" color: #999;font-size:2px" >闪闪帮你买自主技术</span>
-        </div>
+        <div style="height:13vw "></div>
     </div>
-
-
-
     <nav class="mui-bar mui-bar-tab" style="height:12vw">
-    <a class="mui-tab-item  mui-active" @click="backHome()">
-        <span class="mui-icon mui-icon-home"></span><span>首页</span>
-    </a>
-    <a class="mui-tab-item " id="bars"  @click="commodity() " >
+        <a class="mui-tab-item  mui-active" @click="backHome()">
+            <span class="mui-icon mui-icon-home"></span><span>首页</span>
+        </a>
+        <a class="mui-tab-item " id="bars"  @click="commodity() " >
             <span class="mui-icon mui-icon-bars"   ></span><span>商品</span>
-    </a>
-     <a class="mui-tab-item ">
-         <span class="mui-icon mui-icon-spinner-cycle mui-spin"></span><span>活动</span>
-     </a>
-    <a class="mui-tab-item " ><!-- @click="about()" -->
+        </a>
+        <a class="mui-tab-item ">
+            <span class="mui-icon mui-icon-spinner-cycle mui-spin"></span><span>活动</span>
+        </a>
+        <a class="mui-tab-item " ><!-- @click="about()" -->
             <span class="mui-icon mui-icon-info" ></span><span>个人中心</span>
-    </a>
+        </a>
     </nav>
 
 
@@ -83,21 +119,15 @@
 </body>
 <script>
 
-    // mui.init({
-    //     swipeBack: true //启用右滑关闭功能
-    // });
-    // var info = document.getElementById("info");
-    // document.getElementById("alertBtn").addEventListener('tap', function() {
-    //
-    // });
-
     // vue 可以直接通过对象.的方式直接调用属性：data，computed；但是el,data也是属性，叫实例属性
     new Vue({
         el: '#mapp',
         data:{
+            type:[],
             alternate:false,
-            logoPath:"../img/logo.jpg",
-            search:""
+            logoPath:"../img/sc.jpg",
+            search:"",
+            notice:"    保证正品 接受各大论坛app验货，我们所售商品，均通过正规渠道购买，所有商品一旦售出不退不换 代购涉及到很多拼单满减 每个品牌店都有各自的规定 ，涨价降价问题 控制不了 专柜涨价降价确实不能控制 我都是尽量挑最划算的款式买给你们。最后感谢大家的支持与信任 谢谢大家！"
         },
         methods: {
             findPage:function () {
@@ -131,6 +161,10 @@
 
         },
         created() {
+                var _this=this;
+                $.get("/commType/allType",function (data) {
+                    _this.type=data;
+                });
 
         }
     })

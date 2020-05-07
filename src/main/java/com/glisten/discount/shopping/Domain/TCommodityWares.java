@@ -25,6 +25,25 @@ public class TCommodityWares {
     @Column(name = "wares_img")
     private String waresImg;
 
+
+
+    @Column(name = "type_id")
+    private Long typeId;
+
+    @Column(name = "category_id")
+    private Long categoryId;
+
+
+
+    @Column(name = "wares_tagprice")
+    private Long waresTagprice;
+    @Column(name = "wares_offprice")
+    private Long waresOffprice;
+    @Column(name = "offi_state")
+    private int offiState;
+    @Column(name = "wares_exp")
+    private String waresExp;
+
     @Override
     public String toString() {
         return "TCommodityWares{" +
@@ -36,9 +55,46 @@ public class TCommodityWares {
                 ", waresImg='" + waresImg + '\'' +
                 ", typeId=" + typeId +
                 ", categoryId=" + categoryId +
+                ", waresTagprice=" + waresTagprice +
+                ", waresOffprice=" + waresOffprice +
+                ", offiState=" + offiState +
+                ", waresExp='" + waresExp + '\'' +
                 ", waresState=" + waresState +
                 '}';
     }
+
+    public Long getWaresTagprice() {
+        return waresTagprice;
+    }
+
+    public void setWaresTagprice(Long waresTagprice) {
+        this.waresTagprice = waresTagprice;
+    }
+
+    public Long getWaresOffprice() {
+        return waresOffprice;
+    }
+
+    public void setWaresOffprice(Long waresOffprice) {
+        this.waresOffprice = waresOffprice;
+    }
+
+    public int getOffiState() {
+        return offiState;
+    }
+
+    public void setOffiState(int offiState) {
+        this.offiState = offiState;
+    }
+
+    public String getWaresExp() {
+        return waresExp;
+    }
+
+    public void setWaresExp(String waresExp) {
+        this.waresExp = waresExp;
+    }
+
 
     public Long getTypeId() {
         return typeId;
@@ -55,15 +111,6 @@ public class TCommodityWares {
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
     }
-
-    @Column(name = "type_id")
-    private Long typeId;
-
-    @Column(name = "category_id")
-    private Long categoryId;
-
-
-
     public Long getId() {
         return id;
     }

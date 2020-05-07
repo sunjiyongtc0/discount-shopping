@@ -86,8 +86,26 @@
             "                                <el-form-item label=\"商品名称\">\n" +
             "                                    <el-input v-model=\"form.waresName\"></el-input>\n" +
             "                                </el-form-item>\n" +
-            "                                <el-form-item label=\"商品价格\">\n" +
+            "                                <el-form-item label=\"吊牌价格\">\n" +
+            "                                    <el-input v-model=\"form.waresTagprice\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"官网价格\">\n" +
+            "                                    <el-input v-model=\"form.waresOffprice\"></el-input>\n" +
+            "                                </el-form-item>" +
+            "                                <el-form-item  label=\"显示官价\"> " +
+            "                                    <el-radio-group v-model=\"form.offiState\">\n" +
+            "                                    <template v-for=\"(item, index) in status_show\">\n" +
+            "                                     <el-radio :label=\"item.code\">{{item.text}}</el-radio>\n" +
+            "                                </el-radio-group>  "+
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"销售价格\">\n" +
             "                                    <el-input v-model=\"form.waresPrice\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item  label=\"商品状态\"> " +
+            "                                    <el-radio-group v-model=\"form.waresState\">\n" +
+            "                                    <template v-for=\"(item, index) in status_arr\">\n" +
+            "                                     <el-radio :label=\"item.code\">{{item.text}}</el-radio>\n" +
+            "                                </el-radio-group>  "+
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"商品根类\">\n" +
             "                                  <el-radio-group v-model=\"form.typeId\" @change='findcategory'>\n" +
@@ -114,7 +132,7 @@
             "  :on-preview=\"handlePreview\" " +
             "  :file-list=\"fileList\" " +
             "   ref=\"upload0\"  " +
-            "            :limit='6'\n" +
+            "            :limit='9'\n" +
             "            accept=\".jpg,.jpeg,.png,.gif,.bmp,.JPG,.JPEG,.GIF,.BMP\"" +
             "  :before-upload=\"beforeUpload\"\n" +
             "  :on-change=\"handleChange\" " +
@@ -149,9 +167,9 @@
             "                               <el-form-item label=\"商品备注\">\n" +
             "                                    <el-input v-model=\"form.waresRemarks\"></el-input>\n" +
             "                                </el-form-item>\n" +
-            "                                <el-form-item label=\"商品状态\">\n" +
-            "                                    <el-input v-model=\"form.waresState\"></el-input>\n" +
-            "                                </el-form-item>\n" +
+            // "                                <el-form-item label=\"商品状态\">\n" +
+            // "                                    <el-input v-model=\"form.waresState\"></el-input>\n" +
+            // "                                </el-form-item>\n" +
             "                            </el-form>\n" +
             "  <div slot=\"footer\" class=\"dialog-footer\">\n" +
             "    <el-button @click=\"handleClose\">取 消</el-button>\n" +
@@ -186,7 +204,17 @@
                 //判断添加几个图片
                 imgNew:0,
                 imgNum:0,
-                token0:""
+                token0:"",
+                // 单选按钮数据
+                status_arr: [
+                    {text: "不上架",code: 0},
+                    {text: "热销",code: 1},
+                    {text: "无货",code: 2},
+                ],
+                status_show: [
+                    {text: "显示",code: 0},
+                    {text: "不显示",code: 1}
+                ]
             }
         },
         methods:{
@@ -373,14 +401,29 @@
     Vue.component("addcomm",{
         template:" <el-row :gutter='20'>\n" +
             "                    <el-col :span=\"24\"><div class=\"grid-content bg-purple\">\n" +
-            "                        <el-card class=\"box-card\" style=\"height: 800px\">\n" +
+            "                        <el-card class=\"box-card\" style=\"height: 950px\">\n" +
             "                            <h5 align=\"center\"> 新建商品</h5>\n" +
             "                            <el-form ref=\"form\" :model=\"form\" label-width=\"80px\">" +
             "                                <el-form-item label=\"商品名称\">\n" +
             "                                    <el-input v-model=\"form.waresName\"></el-input>\n" +
             "                                </el-form-item>\n" +
-            "                                <el-form-item label=\"商品价格\">\n" +
+            "                                <el-form-item label=\"吊牌价格\">\n" +
+            "                                    <el-input v-model=\"form.waresTagprice\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"官网价格\">\n" +
+            "                                    <el-input v-model=\"form.waresOffprice\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"显示官价\">\n" +
+            "                                    <el-radio v-model=\"form.offiState\" label=\"0\">显示</el-radio>\n" +
+            "                                    <el-radio v-model=\"form.offiState\" label=\"1\">不显示</el-radio>" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"销售价格\">\n" +
             "                                    <el-input v-model=\"form.waresPrice\"></el-input>\n" +
+            "                                </el-form-item>\n" +
+            "                                <el-form-item label=\"商品状态\">\n" +
+            "                                    <el-radio v-model=\"form.waresState\" label=\"0\">不上架</el-radio>\n" +
+            "                                    <el-radio v-model=\"form.waresState\" label=\"1\">热销</el-radio>" +
+            "                                    <el-radio v-model=\"form.waresState\" label=\"2\">无货</el-radio>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"商品根类\">\n" +
             "                                  <el-radio-group v-model=\"form.typeId\" @change='findcategory'>\n" +
@@ -405,7 +448,7 @@
             "  list-type=\"picture-card\" " +
             "  :auto-upload=\"false\" " +
             "   ref=\"upload0\"  " +
-            "            :limit='6'\n" +
+            "            :limit='9'\n" +
             "            accept=\".jpg,.jpeg,.png,.gif,.bmp,.JPG,.JPEG,.GIF,.BMP\"" +
             "  :before-upload=\"beforeUpload\"\n" +
             "  :on-change=\"handleChange\" " +
@@ -440,9 +483,7 @@
             "                               <el-form-item label=\"商品备注\">\n" +
             "                                    <el-input v-model=\"form.waresRemarks\"></el-input>\n" +
             "                                </el-form-item>\n" +
-            "                                <el-form-item label=\"商品状态\">\n" +
-            "                                    <el-input v-model=\"form.waresState\"></el-input>\n" +
-            "                                </el-form-item>\n" +
+
             "                                <el-form-item>\n" +
             "                                    <el-button type=\"primary\" @click=\"onSubmit()\">立即创建</el-button>\n" +
             "                                    <el-button  @click='onCancel()' >取消</el-button>\n" +
@@ -615,7 +656,7 @@
             "                            <el-table-column\n" +
             "                                    prop=\"id\"\n" +
             "                                    label=\"序号\"\n" +
-            "                                    width=\"180\">\n" +
+            "                                    width=\"80\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
             "                                    prop=\"waresName\"\n" +
@@ -632,14 +673,29 @@
             "      fit=\"cover\"></el-image>  </template>" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
+            "                                    prop=\"waresTagprice\"\n" +
+            "                                    label=\"吊牌价格\"\n" +
+            "                                    width=\"80\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"waresOffprice\"\n" +
+            "                                    label=\"官网价格\"\n" +
+            "                                    width=\"80\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column\n" +
+            "                                    prop=\"offiState\"\n" +
+            "                                    label=\"显示官价\"\n" +
+            "                                    width=\"80\">\n" +
+            "                            </el-table-column>\n" +
+            "                            <el-table-column\n" +
             "                                    prop=\"waresPrice\"\n" +
-            "                                    label=\"商品价格\"\n" +
+            "                                    label=\"销售价格\"\n" +
             "                                    width=\"180\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
             "                                    prop=\"waresState\"\n" +
             "                                    label=\"商品状态\"\n" +
-            "                                    width=\"180\">\n" +
+            "                                    width=\"80\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column label=\"操作\">\n" +
             "                                <template slot-scope=\"scope\">\n" +

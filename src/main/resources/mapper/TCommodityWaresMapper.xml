@@ -14,5 +14,9 @@
         <result column="wares_state" jdbcType="INT" property="waresState" />
         <result column="type_id" jdbcType="BIGINT" property="typeId" />
         <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+        <result column="wares_tagprice" jdbcType="BIGINT" property="waresTagprice" />
+        <result column="wares_offprice" jdbcType="BIGINT" property="waresOffprice" />
+        <result column="offi_state" jdbcType="INT" property="offiState" />
+        <result column="wares_exp" jdbcType="varchar" property="waresExp" />
     </resultMap>
 </mapper>

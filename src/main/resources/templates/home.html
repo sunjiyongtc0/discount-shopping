@@ -93,7 +93,7 @@
                                             <el-image style="width: 310px;height: 310px" :src="imgPath+cell.waresImg.split(',')[0]"></el-image>
                                             <br><span class="demonstration">{{cell.waresName}}</span> <span style="width: 30px"></span><span class="demonstration">{{cell.waresPrice}}</span>
                                             <br><span class="demonstration">{{cell.waresRemarks}}</span>
-                                            <br><span class="demonstration">{{cell.waresState==1?'热销':cell.waresState==2?'售罄':'下架'}}</span>
+                                            <br><span class="demonstration">{{cell.waresState==1?'热销':cell.waresState==2?'无货':'下架'}}</span>
                                         </div>
                                     </div>
                                 </el-card>
@@ -177,7 +177,17 @@
             showData:[],
             //图片目录文件
             imgPath:"../images/upload/",
-            wares:[]
+            wares:[],
+            // 单选按钮数据
+            status_arr: [
+                {text: "不上架",code: 0},
+                {text: "热销",code: 1},
+                {text: "无货",code: 2},
+            ],
+            status_show: [
+                {text: "显示",code: 0},
+                {text: "不显示",code: 1}
+            ]
         },
         methods:{//方法属性；
             open:function() {
@@ -372,8 +382,6 @@
         },
         created(){
             this.table0=this.table;
-            console.log(this.wares);
-            console.log(this.imgpath)
         }
     });
 </script>
