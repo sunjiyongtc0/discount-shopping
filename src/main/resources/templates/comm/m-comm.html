@@ -30,7 +30,8 @@
 <body>
 <div id="capp">
     <input  type="hidden"   th:value="${w}"  id="w">
-    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left fixed_div"  ><span style="top: 4vw;">返回</span></a>
+    <!-- <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left fixed_div"  ><span style="top: 4vw;">返回</span></a>-->
+    <a class="fixed_div"  ><span style="top: 4vw;" @click="backComm()">返回</span></a>
     <div style="height: 2vw"></div>
     <div class="mui-content" align="center">
         <div class="mui-content-padded">
@@ -83,6 +84,13 @@
             imgPath :"/images/upload/",
             wares:{},
             sliderNum:1
+        },
+        methods: {
+            backComm:function () {
+                parent.comm.ifrPath="/comm/m-i/";
+                parent.comm.IsShowComm=false;
+
+            }
         },
         created(){
             this.wares=JSON.parse($("#w").val());

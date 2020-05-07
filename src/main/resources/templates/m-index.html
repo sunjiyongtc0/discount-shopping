@@ -44,7 +44,7 @@
         <h1 class="mui-title" align="center"><img align="center"  style="object-fit:cover;width: 26vw; height: 6vw"  :src="logoPath"> </h1>
     </header>
     <div class="mui-iframe-wrapper" style="top: 11vw; bottom: 0px; ">
-        <iframe  v-if="alternate" th:src="@{/home/m-index}" id="list" name="list"></iframe>
+        <iframe  v-if="alternate" :src="iframePath" id="list" name="list" ref="mapFrame" height="80%"></iframe>
         <div id="vi" align="center" v-if="!alternate">
             <div class="mui-input-row mui-search">
                 <input type="search"  v-model="search"  @blur="findPage" @keydown="findPage"  placeholder="快速搜索">
@@ -59,8 +59,8 @@
             <div style="height: 3vw"></div>
             <!--<img  src="../img/sc.jpg" style=" width: 100%;height: 1vw;"   >-->
             <ul class="mui-table-view" style="top: 1vw">
-                <li class="mui-table-view-cell mui-media" v-for="(t,i) in type" :index="i" style="height: 18vw">
-                    <a href="javascript:;"  @click="commodity() " >
+                <li class="mui-table-view-cell mui-media" v-for="(t,i) in type" :index="i" style="height: 18vw" @click="commodity(t.id) ">
+                    <a href="javascript:;"    >
                         <img class="mui-media-object mui-pull-left" :src="logoPath">
                         <div class="mui-media-body">
                             {{t.type}}
@@ -93,7 +93,7 @@
             </ul>
             <div style="height: 15vw" align="center">
                 <span style=" color: #999" >已经到底了</span><br>
-                <span style=" color: #999;font-size:3vw" >闪闪帮你买自主技术</span>
+                <span style=" color: #999;font-size:2vw" >闪闪帮你买自主技术</span>
             </div>
         </div>
         <div style="height:13vw "></div>
@@ -102,7 +102,7 @@
         <a class="mui-tab-item  mui-active" @click="backHome()">
             <span class="mui-icon mui-icon-home"></span><span>首页</span>
         </a>
-        <a class="mui-tab-item " id="bars"  @click="commodity() " >
+        <a class="mui-tab-item " id="bars"  @click="commodity(0) " >
             <span class="mui-icon mui-icon-bars"   ></span><span>商品</span>
         </a>
         <a class="mui-tab-item ">
@@ -120,13 +120,14 @@
 <script>
 
     // vue 可以直接通过对象.的方式直接调用属性：data，computed；但是el,data也是属性，叫实例属性
-    new Vue({
+  let index=  new Vue({
         el: '#mapp',
         data:{
             type:[],
             alternate:false,
             logoPath:"../img/sc.jpg",
             search:"",
+            iframePath:"",
             notice:"    保证正品 接受各大论坛app验货，我们所售商品，均通过正规渠道购买，所有商品一旦售出不退不换 代购涉及到很多拼单满减 每个品牌店都有各自的规定 ，涨价降价问题 控制不了 专柜涨价降价确实不能控制 我都是尽量挑最划算的款式买给你们。最后感谢大家的支持与信任 谢谢大家！"
         },
         methods: {
@@ -137,9 +138,11 @@
                 }
 
             },
-            commodity:function () {
+            commodity:function (val) {
+                var url="/home/m-index/"+val;
+                this.iframePath=url;
                 mui('.mui-popover').popover('hide')
-                $("#list").attr("src","/home/m-index");
+                $("#list").attr("src",url);
                 if(!this.alternate){
                     this.alternate=true;
                 }
@@ -166,7 +169,10 @@
                     _this.type=data;
                 });
 
-        }
+        },
+      mounted() {
+
+      }
     })
 
 
