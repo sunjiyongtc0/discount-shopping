@@ -40,14 +40,14 @@
 </head>
 <body>
 <div id="mapp" >
-    <header class="mui-bar mui-bar-nav" style="height: 10vw">
+    <header class="mui-bar mui-bar-nav" style="height: 5%">
         <h1 class="mui-title" align="center"><img align="center"  style="object-fit:cover;width: 26vw; height: 6vw"  :src="logoPath"> </h1>
     </header>
-    <div class="mui-iframe-wrapper" style="top: 11vw; bottom: 0px; ">
-        <iframe  v-if="alternate" :src="iframePath" id="list" name="list" ref="mapFrame" height="80%"></iframe>
-        <div id="vi" align="center" v-if="!alternate">
-            <div class="mui-input-row mui-search">
-                <input type="search"  v-model="search"  @blur="findPage" @keydown="findPage"  placeholder="快速搜索">
+    <div class="mui-iframe-wrapper" style="top: 11vw; bottom: 0px; height: 90%">
+        <iframe  v-if="alternate" :src="iframePath" id="list" name="list" ref="mapFrame" height="87%"></iframe>
+        <div id="vi" align="center" v-if="!alternate" style="height:100%">
+            <div class="mui-input-row mui-search" style="height: 3%">
+                <input type="search"  v-model="search" @keyup.enter="findPage"  @blur="findPage"  placeholder="快速搜索">
             </div>
             <h5 style="background-color:#efeff4" class="mui-pull-left mui-icon mui-icon-chat">公告</h5><br>
             <div class="scrollXclass">
@@ -55,54 +55,55 @@
 
             </div>
 
-            <div  ><br>
-            <div style="height: 3vw"></div>
-            <!--<img  src="../img/sc.jpg" style=" width: 100%;height: 1vw;"   >-->
-            <ul class="mui-table-view" style="top: 1vw">
-                <li class="mui-table-view-cell mui-media" v-for="(t,i) in type" :index="i" style="height: 18vw" @click="commodity(t.id) ">
-                    <a href="javascript:;"    >
-                        <img class="mui-media-object mui-pull-left" :src="logoPath">
-                        <div class="mui-media-body">
-                            {{t.type}}
-                            <p class='mui-ellipsis'>点击查看该类商品</p>
-                        </div>
-                    </a>
+            <div ><br>
+            <div style="height: 3vw;">
+            </div>
+                <!--<img src="../img/dh.gif"  width="100%"  height="auto" style="object-fit:cover">-->
+            <ul class="mui-table-view" style="top: 1vw;height: 50%">
+                <li class="mui-table-view-cell" v-for="(t,i) in type" :index="i" style="height: 40vw" @click="commodity(t.id) ">
+                    <div >
+                        <img  style="width: 100%;height: 38vw ;object-fit: contain;" :src="'../img/type'+t.id+'.jpg'">
+                        <!-- <img class="mui-media-object mui-pull-left" style="width: 100%" :src="'../img/type'+t.id+'.jpg'">-->
+                        <!--<div class="mui-media-body">-->
+                            <!--{{t.type}}-->
+                            <!--<p class='mui-ellipsis'>点击查看该类商品</p>-->
+                        <!--</div>-->
+                    </div>
                 </li>
             </ul>
                 <div style="height: 3vw"></div>
             </div>
-            <ul class="mui-table-view" align="center" >
-                <li class="mui-table-view-cell " style="height: 22vw">
+            <ul class="mui-table-view" align="center"  style="height: 25%">
+                <li class="mui-table-view-cell " style="height: 40vw">
                     <a href="javascript:;">
-                        <img class=" mui-pull-left" style="width: 20vw;height: 20vw" src="../img/kf.jpg">
-                        <div class="mui-media-body  spjzp" align="center">
-                            <p>联系客服</p>
-                            <p class='mui-ellipsis'>长按图片添加</p>
-                        </div>
+                        <img class=" mui-pull-left" style="width: 100%;height: 38vw;object-fit: contain;" src="../img/kf.jpg">
+                        <!--<div class="mui-media-body  spjzp" align="center">-->
+                            <!--<p>联系客服</p>-->
+                            <!--<p class='mui-ellipsis'>长按图片添加</p>-->
+                        <!--</div>-->
                     </a>
                 </li>
-                <li class="mui-table-view-cell " style="height: 22vw">
+                <li class="mui-table-view-cell " style="height: 40vw">
                     <a href="javascript:;">
-                        <img class=" mui-pull-left" style="width: 20vw;height: 20vw" src="../img/gzh.jpg">
-                        <div class="mui-media-body  spjzp" align="center">
-                            <p>添加公众号</p>
-                            <p class='mui-ellipsis'>长按图片添加</p>
-                        </div>
+                        <img class=" mui-pull-left" style="width: 100%;height: 38vw;object-fit: contain;" src="../img/gzh.jpg">
+                        <!--<div class="mui-media-body  spjzp" align="center">-->
+                            <!--<p>添加公众号</p>-->
+                            <!--<p class='mui-ellipsis'>长按图片添加</p>-->
+                        <!--</div>-->
                     </a>
                 </li>
             </ul>
-            <div style="height: 15vw" align="center">
+            <div style="height: 5%" align="center">
                 <span style=" color: #999" >已经到底了</span><br>
                 <span style=" color: #999;font-size:2vw" >闪闪帮你买自主技术</span>
             </div>
         </div>
-        <div style="height:13vw "></div>
     </div>
-    <nav class="mui-bar mui-bar-tab" style="height:12vw">
-        <a class="mui-tab-item  mui-active" @click="backHome()">
+    <nav class="mui-bar mui-bar-tab" style="height:5%">
+        <a :class="!activeNav?'mui-tab-item ':'mui-tab-item mui-active'" @click="backHome()">
             <span class="mui-icon mui-icon-home"></span><span>首页</span>
         </a>
-        <a class="mui-tab-item " id="bars"  @click="commodity(0) " >
+        <a :class="activeNav?'mui-tab-item ':'mui-tab-item mui-active'"  id="bars"  @click="commodity(0) " >
             <span class="mui-icon mui-icon-bars"   ></span><span>商品</span>
         </a>
         <a class="mui-tab-item ">
@@ -123,6 +124,7 @@
   let index=  new Vue({
         el: '#mapp',
         data:{
+            activeNav:true,
             type:[],
             alternate:false,
             logoPath:"../img/sc.jpg",
@@ -132,7 +134,12 @@
         },
         methods: {
             findPage:function () {
-                $("#list").attr("src","/home/m-index");
+                // $("#list").attr("src","/home/m-index");
+                this.activeNav=false;
+                var url="/home/m-index/search"+this.search;
+                this.iframePath=url;
+                // mui('.mui-popover').popover('hide')
+                $("#list").attr("src",url);
                 if(!this.alternate){
                     this.alternate=true;
                 }
@@ -140,8 +147,9 @@
             },
             commodity:function (val) {
                 var url="/home/m-index/"+val;
+                this.activeNav=false;
                 this.iframePath=url;
-                mui('.mui-popover').popover('hide')
+                // mui('.mui-popover').popover('hide')
                 $("#list").attr("src",url);
                 if(!this.alternate){
                     this.alternate=true;
@@ -152,6 +160,7 @@
                 mui('.mui-popover').popover('hide')
                 $("#list").attr("src","/#");
                 this.alternate=false;
+                this.activeNav=true;
 
             },
             about:function () {

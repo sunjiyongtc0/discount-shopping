@@ -25,4 +25,7 @@ public interface TCommodityWaresMapper extends MyMapper<TCommodityWares> {
             " left JOIN t_commodity_item i ON i.id=w.item_id " +
             "  WHERE   w.wares_name LIKE CONCAT('%',#{key},'%') OR  w.wares_remarks LIKE CONCAT('%',#{key},'%') OR   t.type_name LIKE CONCAT('%',#{key},'%')  OR c.category_name LIKE CONCAT('%',#{key},'%') OR i.item_name LIKE CONCAT('%',#{key},'%')  and w.wares_state>0 order by w.id desc")
     public List<TCommodityWares> findWaresByKeyName(@Param("key") String key);
+
+    @Select("select * from t_commodity_wares where item_id=#{w.itemId} and wares_state>0 and id!=#{w.id} ORDER BY RAND() LIMIT 2" )
+    public List<TCommodityWares> findWaresByRandom(@Param("w") TCommodityWares w );
 }

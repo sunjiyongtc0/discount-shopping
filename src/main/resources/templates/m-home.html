@@ -24,6 +24,21 @@
             width:100%;
             filter:alpha(Opacity=80);-moz-opacity:0.5;opacity: 0.5;z-index:100; background-color:#f7f7f7;
         }
+        .mui-card-footer{
+            /*display: flex;*/
+            /*min-height: 44px;*/
+        }
+        .list{
+            padding:0;
+            margin:0;
+        }
+        .list li{
+            padding:0;
+            margin:0;
+            margin:0;
+            text-align: left;
+            list-style-type: none;
+        }
     </style>
 </head>
 <body>
@@ -37,14 +52,20 @@
                 <div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
                     <a   v-for="(t,index) in type"   :index="index"  @click="takeDate(t.id)" :class="t.id==activeId?'mui-control-item mui-active': 'mui-control-item' ">{{t.type}}</a>
                 </div>
+
             </div>
-            <div class=" fixed_div" style="display: table;" v-if="category.length>0">
-                <a  class="mui-control-item" v-for="(c,i) in category" :index="i" style="display: table-cell" align="center" @click="findRightData('2',c.id)" ><span>{{c.name}}</span></a>
+            <div class="mui-bar" v-if="category.length>0"  style="height: 7vw">
+                        <div  class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary" >
+                            <a  class="mui-control-item" v-for="(c,i) in category" :index="i" style="display: table-cell" align="center" @click="findRightData('2',c.id)" ><span>{{c.name}}</span></a>
+                        </div>
             </div>
+            <!--<div class=" fixed_div" style="display: table;" v-if="category.length>0">-->
+                <!--<a  class="mui-control-item" v-for="(c,i) in category" :index="i" style="display: table-cell" align="center" @click="findRightData('2',c.id)" ><span>{{c.name}}</span></a>-->
+            <!--</div>-->
         </header>
     <input type="hidden"  th:value="${type}" id="reqtype">
         <div class="mui-content">
-            <div style="height: 10vw" align="center">
+            <div style="height: 12vw" align="center">
             </div>
             <div class="mui-row" style="border-left: 1px solid #c8c7cc; overflow-y: auto;"  v-for="(item,index) in listTemp" :key="index"  >
                 <div  class="mui-col-sm-6" v-for="(j,ind) in item" :index="ind" @click="openW(j)">
@@ -54,7 +75,7 @@
                                 <img  :src="imgPath+j.waresImg.split(',')[0]" alt width="100%" height="200vw"  style="object-fit:cover"  onerror="onerror=null;src='/img/logo.jpg'"/>
                             </div>
                             <div class="mui-card-footer">
-                                <ul ><li>{{j.waresName}}</li><li><b style="color: red">￥{{j.waresPrice}}</b></li></ul>
+                                <ul  class="list"  ><li><b>{{j.waresName}}</b></li><li><b style="color: red">￥{{j.waresPrice}}</b></li></ul>
                             </div>
                         </div>
                     </div>
@@ -68,7 +89,7 @@
         </div>
     </div>
     <div id="ifrIsShow">
-        <iframe id="ifr" v-if="IsShowComm"  :src="ifrPath" height="1000vw" width="100%"></iframe>
+        <iframe id="ifr" v-if="IsShowComm"  :src="ifrPath" height="1100vw" width="100%"></iframe>
     </div>
 </div>
 </body>
@@ -172,7 +193,7 @@
                     }
                 }
             }),
-        mui.get( $("#reqtype").val()>0?"/comm/commListByKeyword/1/" + $("#reqtype").val():"/comm/commListByKeywords/", function (data) {
+        mui.get( $("#reqtype").val().indexOf("search")==-1?"/comm/commListByKeyword/1/" + $("#reqtype").val():"/comm/commListByKeywords/"+$("#reqtype").val().substring(6,20), function (data) {
             comm.showData = data;
             comm.activeId=$("#reqtype").val();
         })

@@ -55,4 +55,7 @@ public class CommodityService {
         return tCommodityWaresMapper.findWaresByKeyName(key);
     }
 
+    public List<TCommodityWares>  findWaresByRandom(TCommodityWares w){
+        return tCommodityWaresMapper.findWaresByRandom(w);
+    }
 }

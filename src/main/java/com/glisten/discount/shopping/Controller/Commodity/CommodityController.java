@@ -143,9 +143,13 @@ public class CommodityController {
                 ja.add(jb);
             }
         }else if(type==1){
-            List<TCommodityWares> lcw=cs.findWaresByTypeId(id);
-            ja=JSONArray.parseArray(JSON.toJSONString(lcw));
-
+            if(id>0) {
+                List<TCommodityWares> lcw = cs.findWaresByTypeId(id);
+                ja = JSONArray.parseArray(JSON.toJSONString(lcw));
+            }else{
+                List<TCommodityWares> lcw=cs.findWaresByKeyName("");
+                ja=JSONArray.parseArray(JSON.toJSONString(lcw));
+            }
         }else if(type==2){
             List<TCommodityWares> lcw=cs.findWaresByCategoryId(id);
             ja=JSONArray.parseArray(JSON.toJSONString(lcw));
@@ -167,5 +171,14 @@ public class CommodityController {
         ja=JSONArray.parseArray(JSON.toJSONString(lcw));
         return ja;
 }
+
+    @PostMapping(value = {"/commListByRandom"})
+    @ResponseBody
+    public JSONArray commListByRandom(TCommodityWares w){
+        JSONArray ja =new JSONArray();
+        List<TCommodityWares> lcw=cs.findWaresByRandom(w);
+        ja=JSONArray.parseArray(JSON.toJSONString(lcw));
+        return ja;
+    }
 
 }

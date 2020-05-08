@@ -30,7 +30,7 @@ public class HomeController {
 
 
     @RequestMapping("/m-index/{id}")
-    public ModelAndView MI(@PathVariable("id") long id){
+    public ModelAndView MI(@PathVariable("id") String id){
         ModelAndView mav=new ModelAndView();
         mav.setViewName("m-home");
         mav.addObject("type", id);
