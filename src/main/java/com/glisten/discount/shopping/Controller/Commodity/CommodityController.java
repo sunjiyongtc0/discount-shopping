@@ -67,13 +67,20 @@ public class CommodityController {
         return "comm/commMain";
     }
 
-    @RequestMapping("/m-i/{id}")
-    public ModelAndView MI(@PathVariable("id") long id){
+    @RequestMapping(value = {"/m-i/{id}","/m-i"})
+    public ModelAndView MI(@PathVariable(value = "id",required = false) String id){
         ModelAndView mav=new ModelAndView();
         mav.setViewName("comm/m-comm");
-        mav.addObject("w",JSON.toJSON(cs.findWaresById(id)));
+        if(StringUtil.isNotEmpty(id)){
+            mav.addObject("w",JSON.toJSON(cs.findWaresById(Long.valueOf(id))));
+        }
+
         return mav;
     }
+
+
+
+
 
     @PostMapping("/addComm")
     @ResponseBody

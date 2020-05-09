@@ -5,13 +5,15 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Mobile phone</title>
+    <title>闪购商城</title>
     <script th:src="@{/js/jQuery.js}"></script>
     <script th:src="@{/vue/vue.js}"></script>
     <script th:src="@{/MUI/mui.min.js}"></script>
     <script th:src="@{/MUI/mui.view.js}"></script>
     <script  th:src="@{/MUI/mui.zoom.js}"  ></script>
     <script  th:src="@{/MUI/mui.previewimage.js}"  ></script>
+    <script  th:src="@{/MUI/mui.lazyload.js}"  ></script>
+    <script  th:src="@{/MUI/mui.lazyload.img.js}"  ></script>
     <link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.min.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.previewimage.css}">
 
@@ -65,17 +67,18 @@
         </header>
     <input type="hidden"  th:value="${type}" id="reqtype">
         <div class="mui-content">
-            <div style="height: 12vw" align="center">
-            </div>
-            <div class="mui-row" style="border-left: 1px solid #c8c7cc; overflow-y: auto;"  v-for="(item,index) in listTemp" :key="index"  >
-                <div  class="mui-col-sm-6" v-for="(j,ind) in item" :index="ind" @click="openW(j)">
-                    <div class="mui-card"  style="width: 48vw;margin: 1vw auto;height: 48vw"  >
-                        <div class="mui-card-header mui-card-media" >
-                            <div class="mui-card-content">
-                                <img  :src="imgPath+j.waresImg.split(',')[0]" alt width="100%" height="200vw"  style="object-fit:cover"  onerror="onerror=null;src='/img/logo.jpg'"/>
-                            </div>
-                            <div class="mui-card-footer">
-                                <ul  class="list"  ><li><b>{{j.waresName}}</b></li><li><b style="color: red">￥{{j.waresPrice}}</b></li></ul>
+            <div style="height: 12vw" align="center"></div>
+            <div id="listCard">
+                <div class="mui-row" style="border-left: 1px solid #c8c7cc; overflow-y: auto;"  v-for="(item,index) in listTemp" :key="index"  >
+                    <div  class="mui-col-sm-6" v-for="(j,ind) in item" :index="ind" @click="openW(j)">
+                        <div class="mui-card"  style="width: 48vw;margin: 1vw auto;height: 48vw"  >
+                            <div class="mui-card-header mui-card-media" >
+                                <div class="mui-card-content">
+                                    <img  :src="imgPath+j.waresImg.split(',')[0]+'?version='+Math.random() * 1000"  width="100%" height="200vw"  style="object-fit:cover"  onerror="onerror=null;src='/img/logo.jpg'"/>
+                                </div>
+                                <div class="mui-card-footer">
+                                    <ul  class="list"  ><li><b>{{j.waresName}}</b></li><li><b style="color: red">￥{{j.waresPrice}}</b></li></ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -159,7 +162,7 @@
                     _this.showData=data;
                     // _this.RightShow=true;
                 });
-            },
+            }
         },
         computed:{
             listTemp:function(){
@@ -177,7 +180,7 @@
                 return arrTemp
             }
         },
-        mounted(){
+        created(){
 
         }
     });
@@ -199,6 +202,9 @@
         })
         ],
     });
+
+
+
 
 
 

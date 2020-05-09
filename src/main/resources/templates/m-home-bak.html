@@ -5,7 +5,7 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Mobile phone</title>
+    <title>闪购商城</title>
     <script th:src="@{/js/jQuery.js}"></script>
     <script th:src="@{/vue/vue.js}"></script>
     <script th:src="@{/MUI/mui.min.js}"></script>
@@ -16,176 +16,155 @@
     <link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.previewimage.css}">
 
     <style>
-        .mui-row.mui-fullscreen>[class*="mui-col-"] {
-            height: 100%;
+        .fixed_div{
+            position:fixed;
+            height:3vw;
+            width: auto;
+            top:14vw;
+            width:100%;
+            filter:alpha(Opacity=80);-moz-opacity:0.5;opacity: 0.5;z-index:100; background-color:#f7f7f7;
         }
-        .mui-col-xs-3,
-        .mui-control-content {
-            overflow-y: auto;
-            height: 100%;
+        .mui-card-footer{
+            /*display: flex;*/
+            /*min-height: 44px;*/
         }
-        .mui-segmented-control .mui-control-item {
-            line-height: 50px;
-            width: 100%;
+        .list{
+            padding:0;
+            margin:0;
         }
-        .mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
-            background-color: #fff;
-        }
-        .mui-table-view {
-            background-color: #f7f7f7;
+        .list li{
+            padding:0;
+            margin:0;
+            margin:0;
+            text-align: left;
+            list-style-type: none;
         }
     </style>
 </head>
 <body>
-<div id="app">
-    <div class="mui-content mui-row mui-fullscreen">
-        <div class="mui-col-xs-4">
-            <div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
-                <ul id="list" class="mui-table-view mui-table-view-chevron" >
-                    <li class="mui-table-view-cell mui-collapse" v-for="(t,index) in type"   :index="index" ><!--  @click="takeDate(t.id)"   -->
-                        <a class="mui-navigate-right"      href="#" >{{t.type}}</a>
-                        <ul class=" mui-table-view mui-table-view-chevron"  v-if="t.category.length>0"  >
-                            <li class="mui-table-view-cell" v-for="(c,k) in t.category" :index="k" @click="findRightData('2',c.id)"  >
-                                <a class="mui-navigate-right" href="#">{{c.name}}</a>
-                            </li>
-                        </ul>
-<!--                       <div class="mui-collapse-content" v-if="t.category.length>0">
-                            <p v-for="(c,k) in t.category" :index="k">{{c.name}}</p>
-                        </div>-->
-                    </li>
-                    <li class="mui-table-view-cell mui-collapse">
-                        <div class="mui-input-row mui-search">
-                        <input type="search"  v-model="search"  @blur="findPage" @keydown="findPage"  placeholder="快速搜索">
-                        </div>
-                    </li>
-                </ul>
-
-                <!--<span class="mui-control-item" v-for="(t,index) in type"  @click="takeDate(t.id)"   :index="index">{{t.type}}</span>-->
-                <!--<div class="mui-input-row mui-search">-->
-                    <!--<input type="search"  v-model="search"  @blur="findPage" @keydown="findPage"  placeholder="快速搜索">-->
-                <!--</div>-->
+<div  id="scrollView">
+    <div id="list"  v-show="!IsShowComm">
+        <header class="mui-bar mui-bar-nav" style="height: 14vw">
+            <div class="mui-input-row mui-search">
+                <input type="search"  v-model="search"  @blur="findPage" @keydown="findPage"  placeholder="快速搜索">
             </div>
-        </div>
-        <div id="segmentedControlContents" class="mui-col-xs-8" style="border-left: 1px solid #c8c7cc; overflow-y: auto;">
-            <div class="mui-card" v-for="(j,ind) in showData" :index="ind" @click="openW(j)" style="width: 60vw;margin: 1vw auto;" >
-                <div class="mui-card-header mui-card-media" >
-                    <div class="mui-card-content"   >
-                        <img  :src="imgPath+j.waresImg.split(',')[0]" alt width="100%" height="200vw"  style="object-fit:cover" /><!--  -->
-                    </div>
-                    <div class="mui-card-footer">
-                        <p>{{j.waresName}}</p><br>
-                        <p>{{j.waresPrice}}</p><br>
+            <div style="padding: 0px 0px;">
+                <div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
+                    <a   v-for="(t,index) in type"   :index="index"  @click="takeDate(t.id)" :class="t.id==activeId?'mui-control-item mui-active': 'mui-control-item' ">{{t.type}}</a>
+                </div>
+
+            </div>
+            <div class="mui-bar" v-if="category.length>0"  style="height: 7vw">
+                <div  class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary" >
+                    <a  class="mui-control-item" v-for="(c,i) in category" :index="i" style="display: table-cell" align="center" @click="findRightData('2',c.id)" ><span>{{c.name}}</span></a>
+                </div>
+            </div>
+            <!--<div class=" fixed_div" style="display: table;" v-if="category.length>0">-->
+            <!--<a  class="mui-control-item" v-for="(c,i) in category" :index="i" style="display: table-cell" align="center" @click="findRightData('2',c.id)" ><span>{{c.name}}</span></a>-->
+            <!--</div>-->
+        </header>
+        <input type="hidden"  th:value="${type}" id="reqtype">
+        <div class="mui-content">
+            <div style="height: 12vw" align="center">
+            </div>
+            <div class="mui-row" style="border-left: 1px solid #c8c7cc; overflow-y: auto;"  v-for="(item,index) in listTemp" :key="index"  >
+                <div  class="mui-col-sm-6" v-for="(j,ind) in item" :index="ind" @click="openW(j)">
+                    <div class="mui-card"  style="width: 48vw;margin: 1vw auto;height: 48vw"  >
+                        <div class="mui-card-header mui-card-media" >
+                            <div class="mui-card-content">
+                                <img  :src="imgPath+j.waresImg.split(',')[0]" alt width="100%" height="200vw"  style="object-fit:cover"  onerror="onerror=null;src='/img/logo.jpg'"/>
+                            </div>
+                            <div class="mui-card-footer">
+                                <ul  class="list"  ><li><b>{{j.waresName}}</b></li><li><b style="color: red">￥{{j.waresPrice}}</b></li></ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div style="height: 15vw" align="center">
-                <span style=" color: #999" >已经到底了</span>
+                <span style=" color: #999" >已经到底了</span><br>
+                <span style=" color: #999;font-size:2vw" >闪闪帮你买自主技术</span>
             </div>
+
         </div>
-
     </div>
-
+    <div id="ifrIsShow">
+        <iframe id="ifr" v-show="IsShowComm"  :src="ifrPath" height="1100vw" width="100%"></iframe>
+    </div>
 </div>
 </body>
 <script>
 
 
 
-
-
-
-    // vue 可以直接通过对象.的方式直接调用属性：data，computed；但是el,data也是属性，叫实例属性
-    new Vue({
-        el:'#app',
+    var comm=new Vue({
+        el:'#scrollView',
         data:{
             type:[],
-            msgImgPath:["../img/m1.jpg","../img/m2.jpg","../img/m3.jpg"],
             showData:[],
+            category:[],
             //图片目录文件
-            imgPath:"../images/upload/",
-            RightShow:false,
-            alertName:"",
-            search:""
+            imgPath:"/images/upload/",
+            search:"",
+            activeId:'',
+            IsShowComm:false,
+            ifrPath:"/comm/m-i/"
         },
-        methods:{//方法属性；
-            control:function (val) {
-                console.log(val)
+        methods: {//方法属性；
+            findPage:function () {
+                var _this=this;
+                if(this.search=="0"){
+                    $.get("/comm/commListByKeyword/0/0",function (data) {
+                        _this.showData=data;
+                    });
+                    this.showleft=true;
+                }else{
+                    $.get("/comm/commListByKeywords/"+this.search,function (data) {
+                        _this.showData=data;
+                    });
+                    this.showleft=true;
+                }
             },
-            takeDate:function (val) {
-                // var _this=this;
-                // $(".mui-control-content").css("display","block");
-                // $.get("/comm/commListByKeyword/1/"+val,function (data) {
-                //     _this.showData=data;
-                //     _this.RightShow=true;
-                //     if(_this.showData.length==0){
-                //         mui.alert('敬请期待！', '暂无数据', function() {
-                //             // info.innerText = '你刚关闭了警告框';
-                //         });
-                //     }
-                // });
-                // if(val==5||val==9){
-                //     $(".mui-control-content").css("display","none");
-                // }
+            openW:function(val){
+                this.ShowComm();
+                this.ifrPath=this.ifrPath+val.id;
+                $("#ifr").attr("src", this.ifrPath);
+                // window.location.href="/comm/m-i/"+val.id;
+            },
+            ShowComm:function(){
+                this.IsShowComm=!this.IsShowComm;
+            },
+            takeDate: function (val) {
+                var _this=this;
+                $.get("/comm/commListByKeyword/1/"+val,function (data) {
+                    _this.showData=data;
+                    _this.RightShow=true;
+                    _this.activeId=val;
+                    if(_this.showData.length==0){
+                        mui.alert('敬请期待！', '暂无数据', function() {
+                            // info.innerText = '你刚关闭了警告框';
+                        });
+                    }
+                });
+                var  Ttype=_this.type ;
+                for( let i in Ttype){
+                    if(Ttype[i].id==val){
+                        this.category=Ttype[i].category;
+                    }
+                }
             },
             findRightData:function(type,id){
                 var _this=this;
                 $.get("/comm/commListByKeyword/"+type+"/"+id,function (data) {
                     _this.showData=data;
-                    _this.RightShow=true;
+                    // _this.RightShow=true;
                 });
             },
-            openW:function(val){
-                window.location.href="/comm/m-i/"+val.id;
-            },
-            findPage:function () {
-                // if(this.search!="") {
-                    if(this.search=='管理'||this.search=='guanli'){
-                        this.$prompt('请输入服务密码', '提示', {
-                            confirmButtonText: '确定',
-                            cancelButtonText: '取消',
-                        }).then(({ value }) => {
-                            if(value=='0'){
-                            var d=new Date();
-                            $.post("/comm/setSession",{time:d.getTime()},function (val) {
-                                if(val=="ok"){
-                                    window.location.href="/comm/index";
-                                }
-                            })
-                        }else{
-                            this.$message.error("密码输入错误")
-                        }
-                    }).catch(() => {
-                            // this.$message({
-                            //     type: 'info',
-                            //     message: '取消输入'
-                            // });
-                        });
-                    }else if(this.search=="0"){
-                        var _this=this;
-                        $.get("/comm/commListByKeyword/0/0",function (data) {
-                            _this.showData=data;
-                        });
-                        this.showleft=true;
-                    }else{
-                        var _this=this;
-                        $.get("/comm/commListByKeywords/"+this.search,function (data) {
-                            _this.showData=data;
-                        });
-                        this.showleft=true;
-                    }
-                // }else{
-                //     var _this=this;
-                //     $(".mui-control-content").css("display","block");
-                //     $.get("/comm/commListByKeywords/"+this.search,function (data) {
-                //         _this.showData=data;
-                //     });
-                // }
-            }
         },
         computed:{
             listTemp:function(){
                 let index =0;
-                let count = 1;
+                let count = 2;
                 let arrTemp = [];
                 let showData = this.showData;
                 for(let i=0;i<this.showData.length;i++){
@@ -197,20 +176,30 @@
                 }
                 return arrTemp
             }
-
         },
-        created(){
-            var _this=this;
-            $.get("/commType/allType",function (data) {
-                _this.type=data;
-            });
-            $.get("/comm/commListByKeywords/",function (data) {
-                _this.showData=data;
-            });
-
+        mounted(){
 
         }
-    }) ;
+    });
+
+    mui.init({
+        swipeBack:true ,//启用右滑关闭功能
+        preloadPages:[
+            mui.get("/commType/allType",function (data) {
+                comm.type=data;
+                for( let i in data){
+                    if(data[i].id==$("#reqtype").val()){
+                        comm.category=data[i].category;
+                    }
+                }
+            }),
+            mui.get( $("#reqtype").val().indexOf("search")==-1?"/comm/commListByKeyword/1/" + $("#reqtype").val():"/comm/commListByKeywords/"+$("#reqtype").val().substring(6,20), function (data) {
+                comm.showData = data;
+                comm.activeId=$("#reqtype").val();
+            })
+        ],
+    });
+
 
 
 
