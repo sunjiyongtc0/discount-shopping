@@ -8,6 +8,7 @@
     <title>闪购商城</title>
     <script th:src="@{/js/jQuery.js}"></script>
     <script th:src="@{/vue/vue.js}"></script>
+    <script th:src="@{/vue/vue-lazyload.js}"></script>
     <link rel="stylesheet" type="text/css" th:href="@{/element/element-index.css}">
     <script  th:src="@{/element/element-index.js}"  ></script>
 
@@ -90,10 +91,10 @@
                                 <el-card class="box-card" >
                                     <div class="demo-image__placeholder">
                                         <div class="block">
-                                            <el-image style="width: 310px;height: 310px" :src="imgPath+cell.waresImg.split(',')[0]"></el-image>
-                                            <br><span class="demonstration">{{cell.waresName}}</span> <span style="width: 30px"></span><span class="demonstration">{{cell.waresPrice}}</span>
-                                            <br><span class="demonstration">{{cell.waresRemarks}}</span>
-                                            <br><span class="demonstration">{{cell.waresState==1?'热销':cell.waresState==2?'无货':'下架'}}</span>
+                                            <el-image style="width: 310px;height: 310px" fit="cover"  :src="imgPath+cell.waresImg.split(',')[0]" lazy></el-image>
+                                            <br><b><span class="demonstration">{{cell.waresName}}</span> <span style="width: 30px"></span><span class="demonstration">{{cell.waresPrice}}</span></b>
+                                            <br><span class="demonstration" style="font-size: 13px;">{{cell.waresRemarks}}</span>
+                                            <br><b style="color: red"><span class="demonstration">{{cell.waresState==1?'热销':cell.waresState==2?'无货':'下架'}}</span></b>
                                         </div>
                                     </div>
                                 </el-card>
@@ -148,7 +149,7 @@
 
 
 
-
+    Vue.use(VueLazyload);
     // vue 可以直接通过对象.的方式直接调用属性：data，computed；但是el,data也是属性，叫实例属性
     new Vue({
         el:'#app',

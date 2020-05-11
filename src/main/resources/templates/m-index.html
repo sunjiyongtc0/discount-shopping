@@ -6,6 +6,7 @@
     <title>闪购商城</title>
     <script th:src="@{/js/jQuery.js}"></script>
     <script th:src="@{/vue/vue.js}"></script>
+    <script th:src="@{/vue/vue-lazyload.js}"></script>
     <script th:src="@{/MUI/mui.min.js}"></script>
     <script th:src="@{/MUI/mui.view.js}"></script>
     <script  th:src="@{/MUI/mui.zoom.js}"  ></script>
@@ -61,7 +62,7 @@
             <ul class="mui-table-view" style="top: 1vw;height: 50%">
                 <li class="mui-table-view-cell" v-for="(t,i) in type" :index="i" style="height: 40vw" @click="commodity(t.id) ">
                     <div >
-                        <img  style="width: 100%;height: 38vw ;object-fit: contain;" :src="'../img/type'+t.id+'.jpg'">
+                        <img  style="width: 100%;height: 38vw ;object-fit: contain;"  v-lazy="'../img/type'+t.id+'.jpg'">
                         <!-- <img class="mui-media-object mui-pull-left" style="width: 100%" :src="'../img/type'+t.id+'.jpg'">-->
                         <!--<div class="mui-media-body">-->
                             <!--{{t.type}}-->
@@ -118,7 +119,7 @@
 
 </body>
 <script>
-
+    Vue.use(VueLazyload);
     // vue 可以直接通过对象.的方式直接调用属性：data，computed；但是el,data也是属性，叫实例属性
   let index=  new Vue({
         el: '#mapp',

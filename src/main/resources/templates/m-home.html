@@ -8,6 +8,7 @@
     <title>闪购商城</title>
     <script th:src="@{/js/jQuery.js}"></script>
     <script th:src="@{/vue/vue.js}"></script>
+    <script th:src="@{/vue/vue-lazyload.js}"></script>
     <script th:src="@{/MUI/mui.min.js}"></script>
     <script th:src="@{/MUI/mui.view.js}"></script>
     <script  th:src="@{/MUI/mui.zoom.js}"  ></script>
@@ -45,7 +46,7 @@
 </head>
 <body>
 <div  id="scrollView">
-    <div id="list"  v-if="!IsShowComm">
+    <div id="list"  v-show="!IsShowComm">
         <header class="mui-bar mui-bar-nav" style="height: 14vw">
             <div class="mui-input-row mui-search">
                 <input type="search"  v-model="search"  @blur="findPage" @keydown="findPage"  placeholder="快速搜索">
@@ -74,7 +75,7 @@
                         <div class="mui-card"  style="width: 48vw;margin: 1vw auto;height: 48vw"  >
                             <div class="mui-card-header mui-card-media" >
                                 <div class="mui-card-content">
-                                    <img  :src="imgPath+j.waresImg.split(',')[0]+'?version='+Math.random() * 1000"  width="100%" height="200vw"  style="object-fit:cover"  onerror="onerror=null;src='/img/logo.jpg'"/>
+                                    <img v-lazy="imgPath+j.waresImg.split(',')[0]+'?version='+Math.random() * 1000"  width="100%" height="200vw"  style="object-fit:cover"  onerror="onerror=null;src='/img/logo.jpg'"/>
                                 </div>
                                 <div class="mui-card-footer">
                                     <ul  class="list"  ><li><b>{{j.waresName}}</b></li><li><b style="color: red">￥{{j.waresPrice}}</b></li></ul>
@@ -97,7 +98,7 @@
 </div>
 </body>
 <script>
-
+    Vue.use(VueLazyload);
 
 
     var comm=new Vue({

@@ -5,7 +5,7 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>ssssss</title>
+    <title>闪购商城</title>
     <script th:src="@{/js/jQuery.js}"></script>
     <script th:src="@{/vue/vue.js}"></script>
     <link rel="stylesheet" type="text/css" th:href="@{/element/element-index.css}">
@@ -52,18 +52,18 @@
 
         </el-aside>
         <el-container>
-            <el-main>
+            <el-main style="height: 600px">
 
 
                 <div v-if="ct==0"><type ref="typeId"></type></div>
                 <div v-else-if="ct==1"><category></category></div>
                 <div v-else-if="ct==2"><item></item></div>
 
-                <div v-if="commShow">
+                <div v-if="commShow" >
                     <div v-if="editcomm"> <editcomm  ></editcomm></div>
                     <div v-if="commAdd"><addcomm  :commadd="commAdd"></addcomm></div>
                     <!--   利用 sendvaule 方法，将子的值修改父类值 -->
-                    <div v-else><showcomm @sendvaule="getvaule"> </showcomm></div>
+                    <div v-else><showcomm @sendvaule="getvaule" > </showcomm></div>
                 </div>
             </el-main>
             <el-footer  >Footer</el-footer>
@@ -646,11 +646,11 @@
 
     // -------------查看商品列表
     Vue.component("showcomm",{
-        template:" <el-row :gutter='20'>\n" +
+        template:" <el-row :gutter='20'  >\n" +
             "                    <el-col :span=\"24\"><div class=\"grid-content bg-purple\">\n" +
             "                        <el-table\n" +
             "                                :data=\"tableData\"\n" +
-            "                                height=\"400\"\n" +
+            "                                height=\"550\"\n" +
             "                                border\n" +
             "                                style=\"width: 100%\" >\n" +
             "                            <el-table-column\n" +
