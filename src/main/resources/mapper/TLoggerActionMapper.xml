@@ -9,6 +9,7 @@
         <result column="host_ip" jdbcType="varchar" property="hostIp" />
         <result column="action_time" jdbcType="varchar" property="actionTime" />
         <result column="action_name" jdbcType="varchar" property="actionName" />
+        <result column="action_function" jdbcType="varchar" property="actionFunction" />
 
     </resultMap>
 </mapper>

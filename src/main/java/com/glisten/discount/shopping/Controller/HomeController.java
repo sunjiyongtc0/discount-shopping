@@ -21,7 +21,7 @@ public class HomeController {
 
     @Autowired
     private HttpServletResponse response;
-    @Log("电脑端用户登录")
+    @Log("登录Web主页")
     @RequestMapping("/index")
     public String index(){
         return "home";
@@ -37,7 +37,7 @@ public class HomeController {
         return mav;
     }
 
-    @Log("移动端用户登录")
+    @Log("登录移动端主页")
     @RequestMapping("/m-i")
     public String mI(){
         return "m-index";

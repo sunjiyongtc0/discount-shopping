@@ -52,7 +52,7 @@
 
         </el-aside>
         <el-container>
-            <el-main style="height: 600px">
+            <el-main style="height: 610px">
 
 
                 <div v-if="ct==0"><type ref="typeId"></type></div>
@@ -94,18 +94,18 @@
             "                                </el-form-item>" +
             "                                <el-form-item  label=\"显示官价\"> " +
             "                                    <el-radio-group v-model=\"form.offiState\">\n" +
-            "                                    <template v-for=\"(item, index) in status_show\">\n" +
-            "                                     <el-radio :label=\"item.code\">{{item.text}}</el-radio>\n" +
-            "                                </el-radio-group>  "+
+            "                                       <template v-for=\"(item, index) in status_show\">\n" +
+            "                                       <el-radio :label=\"item.code\">{{item.text}}</el-radio>\n" +
+            "                                    </el-radio-group>  "+
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"销售价格\">\n" +
             "                                    <el-input v-model=\"form.waresPrice\"></el-input>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item  label=\"商品状态\"> " +
-            "                                    <el-radio-group v-model=\"form.waresState\">\n" +
-            "                                    <template v-for=\"(item, index) in status_arr\">\n" +
-            "                                     <el-radio :label=\"item.code\">{{item.text}}</el-radio>\n" +
-            "                                </el-radio-group>  "+
+            "                                    <el-radio-group v-model=\"form.waresState\">" +
+            "                                       <template v-for=\"(item, index) in status_arr\">" +
+            "                                       <el-radio :label=\"item.code\">{{item.text}}</el-radio>" +
+            "                                    </el-radio-group>  "+
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"商品根类\">\n" +
             "                                  <el-radio-group v-model=\"form.typeId\" @change='findcategory'>\n" +
@@ -128,7 +128,7 @@
             "<el-upload   v-if='fileList.length>0'" +
             "  action=\"/img/uplode\"\n" +
             "  list-type=\"picture-card\" " +
-            "  :auto-upload=\"false\"  " +
+            "  :auto-upload=\"false\"  :multiple=true " +
             "  :on-preview=\"handlePreview\" " +
             "  :file-list=\"fileList\" " +
             "   ref=\"upload0\"  " +
@@ -165,11 +165,8 @@
             "</el-dialog>" +
             "                                </el-form-item>\n" +
             "                               <el-form-item label=\"商品备注\">\n" +
-            "                                    <el-input v-model=\"form.waresRemarks\"></el-input>\n" +
+            "                                     <el-input type=\"textarea\"  v-model=\"form.waresRemarks\"></el-input>" +
             "                                </el-form-item>\n" +
-            // "                                <el-form-item label=\"商品状态\">\n" +
-            // "                                    <el-input v-model=\"form.waresState\"></el-input>\n" +
-            // "                                </el-form-item>\n" +
             "                            </el-form>\n" +
             "  <div slot=\"footer\" class=\"dialog-footer\">\n" +
             "    <el-button @click=\"handleClose\">取 消</el-button>\n" +
@@ -304,7 +301,7 @@
                             $.post("/comm/addComm",formData,function (data) {
                             if(data=='ok'){
                                 _this.$message({
-                                    message: '创建完成！',
+                                    message: '修改完成！',
                                     type: 'success'
                                 });
                                 _this.onCancel();
@@ -383,7 +380,7 @@
                     if (imgnames[i] != "") {
                         var img = {};
                         img.name = imgnames[i];
-                        img.url = imgPath + imgnames[i];
+                        img.url = imgPath + imgnames[i];//+"?version="+Math.random() * 1000;
                         _this.fileList[i] = img;
                     }
                 }
@@ -401,7 +398,7 @@
     Vue.component("addcomm",{
         template:" <el-row :gutter='20'>\n" +
             "                    <el-col :span=\"24\"><div class=\"grid-content bg-purple\">\n" +
-            "                        <el-card class=\"box-card\" style=\"height: 950px\">\n" +
+            "                        <el-card class=\"box-card\" style=\"height:1150px\">\n" +
             "                            <h5 align=\"center\"> 新建商品</h5>\n" +
             "                            <el-form ref=\"form\" :model=\"form\" label-width=\"80px\">" +
             "                                <el-form-item label=\"商品名称\">\n" +
@@ -446,7 +443,7 @@
             "<el-upload\n" +
             "  action=\"/img/uplode\"\n" +
             "  list-type=\"picture-card\" " +
-            "  :auto-upload=\"false\" " +
+            "  :auto-upload=\"false\" :multiple=true" +
             "   ref=\"upload0\"  " +
             "            :limit='9'\n" +
             "            accept=\".jpg,.jpeg,.png,.gif,.bmp,.JPG,.JPEG,.GIF,.BMP\"" +
@@ -481,7 +478,7 @@
             "</el-dialog>" +
             "                                </el-form-item>\n" +
             "                               <el-form-item label=\"商品备注\">\n" +
-            "                                    <el-input v-model=\"form.waresRemarks\"></el-input>\n" +
+            "                                      <el-input type=\"textarea\"  v-model=\"form.waresRemarks\"></el-input>" +
             "                                </el-form-item>\n" +
 
             "                                <el-form-item>\n" +
@@ -646,31 +643,33 @@
 
     // -------------查看商品列表
     Vue.component("showcomm",{
-        template:" <el-row :gutter='20'  >\n" +
-            "                    <el-col :span=\"24\"><div class=\"grid-content bg-purple\">\n" +
-            "                        <el-table\n" +
-            "                                :data=\"tableData\"\n" +
-            "                                height=\"550\"\n" +
+        template:
+            "<el-row :gutter='20'  >" +
+            "                    <el-col :span=\"24\"><el-button @click=\"clearFilter\">清除所有过滤器</el-button> " +
+            "<div class=\"grid-content bg-purple\">" +
+            "                        <el-table " +
+            "                                :data=\"tableData\"  ref=\"filterTable\"" +
+            "                                height=\"520\"\n" +
             "                                border\n" +
             "                                style=\"width: 100%\" >\n" +
             "                            <el-table-column\n" +
             "                                    prop=\"id\"\n" +
             "                                    label=\"序号\"\n" +
-            "                                    width=\"80\">\n" +
+            "                                    width=\"50\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
             "                                    prop=\"waresName\"\n" +
             "                                    label=\"商品名\"\n" +
-            "                                    width=\"180\">\n" +
+            "                                    width=\"320\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
             "                                    prop=\"waresImg\"\n" +
             "                                    label=\"商品图片\"\n" +
-            "                                    width=\"180\">\n" +
+            "                                    width=\"80\">\n" +
             "<template slot-scope=\"scope\"  v-if='scope.row.waresImg!=null&scope.row.waresImg!=\"\"' > " +
             "<el-image style=\"width: 40px; height: 40px\"\n" +
-            "      :src=\"imgPath+scope.row.waresImg.split(',')[0]\"\n" +
-            "      fit=\"cover\"></el-image>  </template>" +
+            "      :src=\"imgPath+scope.row.waresImg.split(',')[0]\""+   //+'?version='+Math.random() * 1000\"\n" +
+            "      fit=\"cover\"  ></el-image>  </template>" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
             "                                    prop=\"waresTagprice\"\n" +
@@ -683,19 +682,20 @@
             "                                    width=\"80\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
-            "                                    prop=\"offiState\"\n" +
+            "                                    prop=\"offiState\"   " +
             "                                    label=\"显示官价\"\n" +
-            "                                    width=\"80\">\n" +
+            "                                    width=\"80\"  :filters='status_show'" +
+            "                                   :filter-method=\"filterTag\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
             "                                    prop=\"waresPrice\"\n" +
             "                                    label=\"销售价格\"\n" +
-            "                                    width=\"180\">\n" +
+            "                                    width=\"160\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column\n" +
             "                                    prop=\"waresState\"\n" +
             "                                    label=\"商品状态\"\n" +
-            "                                    width=\"80\">\n" +
+            "                                    width=\"80\"  :filters='status_arr'  :filter-method=\"filterStatic\">\n" +
             "                            </el-table-column>\n" +
             "                            <el-table-column label=\"操作\">\n" +
             "                                <template slot-scope=\"scope\">\n" +
@@ -728,11 +728,29 @@
                     waresState:'',
                     waresRemarks:'',
                     waresImg:''
-                }
+                },
+                // 单选按钮数据
+                status_arr: [
+                    {text: "不上架",value: 0},
+                    {text: "热销",value: 1},
+                    {text: "无货",value: 2},
+                ],
+                status_show: [
+                    {text: "显示",value: 0},
+                    {text: "不显示",value: 1}
+                ]
             }
         },
         methods:{
-
+            clearFilter:function() {
+                this.$refs.filterTable.clearFilter();
+            },
+            filterTag:function(value, row) {
+                return row.offiState === value;
+            },
+            filterStatic:function(value, row) {
+                return row.waresState === value;
+            },
             handleEdit:function(index, row) {
                 //通过子组件向父组件发送开启弹出框命令
                 this.$emit('sendvaule', true);

@@ -16,7 +16,7 @@ public interface TCommodityWaresMapper extends MyMapper<TCommodityWares> {
     @Select("select * from t_commodity_wares where category_id =#{cid} and wares_state>0")
     public List<TCommodityWares> findWaresByCategoryId(@Param("cid") long cid);
 
-    @Select("select * from t_commodity_wares where type_id =#{tid} and wares_state>0")
+    @Select("select * from t_commodity_wares where type_id =#{tid} and wares_state>0 AND ( category_id  IN (SELECT MIN(category_id) FROM t_commodity_wares WHERE type_id =#{tid} AND wares_state>0 ) OR category_id IS NULL ) ")
     public List<TCommodityWares> findWaresByTypeId(@Param("tid") long cid);
 
 

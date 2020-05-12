@@ -40,8 +40,8 @@
 </head>
 <body>
 <div id="mapp" >
-    <header class="mui-bar mui-bar-nav" style="height: 5%">
-        <h1 class="mui-title" align="center"><img align="center"  style="object-fit:cover;width: 26vw; height: 6vw"  :src="logoPath"> </h1>
+    <header class="mui-bar mui-bar-nav" style="height: 5%" >
+        <h1 class="mui-title" align="center" style="top: 2vw;"><img align="center"  style="object-fit:cover;width: 26vw; height: 6vw"  :src="logoPath"> </h1>
     </header>
     <div class="mui-iframe-wrapper" style="top: 11vw; bottom: 0px; height: 90%">
         <iframe  v-if="alternate" :src="iframePath" id="list" name="list" ref="mapFrame" height="87%"></iframe>
@@ -103,13 +103,13 @@
         <a :class="!activeNav?'mui-tab-item ':'mui-tab-item mui-active'" @click="backHome()">
             <span class="mui-icon mui-icon-home"></span><span>首页</span>
         </a>
-        <a :class="activeNav?'mui-tab-item ':'mui-tab-item mui-active'"  id="bars"  @click="commodity(0) " >
+        <a :class="activeNav?'mui-tab-item ':'mui-tab-item mui-active'"  id="bars"  @click="commodity(1) " >
             <span class="mui-icon mui-icon-bars"   ></span><span>商品</span>
         </a>
-        <a class="mui-tab-item ">
+        <a class="mui-tab-item "  @click="about()">
             <span class="mui-icon mui-icon-spinner-cycle mui-spin"></span><span>活动</span>
         </a>
-        <a class="mui-tab-item " ><!-- @click="about()" -->
+        <a class="mui-tab-item "   @click="about()" >  <!-- @click="about()"-->
             <span class="mui-icon mui-icon-info" ></span><span>个人中心</span>
         </a>
     </nav>
@@ -164,11 +164,14 @@
 
             },
             about:function () {
-                mui('.mui-popover').popover('hide')
-                $("#list").attr("src","/home/m-about");
-                if(!this.alternate){
-                    this.alternate=true;
-                }
+                mui.alert('敬请期待！', '暂未开放', function() {
+                });
+
+                // mui('.mui-popover').popover('hide')
+                // $("#list").attr("src","/home/m-about");
+                // if(!this.alternate){
+                //     this.alternate=true;
+                // }
             }
 
         },

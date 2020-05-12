@@ -14,7 +14,8 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://39.105.145.184:3306/DiscountShopping?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+#    url: jdbc:mysql://39.105.145.184:3306/DiscountShopping?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://172.17.244.71:3306/DiscountShopping?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
     username: root
     password: 123456
     hikari:
@@ -30,3 +31,4 @@ mybatis:
   configuration:
     #自动驼峰注入
     map-underscore-to-camel-case: true
+devSwitch: false #true  #false

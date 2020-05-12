@@ -21,9 +21,16 @@ public class TLoggerAction {
     @Column(name = "action_name")
     private String actionName;
 
+    @Column(name = "action_function")
+    private String actionFunction;
 
+    public String getActionFunction() {
+        return actionFunction;
+    }
 
-
+    public void setActionFunction(String actionFunction) {
+        this.actionFunction = actionFunction;
+    }
 
     public Long getId() {
         return id;
@@ -64,6 +71,7 @@ public class TLoggerAction {
                 ", hostIp='" + hostIp + '\'' +
                 ", actionTime='" + actionTime + '\'' +
                 ", actionName='" + actionName + '\'' +
+                ", actionFunction='" + actionFunction + '\'' +
                 '}';
     }
 }

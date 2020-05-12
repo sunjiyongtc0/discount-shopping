@@ -60,7 +60,7 @@ public class CommodityController {
         return  (String) request.getSession().getAttribute("token");
     }
 
-    @Log("管理操作")
+    @Log("登录商品管理")
     @RequestMapping("/index")
     public String  CommIndex(){
 
@@ -81,7 +81,7 @@ public class CommodityController {
 
 
 
-
+    @Log("添加修改商品操作")
     @PostMapping("/addComm")
     @ResponseBody
     @Token(remove = true)
@@ -120,6 +120,7 @@ public class CommodityController {
 //        return ja;
     }
 
+    @Log("删除商品操作")
     @PostMapping("delComm")
     @ResponseBody
     public  String delComm(@ModelAttribute TCommodityWares wares){

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.glisten.discount.shopping.Domain.TLoggerAction;
 import com.glisten.discount.shopping.Service.Logger.LogActionService;
 import com.glisten.discount.shopping.ThreadWork.LogThread;
+import com.glisten.discount.shopping.ThreadWork.ThreadLog;
+import com.glisten.discount.shopping.Util.Judge;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.*;
@@ -12,6 +14,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -40,14 +43,16 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Order(5)
 @Component
 public class LogAspect {
-
+    @Value("${devSwitch}")
+    private boolean devSwitch;
     @Autowired
-    private LogActionService LogService;
+    private  LogActionService LogService;
+
 
     private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
-    private static LinkedBlockingQueue<TLoggerAction> queue = new LinkedBlockingQueue<TLoggerAction>(100);
-    private static ConcurrentHashMap<String,Object> concurrentHashMap=new ConcurrentHashMap<String,Object>();
-    private static LogThread lt=new LogThread();
+//    private static LinkedBlockingQueue<TLoggerAction> queue = new LinkedBlockingQueue<TLoggerAction>(100);
+//    private static ConcurrentHashMap<String,Object> concurrentHashMap=new ConcurrentHashMap<String,Object>();
+//    private static LogThread lt=new LogThread();
 
     @Pointcut("@annotation(com.glisten.discount.shopping.Interceptor.Log)")
     public void pointcut() {
@@ -89,6 +94,9 @@ public class LogAspect {
     public void handleLog(final JoinPoint joinPoint, final Exception e, Object rvt) throws Exception{
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String ip = request.getRemoteAddr(); // 获取IP地址
+        String osAndBrower = request.getHeader("user-agent");
+        String os = Judge.whatOS(osAndBrower);
+        String brower = Judge.whatBrower(osAndBrower);
         // 获得注解
         Method method = getMethod(joinPoint);
         Log log = getAnnotationLog(method);
@@ -102,68 +110,12 @@ public class LogAspect {
         la.setActionName(log.value());
         la.setActionTime(dateString);
         la.setHostIp(ip);
-//        System.out.println(la.toString());
-        LogService.SaveLog(la);
-//        if(concurrentHashMap.isEmpty()){
-//            concurrentHashMap.put(ip,new Date().getTime());
-//            queue.put(la);
-//            lt.ActionLog(queue,concurrentHashMap);
-//        }else if( !concurrentHashMap.containsKey(ip)){
-//            concurrentHashMap.put(ip,new Date().getTime());
-//                        queue.put(la);
-//            lt.ActionLog(queue,concurrentHashMap);
-////          new  LogThread().ActionLog(queue,concurrentHashMap);
-//        }
-//        for (String s:concurrentHashMap.keySet()){
-//            System.out.println(s);
-//            System.out.println(concurrentHashMap.get(s));
-//            if((long )concurrentHashMap.get(s)+15*60*1000>new Date().getTime()){
-//                concurrentHashMap.remove(s);
-//            }
-//        }
-
-
-
-//        // 操作数据库日志表
-//        ErpLog erpLog = new ErpLog();
-//        erpLog.setErrorCode(0);
-//        erpLog.setIsDeleted(0);
-//        // 请求信息
-//        HttpServletRequest request = ToolUtil.getRequest();
-//        erpLog.setType(ToolUtil.isAjaxRequest(request) ? "Ajax请求" : "普通请求");
-//        erpLog.setTitle(log.value());
-//        erpLog.setHost(request.getRemoteHost());
-//        erpLog.setUri(request.getRequestURI().toString());
-////  erpLog.setHeader(request.getHeader(HttpHeaders.USER_AGENT));
-//        erpLog.setHttpMethod(request.getMethod());
-//        erpLog.setClassMethod(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-//        // 请求的方法参数值
-//        Object[] args = joinPoint.getArgs();
-//        // 请求的方法参数名称
-//        LocalVariableTableParameterNameDiscoverer u
-//                = new LocalVariableTableParameterNameDiscoverer();
-//        String[] paramNames = u.getParameterNames(method);
-//        if (args != null && paramNames != null) {
-//            StringBuilder params = new StringBuilder();
-//            params = handleParams(params, args, Arrays.asList(paramNames));
-//            erpLog.setParams(params.toString());
-//        }
-//        String retString = JsonUtil.bean2Json(rvt);
-//        erpLog.setResponseValue(retString.length() > 5000 ? JsonUtil.bean2Json("请求参数数据过长不与显示") : retString);
-//        if (e != null) {
-//            erpLog.setErrorCode(1);
-//            erpLog.setErrorMessage(e.getMessage());
-//        }
-//        Date stime = startTime.get();
-//        erpLog.setStartTime(stime);
-//        erpLog.setEndTime(now);
-//        erpLog.setExecuteTime(now.getTime() - stime.getTime());
-//        erpLog.setUsername(MySysUser.loginName());
-//        HashMap<String, String> browserMap = ToolUtil.getOsAndBrowserInfo(request);
-//        erpLog.setOperatingSystem(browserMap.get("os"));
-//        erpLog.setBrower(browserMap.get("browser"));
-//        erpLog.setId(IdUtil.simpleUUID());
-//        logService.insertSelective(erpLog);
+        la.setActionFunction(os + ":" + brower);
+        if(!devSwitch) {
+            logger.info(la.toString());
+            LogService.SaveLog(la);
+        }
+//        ThreadLog.add(la);
     }
 
     /**
@@ -187,34 +139,7 @@ public class LogAspect {
     }
 
     private StringBuilder handleParams(StringBuilder params, Object[] args, List paramNames) throws JsonProcessingException {
-//        for (int i = 0; i < args.length; i++) {
-//            if (args[i] instanceof Map) {
-//                Set set = ((Map) args[i]).keySet();
-//                List list = new ArrayList();
-//                List paramList = new ArrayList<>();
-//                for (Object key : set) {
-//                    list.add(((Map) args[i]).get(key));
-//                    paramList.add(key);
-//                }
-//                return handleParams(params, list.toArray(), paramList);
-//            } else {
-//                if (args[i] instanceof Serializable) {
-//                    Class<?> aClass = args[i].getClass();
-//                    try {
-//                        aClass.getDeclaredMethod("toString", new Class[]{null});
-//                        // 如果不抛出NoSuchMethodException 异常则存在 toString 方法 ，安全的writeValueAsString ，否则 走 Object的 toString方法
-//                        params.append(" ").append(paramNames.get(i)).append(": ").append(objectMapper.writeValueAsString(args[i]));
-//                    } catch (NoSuchMethodException e) {
-//                        params.append(" ").append(paramNames.get(i)).append(": ").append(objectMapper.writeValueAsString(args[i].toString()));
-//                    }
-//                } else if (args[i] instanceof MultipartFile) {
-//                    MultipartFile file = (MultipartFile) args[i];
-//                    params.append(" ").append(paramNames.get(i)).append(": ").append(file.getName());
-//                } else {
-//                    params.append(" ").append(paramNames.get(i)).append(": ").append(args[i]);
-//                }
-//            }
-//        }
+
         return params;
     }
 
