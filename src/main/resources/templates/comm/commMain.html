@@ -95,7 +95,8 @@
             "                                <el-form-item  label=\"显示官价\"> " +
             "                                    <el-radio-group v-model=\"form.offiState\">\n" +
             "                                       <template v-for=\"(item, index) in status_show\">\n" +
-            "                                       <el-radio :label=\"item.code\">{{item.text}}</el-radio>\n" +
+            "                                           <el-radio :label=\"item.code\">{{item.text}}</el-radio> " +
+            "                                       </template>" +
             "                                    </el-radio-group>  "+
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"销售价格\">\n" +
@@ -104,7 +105,8 @@
             "                                <el-form-item  label=\"商品状态\"> " +
             "                                    <el-radio-group v-model=\"form.waresState\">" +
             "                                       <template v-for=\"(item, index) in status_arr\">" +
-            "                                       <el-radio :label=\"item.code\">{{item.text}}</el-radio>" +
+            "                                           <el-radio :label=\"item.code\">{{item.text}}</el-radio>" +
+            "                                       </template>" +
             "                                    </el-radio-group>  "+
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"商品根类\">\n" +
@@ -294,7 +296,6 @@
                 this.imgNum+=1;
                 if(response!='') {
                     this.form.waresImg += response+",";
-
                     if(this.imgNum==this.fileList.length){
                         var formData = this.form;
                             formData.token=this.token0;
@@ -556,7 +557,7 @@
             },
             onSubmit:function() {
                 this.$refs.upload0.submit();
-                console.log(this.$refs.upload0)
+                // console.log(this.$refs.upload0)
             },
             handleChange:function (file, fileList) {
                 this.fileLIst=fileList;
@@ -578,6 +579,12 @@
                 if(response!='') {
                     this.form.waresImg += response+",";
                     if(this.form.waresImg.split(",").length-1==this.fileLIst.length){
+                        this.form.waresImg="";
+                        for( let i in this.fileLIst){
+                            if(i<=this.fileLIst.length) {
+                                this.form.waresImg += this.fileLIst[i].response + ",";
+                            }
+                        }
                             var formData = this.form;
                                 formData.token=this.token0;
                         $.post("/comm/addComm",formData,function (data) {
@@ -757,8 +764,6 @@
                 //依靠父组件，将数据id发送给兄弟组件
                 this.form=row;
                 var _this=this;
-
-
                 comms.$emit('sendrow', this.form);
                 comms.$emit('sendshow',true);
             },

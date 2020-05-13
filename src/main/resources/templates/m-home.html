@@ -58,7 +58,7 @@
                 </div>
 
             </div>
-            <div  class="mui-bar" v-if="ReCategory>0&category.length>0"  style="height: 7vw">
+            <div  id="Categorydiv" class="mui-bar" v-if="ReCategory>0&category.length>0"  style="height: 7vw">
                         <div  class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary" >
                             <a   v-for="(c,i) in category" :index="i" style="display: table-cell" align="center" @click="findRightData('2',c.id)" :class="ReCategory==c.id?'mui-control-item mui-active':'mui-control-item'" ><span>{{c.name}}</span></a>
                         </div>
@@ -130,6 +130,7 @@
                     });
                     this.showleft=true;
                 }
+
             },
             openW:function(val){
                 this.ShowComm();
@@ -141,6 +142,9 @@
                 this.IsShowComm=!this.IsShowComm;
             },
             takeDate: function (val) {
+                if( $("#Categorydiv").length>0) {
+                    $("#Categorydiv div a ").last()[0].className = "mui-control-item";
+                }
                 var _this=this;
                 $.get("/comm/commListByKeyword/1/"+val,function (data) {
                     _this.showData=data;
