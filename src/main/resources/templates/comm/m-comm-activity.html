@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=640,user-scalable=no" />
+    <title>闪购商城</title>
+    <script th:src="@{/js/jQuery.js}"></script>
+    <script th:src="@{/vue/vue.js}"></script>
+    <script th:src="@{/vue/vue-lazyload.js}"></script>
+    <script th:src="@{/MUI/mui.min.js}"></script>
+    <script th:src="@{/MUI/mui.view.js}"></script>
+    <script  th:src="@{/MUI/mui.zoom.js}"  ></script>
+    <script  th:src="@{/MUI/mui.previewimage.js}"  ></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.previewimage.css}">
+
+    <style>
+        .fixed_div{
+            position:fixed;
+            bottom:0vw;
+            /*right: 2vw;*/
+            /*width:12vw;*/
+            top: 0vw;
+            width: 100%;
+            height:2vw;
+            filter:alpha(Opacity=80);-moz-opacity:0.5;opacity: 0.5;z-index:100; background-color:#ffffff;
+            text-align:center;
+            display:table-cell;
+            margin:0 auto;
+            z-index: 999;
+        }
+        .list{
+            padding:0;
+            margin:0;
+        }
+        .list li{
+            padding:0;
+            margin:0;
+            margin:0;
+            text-align: left;
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+<div id="capp" style="height: 100%">
+    <input  type="hidden"   th:value="${w}"  id="w">
+    <!-- <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left fixed_div"  ><span style="top: 4vw;">返回</span></a>-->
+    <div class="fixed_div"  @click="backComm()"   ><button type="button" class="mui-btn mui-btn-primary mui-btn-block">返回</button></div>
+    <div style="height: 8vw"></div>
+    <div class="mui-content" style="height: 80%">
+        <div class="mui-content-padded">
+
+            <p>
+                <div id="slider" class="mui-slider" >
+                    <div class="mui-slider-group mui-slider-loop">
+                        <!--支持循环，需要重复图片节点-->
+                        <!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+                        <div class="mui-slider-item mui-slider-item-duplicate">
+                            <a href="#">
+                                <img :src="imgPath+wares.waresImg.split(',')[wares.waresImg.split(',').length-2]" style=" width: 100%;height:70vw; object-fit:contain" data-preview-src="" data-preview-group="1">
+                            </a>
+                        </div>
+                        <div class="mui-slider-item" v-for=" (p,i) in wares.waresImg.split(',')"  v-if="p!=null&p!=''" ><a href="#">
+                            <!--<img :src="imgPath+p"  style=" width: 100%;height:75vw;object-fit:cover">-->
+                            <img  v-lazy="imgPath+p"  style=" width: 100%;height:75vw;object-fit:contain" data-preview-src="" data-preview-group="1">
+                        </a>
+                        </div>
+                        <!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+                        <div class="mui-slider-item mui-slider-item-duplicate">
+                            <a href="#">
+                                <img :src="imgPath+wares.waresImg.split(',')[0]" style=" width: 100%;height:70vw; object-fit:contain" data-preview-src="" data-preview-group="1">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mui-slider-indicator">
+                        <div class="mui-indicator"  v-for=" i in sliderNum" :index="i"  :class="i==0?'mui-active':''"></div>
+                    </div>
+                </div>
+            </p>
+            <p style="height: 2vw"></p>
+            <p><h2>{{wares.waresName}}</h2></p>
+            <p v-if="wares.offiState==0"><h3 style="text-decoration: line-through" v-if="wares.offiState==0" >官网价格：￥{{wares.waresOffprice}}</h3></p>
+            <h2>销售价格：￥{{wares.waresPrice}}</h2>
+            <p></p>
+            <p style="margin: 0;font-size:18px;line-height:30px;">{{wares.waresRemarks}}</p><!-- text-indent:2em; -->
+            <div style="height: 20vw">
+                <!--<span style=" color: #999">已经到底了</span>-->
+            </div>
+        </div>
+    </div>
+<!--<div  v-if="showData.length>0">同类热销：</div>-->
+    <!--<div class="mui-row" style="border-left: 1px solid #c8c7cc; overflow-y: auto;"  v-for="(item,index) in listTemp" :key="index"  >-->
+        <!--<div  class="mui-col-sm-6" v-for="(j,ind) in item" :index="ind" @click="findComm(j)">-->
+            <!--<div class="mui-card"  style="width: 45vw;margin: 1vw auto;height: 38vw"  >-->
+                <!--<div class="mui-card-header mui-card-media" >-->
+                    <!--<div class="mui-card-content">-->
+                        <!--<img   v-lazy="imgPath+j.waresImg.split(',')[0]" alt width="100%" height="150vw"  style="object-fit:cover"  onerror="onerror=null;src='/img/logo.jpg'"/>-->
+                    <!--</div>-->
+                    <!--<div class="mui-card-footer">-->
+                        <!--<ul  class="list"><li><b>{{j.waresName}}</b></li><li><b style="color: red">￥{{j.waresPrice}}</b></li></ul>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<div style="height: 10vw">
+
+</div>
+
+</div>
+</body>
+<script th:inline="javascript">
+    mui.previewImage();
+    Vue.use(VueLazyload);
+    new Vue({
+        el:'#capp',
+        data:{
+            imgPath :"/images/upload/",
+            wares:{},
+            sliderNum:1,
+            showData:[]
+        },
+        methods: {
+            backComm:function () {
+                parent.act.ifrPath="/comm/m-i-active/";
+                parent.act.IsShowActive=true;
+            },
+            findComm:function(val){
+                this.wares=val;
+                this.sliderNum=val.waresImg.split(',').length-1;
+                var _this=this;
+                $.post("/comm/commListByRandom",val,function (data) {
+                    _this.showData=data;
+                })
+            }
+        },
+        computed:{
+            listTemp:function(){
+                let index =0;
+                let count = 2;
+                let arrTemp = [];
+                let showData = this.showData;
+                for(let i=0;i<this.showData.length;i++){
+                    index = parseInt(i/count);
+                    if (arrTemp.length <= index) {
+                        arrTemp.push([]);
+                    }
+                    arrTemp[index].push(showData[i])
+                }
+                return arrTemp
+            }
+        },
+        created(){
+            this.wares=JSON.parse($("#w").val());
+            this.sliderNum=this.wares.waresImg.split(',').length-1;
+            var _this=this;
+            $.post("/comm/commListByRandom",this.wares,function (data) {
+                _this.showData=data;
+
+            })
+
+        }
+    }) ;
+
+</script>
+</html>

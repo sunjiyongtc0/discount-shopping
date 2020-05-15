@@ -31,4 +31,4 @@ mybatis:
   configuration:
     #自动驼峰注入
     map-underscore-to-camel-case: true
-devSwitch: false #true  #false
+devSwitch:  false #true  #false
