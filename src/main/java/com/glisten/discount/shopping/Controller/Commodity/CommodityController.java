@@ -188,5 +188,13 @@ public class CommodityController {
         ja=JSONArray.parseArray(JSON.toJSONString(lcw));
         return ja;
     }
+    @PostMapping(value = {"/findWaresByactivityId"})
+    @ResponseBody
+    public JSONArray findWaresByactivityId(){
+        JSONArray ja =new JSONArray();
+        List<TCommodityWares> lcw=cs.findWaresByactivityId();
+        ja=JSONArray.parseArray(JSON.toJSONString(lcw));
+        return ja;
+    }
 
 }

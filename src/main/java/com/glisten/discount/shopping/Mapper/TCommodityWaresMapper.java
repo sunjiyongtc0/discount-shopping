@@ -28,4 +28,7 @@ public interface TCommodityWaresMapper extends MyMapper<TCommodityWares> {
 
     @Select("select * from t_commodity_wares where item_id=#{w.itemId} and wares_state>0 and id!=#{w.id} ORDER BY RAND() LIMIT 2" )
     public List<TCommodityWares> findWaresByRandom(@Param("w") TCommodityWares w );
+
+    @Select("select * from t_commodity_wares where  wares_state=-1 order by id desc")
+    public List<TCommodityWares> findWaresByactivityId();
 }

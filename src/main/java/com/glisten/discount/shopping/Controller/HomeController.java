@@ -47,4 +47,10 @@ public class HomeController {
     public String mAbout(){
         return "m-about";
     }
+
+    @RequestMapping("/m-activity")
+    public String mActivity(){
+        return "m-activity";
+    }
+
 }

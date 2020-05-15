@@ -8,6 +8,7 @@
     <title>闪购商城</title>
     <script th:src="@{/js/jQuery.js}"></script>
     <script th:src="@{/vue/vue.js}"></script>
+    <link rel="shortcut icon" th:href="@{/img/favicon.ico}" type="image/x-icon">
     <link rel="stylesheet" type="text/css" th:href="@{/element/element-index.css}">
     <script  th:src="@{/element/element-index.js}"  ></script>
 
@@ -206,6 +207,7 @@
                 token0:"",
                 // 单选按钮数据
                 status_arr: [
+                    {text: "活动",code: -1},
                     {text: "不上架",code: 0},
                     {text: "热销",code: 1},
                     {text: "无货",code: 2},
@@ -419,6 +421,7 @@
             "                                    <el-input v-model=\"form.waresPrice\"></el-input>\n" +
             "                                </el-form-item>\n" +
             "                                <el-form-item label=\"商品状态\">\n" +
+            "                                    <el-radio v-model=\"form.waresState\" label=\"-1\">活动</el-radio>\n" +
             "                                    <el-radio v-model=\"form.waresState\" label=\"0\">不上架</el-radio>\n" +
             "                                    <el-radio v-model=\"form.waresState\" label=\"1\">热销</el-radio>" +
             "                                    <el-radio v-model=\"form.waresState\" label=\"2\">无货</el-radio>\n" +
@@ -738,6 +741,7 @@
                 },
                 // 单选按钮数据
                 status_arr: [
+                    {text: "活动",value: -1},
                     {text: "不上架",value: 0},
                     {text: "热销",value: 1},
                     {text: "无货",value: 2},

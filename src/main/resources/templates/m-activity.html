@@ -14,7 +14,20 @@
     <link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.min.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/MUI/css/mui.previewimage.css}">
 
+
     <style>
+        /*p{ text-indent: 2em;}*/
+        .list{
+            padding:0;
+            margin:0;
+        }
+        .list li{
+            padding:0;
+            margin:0;
+            margin:0;
+            text-align: left;
+            list-style-type: none;
+        }
         .fixed_div{
             position:fixed;
             bottom:0vw;
@@ -29,29 +42,33 @@
             margin:0 auto;
             z-index: 999;
         }
-        .list{
-            padding:0;
-            margin:0;
-        }
-        .list li{
-            padding:0;
-            margin:0;
-            margin:0;
-            text-align: left;
-            list-style-type: none;
-        }
     </style>
 </head>
 <body>
-<div id="capp" style="height: 100%">
-    <input  type="hidden"   th:value="${w}"  id="w">
-    <!-- <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left fixed_div"  ><span style="top: 4vw;">返回</span></a>-->
-    <div class="fixed_div"  @click="backComm()"   ><button type="button" class="mui-btn mui-btn-primary mui-btn-block">返回</button></div>
-    <div style="height: 8vw"></div>
-    <div class="mui-content" style="height: 80%">
-        <div class="mui-content-padded">
-
-            <p>
+<div id="dapp" width="90%">
+    <div v-show="IsShowActive">
+        <img  style="width: 100%;height: 60vw;object-fit: scale-down;" src="../img/hd.jpg">
+        <h4>活动商品</h4>
+        <div class="mui-row" style="border-left: 1px solid #c8c7cc; overflow-y: auto;"  v-for="(item,index) in listTemp" :key="index"  >
+            <div  class="mui-col-sm-6" v-for="(j,ind) in item" :index="ind" @click="findComm(j)">
+                <div class="mui-card"  style="width: 45vw;margin: 1vw auto;height: 38vw"  >
+                    <div class="mui-card-header mui-card-media" >
+                        <div class="mui-card-content">
+                            <img   v-lazy="imgPath+j.waresImg.split(',')[0]" alt width="100%" height="150vw"  style="object-fit:cover"  onerror="onerror=null;src='/img/logo.jpg'"/>
+                        </div>
+                        <div class="mui-card-footer">
+                            <ul  class="list"><li><b>{{j.waresName}}</b></li><li><b style="color: red">￥{{j.waresPrice}}</b></li></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-if="!IsShowActive">
+        <div class="fixed_div"  @click="backComm()"   ><button type="button" class="mui-btn mui-btn-primary mui-btn-block">返回</button></div>
+        <div style="height: 8vw"></div>
+        <div class="mui-content" style="height: 80%">
+            <div class="mui-content-padded">
                 <div id="slider" class="mui-slider" >
                     <div class="mui-slider-group mui-slider-loop">
                         <!--支持循环，需要重复图片节点-->
@@ -61,10 +78,10 @@
                                 <img :src="imgPath+wares.waresImg.split(',')[wares.waresImg.split(',').length-2]" style=" width: 100%;height:70vw; object-fit:contain" data-preview-src="" data-preview-group="1">
                             </a>
                         </div>
-                        <div class="mui-slider-item" v-for=" (p,i) in wares.waresImg.split(',')"  v-if="p!=null&p!=''" ><a href="#">
-                            <!--<img :src="imgPath+p"  style=" width: 100%;height:75vw;object-fit:cover">-->
-                            <img  v-lazy="imgPath+p"  style=" width: 100%;height:75vw;object-fit:contain" data-preview-src="" data-preview-group="1">
-                        </a>
+                        <div class="mui-slider-item" v-for=" (p,i) in wares.waresImg.split(',')"  v-if="p!=null&p!=''" >
+                            <a href="#">
+                                <img  v-lazy="imgPath+p"  style=" width: 100%;height:75vw;object-fit:contain" data-preview-src="" data-preview-group="1">
+                            </a>
                         </div>
                         <!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
                         <div class="mui-slider-item mui-slider-item-duplicate">
@@ -77,62 +94,44 @@
                         <div class="mui-indicator"  v-for=" i in sliderNum" :index="i"  :class="i==0?'mui-active':''"></div>
                     </div>
                 </div>
-            </p>
-            <p style="height: 2vw"></p>
-            <p><h2>{{wares.waresName}}</h2></p>
-            <p v-if="wares.offiState==0"><h3 style="text-decoration: line-through" v-if="wares.offiState==0" >官网价格：￥{{wares.waresOffprice}}</h3></p>
-            <h2>销售价格：￥{{wares.waresPrice}}</h2>
-            <p></p>
-            <p style="margin: 0;font-size:18px;line-height:30px;">{{wares.waresRemarks}}</p><!-- text-indent:2em; -->
-            <div style="height: 20vw">
-                <!--<span style=" color: #999">已经到底了</span>-->
+                <div style="height: 10vw"></div>
+                <h5>点击图片预览商品</h5>
+                <p style="height: 2vw"></p>
+                <p><h2>{{wares.waresName}}</h2></p>
+                <p v-if="wares.offiState==0"><h3 style="text-decoration: line-through" v-if="wares.offiState==0" >官网价格：￥{{wares.waresOffprice}}</h3></p>
+                <h2>销售价格：￥{{wares.waresPrice}}</h2>
+                <p></p>
+                <p style="margin: 0;font-size:18px;line-height:30px;">{{wares.waresRemarks}}</p>
+
+            </div>
             </div>
         </div>
-    </div>
-<div  v-if="showData.length>0">同类热销：</div>
-    <div class="mui-row" style="border-left: 1px solid #c8c7cc; overflow-y: auto;"  v-for="(item,index) in listTemp" :key="index"  >
-        <div  class="mui-col-sm-6" v-for="(j,ind) in item" :index="ind" @click="findComm(j)">
-            <div class="mui-card"  style="width: 45vw;margin: 1vw auto;height: 38vw"  >
-                <div class="mui-card-header mui-card-media" >
-                    <div class="mui-card-content">
-                        <img   v-lazy="imgPath+j.waresImg.split(',')[0]" alt width="100%" height="150vw"  style="object-fit:cover"  onerror="onerror=null;src='/img/logo.jpg'"/>
-                    </div>
-                    <div class="mui-card-footer">
-                        <ul  class="list"><li><b>{{j.waresName}}</b></li><li><b style="color: red">￥{{j.waresPrice}}</b></li></ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-<div style="height: 10vw">
 
-</div>
-
+    </div>
+    <div style="height: 13vw"></div>
 </div>
 </body>
 <script th:inline="javascript">
     mui.previewImage();
     Vue.use(VueLazyload);
     new Vue({
-        el:'#capp',
+        el:'#dapp',
         data:{
+            IsShowActive:true,
+            showData:[],
             imgPath :"/images/upload/",
             wares:{},
             sliderNum:1,
-            showData:[]
         },
         methods: {
-            backComm:function () {
-                parent.comm.ifrPath="/comm/m-i/";
-                parent.comm.IsShowComm=false;
-            },
             findComm:function(val){
-                this.wares=val;
+                this.IsShowActive=false;
                 this.sliderNum=val.waresImg.split(',').length-1;
-                var _this=this;
-                $.post("/comm/commListByRandom",val,function (data) {
-                    _this.showData=data;
-                })
+                this.wares=val;
+                //获得slider插件对象
+            },
+            backComm:function(){
+                this.IsShowActive=true;
             }
         },
         computed:{
@@ -152,10 +151,8 @@
             }
         },
         created(){
-            this.wares=JSON.parse($("#w").val());
-            this.sliderNum=this.wares.waresImg.split(',').length-1;
             var _this=this;
-            $.post("/comm/commListByRandom",this.wares,function (data) {
+            $.post("/comm/findWaresByactivityId",function (data) {
                 _this.showData=data;
 
             })

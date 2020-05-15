@@ -30,66 +30,56 @@
             margin-top: -50px;
             margin-left: 50vw;
         }
-        .scrollXclass{
-            height: 4vw;width: 90%;
-            float:left; border:1px solid #F00;
-            margin-left:10px;overflow-y:scroll;
-            over-flow:auto
-        }
+        .mui-bar-tab .mui-tab-item.mui-active   {color:#F7691E;}
+        /*.scrollXclass{*/
+            /*height: 4vw;width: 90%;*/
+            /*float:left; border:1px solid #F00;*/
+            /*margin-left:10px;overflow-y:scroll;*/
+            /*over-flow:auto*/
+        /*}*/
     </style>
 </head>
 <body>
 <div id="mapp" >
-    <header class="mui-bar mui-bar-nav" style="height: 5%" >
-        <h1 class="mui-title" align="center" style="top: 2vw;"><img align="center"  style="object-fit:cover;width: 26vw; height: 6vw"  :src="logoPath"> </h1>
+    <header class="mui-bar mui-bar-nav" style="height: 5%;background-color: #7D130C"  >
+        <h1 class="mui-title" align="center" style="top: 2vw;"><img align="center"  style="object-fit:cover;width: 50vw; height: 6vw"  :src="logoPath"> </h1>
     </header>
-    <div class="mui-iframe-wrapper" style="top: 11vw; bottom: 0px; height: 90%">
-        <iframe  v-if="alternate" :src="iframePath" id="list" name="list" ref="mapFrame" height="87%"></iframe>
-        <div id="vi" align="center" v-if="!alternate" style="height:100%">
+
+    <div class="mui-iframe-wrapper" style="top: 6%; bottom: 0px; height: 90%">
+        <iframe  v-if="alternate" :src="iframePath" id="list" name="list" ref="mapFrame" height="89%"></iframe>
+
+        <div id="vi" align="center" v-if="!alternate" style="height:130%">
             <div class="mui-input-row mui-search" style="height: 3%">
                 <input type="search"  v-model="search" @keyup.enter="findPage"  @blur="findPage"  placeholder="快速搜索">
             </div>
-            <h5 style="background-color:#efeff4" class="mui-pull-left mui-icon mui-icon-chat">公告</h5><br>
-            <div class="scrollXclass">
-                <marquee scrolldelay="5" scrollamount="5"><span style="font-size: 20px;color: red">{{notice}}</span></marquee>
-
-            </div>
-
-            <div ><br>
-            <div style="height: 3vw;">
-            </div>
+            <!--<h5 style="background-color:#efeff4" class="mui-pull-left mui-icon mui-icon-chat">公告</h5><br>-->
+            <!--<div class="scrollXclass">-->
+                <!--<marquee scrolldelay="5" scrollamount="5"><span style="font-size: 20px;color: red">{{notice}}</span></marquee>-->
+            <!--</div>-->
+            <div >
+            <!--<div style="height: 1vw;">-->
+            <!--</div>-->
                 <!--<img src="../img/dh.gif"  width="100%"  height="auto" style="object-fit:cover">-->
-            <ul class="mui-table-view" style="top: 1vw;height: 50%">
-                <li class="mui-table-view-cell" v-for="(t,i) in type" :index="i" style="height: 40vw" @click="commodity(t.id) ">
+            <ul class="mui-table-view" style="top: 1vw;height: 70%">
+                <li class="mui-table-view-cell" v-for="(t,i) in type" :index="i" style="height: 54vw" @click="commodity(t.id) ">
                     <div >
-                        <img  style="width: 100%;height: 38vw ;object-fit: contain;"  v-lazy="'../img/type'+t.id+'.jpg'">
-                        <!-- <img class="mui-media-object mui-pull-left" style="width: 100%" :src="'../img/type'+t.id+'.jpg'">-->
-                        <!--<div class="mui-media-body">-->
-                            <!--{{t.type}}-->
-                            <!--<p class='mui-ellipsis'>点击查看该类商品</p>-->
-                        <!--</div>-->
+                        <img  style="width: 100%;height: 53vw ;object-fit: contain;"  v-lazy="'../img/type'+t.id+'.jpg'">
+
                     </div>
                 </li>
             </ul>
                 <div style="height: 3vw"></div>
             </div>
-            <ul class="mui-table-view" align="center"  style="height: 25%">
-                <li class="mui-table-view-cell " style="height: 40vw">
+            <ul class="mui-table-view" align="center"  style="height: 22%">
+                <li class="mui-table-view-cell " style="height: 24vw">
                     <a href="javascript:;">
-                        <img class=" mui-pull-left" style="width: 100%;height: 38vw;object-fit: contain;" src="../img/kf.jpg">
-                        <!--<div class="mui-media-body  spjzp" align="center">-->
-                            <!--<p>联系客服</p>-->
-                            <!--<p class='mui-ellipsis'>长按图片添加</p>-->
-                        <!--</div>-->
+                        <img class=" mui-pull-left" style="width: 100%;height: 23vw;object-fit: scale-down;" src="../img/kf.jpg">
+
                     </a>
                 </li>
-                <li class="mui-table-view-cell " style="height: 40vw">
+                <li class="mui-table-view-cell " style="height: 24vw">
                     <a href="javascript:;">
-                        <img class=" mui-pull-left" style="width: 100%;height: 38vw;object-fit: contain;" src="../img/gzh.jpg">
-                        <!--<div class="mui-media-body  spjzp" align="center">-->
-                            <!--<p>添加公众号</p>-->
-                            <!--<p class='mui-ellipsis'>长按图片添加</p>-->
-                        <!--</div>-->
+                        <img class=" mui-pull-left" style="width: 100%;height: 23vw;object-fit: scale-down;" src="../img/gzh.jpg">
                     </a>
                 </li>
             </ul>
@@ -99,18 +89,19 @@
             </div>
         </div>
     </div>
-    <nav class="mui-bar mui-bar-tab" style="height:5%">
-        <a :class="!activeNav?'mui-tab-item ':'mui-tab-item mui-active'" @click="backHome()">
-            <span class="mui-icon mui-icon-home"></span><span>首页</span>
+
+    <nav class="mui-bar mui-bar-tab" style="height:5%;background-color: #7D130C">
+        <a :class="activeNav==1?'mui-tab-item  mui-active':'mui-tab-item'" @click="backHome()">
+            <span class="mui-icon mui-icon-home"></span><span style="font-size:x-large ">首页</span>
         </a>
-        <a :class="activeNav?'mui-tab-item ':'mui-tab-item mui-active'"  id="bars"  @click="commodity(1) " >
-            <span class="mui-icon mui-icon-bars"   ></span><span>商品</span>
+        <a :class="activeNav==2?'mui-tab-item  mui-active':'mui-tab-item '"  id="bars"  @click="commodity(1) " >
+            <span class="mui-icon mui-icon-bars"   ></span><span style="font-size:x-large" >商品</span>
         </a>
-        <a class="mui-tab-item "  @click="about()">
-            <span class="mui-icon mui-icon-spinner-cycle mui-spin"></span><span>活动</span>
+        <a :class="activeNav==3?'mui-tab-item  mui-active':'mui-tab-item '"   @click="activity()">
+            <span class="mui-icon mui-icon-spinner-cycle mui-spin"></span><span style="font-size:x-large" >活动</span>
         </a>
-        <a class="mui-tab-item "   @click="about()" >  <!-- @click="about()"-->
-            <span class="mui-icon mui-icon-info" ></span><span>个人中心</span>
+        <a :class="activeNav==4?'mui-tab-item  mui-active':'mui-tab-item '"   @click="about()" >
+            <span class="mui-icon mui-icon-info" ></span><span style="font-size:x-large" >个人中心</span>
         </a>
     </nav>
 
@@ -124,7 +115,7 @@
   let index=  new Vue({
         el: '#mapp',
         data:{
-            activeNav:true,
+            activeNav:1,
             type:[],
             alternate:false,
             logoPath:"../img/sc.jpg",
@@ -147,7 +138,7 @@
             },
             commodity:function (val) {
                 var url="/home/m-index/"+val;
-                this.activeNav=false;
+                this.activeNav=2;
                 this.iframePath=url;
                 // mui('.mui-popover').popover('hide')
                 $("#list").attr("src",url);
@@ -160,10 +151,11 @@
                 mui('.mui-popover').popover('hide')
                 $("#list").attr("src","/#");
                 this.alternate=false;
-                this.activeNav=true;
+                this.activeNav=1;
 
             },
             about:function () {
+                // this.activeNav=4;
                 mui.alert('敬请期待！', '暂未开放', function() {
                 });
 
@@ -172,6 +164,16 @@
                 // if(!this.alternate){
                 //     this.alternate=true;
                 // }
+            },
+            activity:function () {
+                var url="/home/m-activity";
+                this.activeNav=3;
+                this.iframePath=url;
+                // mui('.mui-popover').popover('hide')
+                $("#list").attr("src",url);
+                if(!this.alternate){
+                    this.alternate=true;
+                }
             }
 
         },
