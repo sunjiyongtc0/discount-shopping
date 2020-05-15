@@ -65,56 +65,61 @@
         </div>
     </div>
     <div v-if="!IsShowActive">
-        <div class="fixed_div"  @click="backComm()"   ><button type="button" class="mui-btn mui-btn-primary mui-btn-block">返回</button></div>
-        <div style="height: 8vw"></div>
-        <div class="mui-content" style="height: 80%">
-            <div class="mui-content-padded">
-                <div id="slider" class="mui-slider" >
-                    <div class="mui-slider-group mui-slider-loop">
-                        <!--支持循环，需要重复图片节点-->
-                        <!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
-                        <div class="mui-slider-item mui-slider-item-duplicate">
-                            <a href="#">
-                                <img :src="imgPath+wares.waresImg.split(',')[wares.waresImg.split(',').length-2]" style=" width: 100%;height:70vw; object-fit:contain" data-preview-src="" data-preview-group="1">
-                            </a>
-                        </div>
-                        <div class="mui-slider-item" v-for=" (p,i) in wares.waresImg.split(',')"  v-if="p!=null&p!=''" >
-                            <a href="#">
-                                <img  v-lazy="imgPath+p"  style=" width: 100%;height:75vw;object-fit:contain" data-preview-src="" data-preview-group="1">
-                            </a>
-                        </div>
-                        <!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
-                        <div class="mui-slider-item mui-slider-item-duplicate">
-                            <a href="#">
-                                <img :src="imgPath+wares.waresImg.split(',')[0]" style=" width: 100%;height:70vw; object-fit:contain" data-preview-src="" data-preview-group="1">
-                            </a>
-                        </div>
-                    </div>
-                    <div class="mui-slider-indicator">
-                        <div class="mui-indicator"  v-for=" i in sliderNum" :index="i"  :class="i==0?'mui-active':''"></div>
-                    </div>
-                </div>
-                <div style="height: 10vw"></div>
-                <h5>点击图片预览商品</h5>
-                <p style="height: 2vw"></p>
-                <p><h2>{{wares.waresName}}</h2></p>
-                <p v-if="wares.offiState==0"><h3 style="text-decoration: line-through" v-if="wares.offiState==0" >官网价格：￥{{wares.waresOffprice}}</h3></p>
-                <h2>销售价格：￥{{wares.waresPrice}}</h2>
-                <p></p>
-                <p style="margin: 0;font-size:18px;line-height:30px;">{{wares.waresRemarks}}</p>
-
-            </div>
-            </div>
+        <div>
+            <iframe id="ifr"   :src="ifrPath" height="1100vw" width="100%"></iframe>
         </div>
-
     </div>
+
+        <!--<div class="fixed_div"  @click="backComm()"   ><button type="button" class="mui-btn mui-btn-primary mui-btn-block">返回</button></div>-->
+        <!--<div style="height: 8vw"></div>-->
+        <!--<div class="mui-content" style="height: 80%">-->
+                <!--<div id="slider" class="mui-slider" >-->
+                    <!--<div class="mui-slider-group mui-slider-loop">-->
+                        <!--&lt;!&ndash;支持循环，需要重复图片节点&ndash;&gt;-->
+                        <!--&lt;!&ndash; 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) &ndash;&gt;-->
+                        <!--<div class="mui-slider-item mui-slider-item-duplicate">-->
+                            <!--<a href="#">-->
+                                <!--<img :src="imgPath+wares.waresImg.split(',')[wares.waresImg.split(',').length-2]" style=" width: 100%;height:70vw; object-fit:contain" data-preview-src="" data-preview-group="1">-->
+                            <!--</a>-->
+                        <!--</div>-->
+                        <!--<div class="mui-slider-item" v-for=" (p,i) in wares.waresImg.split(',')"  v-if="p!=null&p!=''" >-->
+                            <!--<a href="#">-->
+                                <!--<img  v-lazy="imgPath+p"  style=" width: 100%;height:75vw;object-fit:contain" data-preview-src="" data-preview-group="1">-->
+                            <!--</a>-->
+                        <!--</div>-->
+                        <!--&lt;!&ndash; 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) &ndash;&gt;-->
+                        <!--<div class="mui-slider-item mui-slider-item-duplicate">-->
+                            <!--<a href="#">-->
+                                <!--<img :src="imgPath+wares.waresImg.split(',')[0]" style=" width: 100%;height:70vw; object-fit:contain" data-preview-src="" data-preview-group="1">-->
+                            <!--</a>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="mui-slider-indicator">-->
+                        <!--<div class="mui-indicator"  v-for=" i in sliderNum" :index="i"  :class="i==0?'mui-active':''"></div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div style="height: 10vw"></div>-->
+                <!--<h5>点击图片预览商品</h5>-->
+                <!--<p style="height: 2vw"></p>-->
+                <!--<p><h2>{{wares.waresName}}</h2></p>-->
+                <!--<p v-if="wares.offiState==0"><h3 style="text-decoration: line-through" v-if="wares.offiState==0" >官网价格：￥{{wares.waresOffprice}}</h3></p>-->
+                <!--<h2>销售价格：￥{{wares.waresPrice}}</h2>-->
+                <!--<p></p>-->
+                <!--<p style="margin: 0;font-size:18px;line-height:30px;">{{wares.waresRemarks}}</p>-->
+
+            <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+
     <div style="height: 13vw"></div>
 </div>
 </body>
 <script th:inline="javascript">
+    mui.init();
     mui.previewImage();
     Vue.use(VueLazyload);
-    new Vue({
+  var act=  new Vue({
         el:'#dapp',
         data:{
             IsShowActive:true,
@@ -122,17 +127,18 @@
             imgPath :"/images/upload/",
             wares:{},
             sliderNum:1,
+            ifrPath:"/comm/m-i-active/"
         },
         methods: {
-            findComm:function(val){
-                this.IsShowActive=false;
-                this.sliderNum=val.waresImg.split(',').length-1;
-                this.wares=val;
-                //获得slider插件对象
+            findComm:function(val) {
+                this.IsShowActive = false;
+                this.ifrPath=this.ifrPath+val.id;
+                $("#ifr").attr("src", this.ifrPath);
             },
             backComm:function(){
                 this.IsShowActive=true;
             }
+
         },
         computed:{
             listTemp:function(){

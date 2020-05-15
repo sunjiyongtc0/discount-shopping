@@ -95,7 +95,7 @@
                                             <el-image style="width: 310px;height: 310px" fit="cover"  :src="imgPath+cell.waresImg.split(',')[0]" lazy></el-image>
                                             <br><b><span class="demonstration">{{cell.waresName}}</span> <span style="width: 30px"></span><span class="demonstration">{{cell.waresPrice}}</span></b>
                                             <br><span class="demonstration" style="font-size: 13px;">{{cell.waresRemarks}}</span>
-                                            <br><b style="color: red"><span class="demonstration">{{cell.waresState==1?'热销':cell.waresState==2?'无货':'下架'}}</span></b>
+                                            <br><b style="color: red"><span class="demonstration">{{cell.waresState==1?'热销':cell.waresState==2?'无货':cell.waresState==-1?'活动':'下架'}}</span></b>
                                         </div>
                                     </div>
                                 </el-card>

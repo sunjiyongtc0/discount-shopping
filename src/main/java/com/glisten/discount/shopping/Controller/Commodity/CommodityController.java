@@ -78,7 +78,16 @@ public class CommodityController {
         return mav;
     }
 
+    @RequestMapping("/m-i-active/{id}")
+    public ModelAndView MIAvtive(@PathVariable( "id")  String id){
+        ModelAndView mav=new ModelAndView();
+        mav.setViewName("comm/m-comm-activity");
+        if(StringUtil.isNotEmpty(id)){
+            mav.addObject("w",JSON.toJSON(cs.findWaresById(Long.valueOf(id))));
+        }
 
+        return mav;
+    }
 
 
     @Log("添加修改商品操作")
@@ -175,8 +184,14 @@ public class CommodityController {
             key="";
         }
         JSONArray ja =new JSONArray();
-        List<TCommodityWares> lcw=cs.findWaresByKeyName(key);
-        ja=JSONArray.parseArray(JSON.toJSONString(lcw));
+        if("活动".equals(key)){
+            List<TCommodityWares> lcw=cs.findWaresByactivityId();
+            ja=JSONArray.parseArray(JSON.toJSONString(lcw));
+        }else{
+            List<TCommodityWares> lcw=cs.findWaresByKeyName(key);
+            ja=JSONArray.parseArray(JSON.toJSONString(lcw));
+        }
+
         return ja;
 }
 
