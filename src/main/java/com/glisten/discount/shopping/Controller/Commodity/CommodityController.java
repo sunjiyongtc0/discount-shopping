@@ -66,6 +66,14 @@ public class CommodityController {
 
         return "comm/commMain";
     }
+    @RequestMapping("/List")
+    public String  CommList(){
+        return "comm/commList";
+    }
+    @RequestMapping("/Type")
+    public String  CommType(){
+        return "comm/commType";
+    }
 
     @RequestMapping(value = {"/m-i/{id}","/m-i"})
     public ModelAndView MI(@PathVariable(value = "id",required = false) String id){

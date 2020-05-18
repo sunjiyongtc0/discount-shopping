@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>闪购商城</title>
+    <script th:src="@{/js/jQuery.js}"></script>
+    <script th:src="@{/vue/vue.js}"></script>
+    <link rel="shortcut icon" th:href="@{/img/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/element/element-index.css}">
+    <script  th:src="@{/element/element-index.js}"  ></script>
+</head>
+<body>
+<div id="tapp" style="height: 1200px" >
+    <div v-if="ct==0">
+        <el-row :gutter='20'>
+            <el-col :span="16">
+                <div class="grid-content bg-purple">
+                    <el-table :data="typeData"
+                               height="600"  border style="width: 95%" >
+                        <el-table-column prop="typeOrder" label="序号" width="120"></el-table-column>
+                        <el-table-column prop="typeName"  label="商品根类"   width="120"></el-table-column>
+                        <el-table-column label="操作"  >
+                            <template slot-scope="scope">
+                                <el-button  size="mini" @click="handleEditByType(scope.$index, scope.row)">编辑</el-button>
+                                <el-button  size="mini" type="danger" @click="handleDeleteByType(scope.$index, scope.row)">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </el-col>
+            <el-col :span="8">
+                <div class="grid-content bg-purple">
+                    <el-card class="box-card" style="height: 600px">
+                        <h5 align="center" v-if='typeform.id>0'> 修改根类</h5>
+                        <h5 align="center" v-else=''> 新建根类</h5>
+                        <el-form ref="form" :model="typeform" label-width="80px">
+                            <el-form-item label="根类序号">
+                                <el-input v-model="typeform.typeOrder"></el-input>
+                            </el-form-item>
+                            <el-form-item label="根类名称">
+                                <el-input v-model="typeform.typeName"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="onSubmitByType">提交</el-button>
+                                <el-button @click="handleDelete">取消</el-button></el-form-item>
+                        </el-form>
+                    </el-card>
+                </div>
+            </el-col>
+        </el-row>
+    </div>
+
+    <div v-else-if="ct==1">
+        <el-row :gutter='20'>
+            <el-col :span="16"><div class="grid-content bg-purple">
+                <el-table
+                        :data="categoryData"
+                        height="600"
+                        border
+                        style="width: 95%">
+                    <el-table-column
+                            prop="categoryOrder"
+                            label="序号"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="categoryName"
+                            label="一类名称"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="typeName"
+                            label="所属根类"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    @click="handleEditByCategory(scope.$index, scope.row)">编辑</el-button>
+                            <el-button
+                                    size="mini"
+                                    type="danger"
+                                    @click="handleDeleteByCategory(scope.$index, scope.row)">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div></el-col>
+            <el-col :span="8"><div class="grid-content bg-purple">
+                <el-card class="box-card" style="height: 600px">
+                    <h5 align="center" v-if='categoryform.id>0' > 修改一级分类</h5>
+                    <h5 align="center" v-else=''> 新建一级分类</h5>
+                    <el-form ref="form" :model="categoryform" label-width="80px">
+                        <el-form-item label="一类序号">
+                            <el-input v-model="categoryform.categoryOrder"></el-input>
+                        </el-form-item>
+                        <el-form-item label="一类名称">
+                            <el-input v-model="categoryform.categoryName"></el-input>
+                        </el-form-item>
+                        <el-form-item label="根类名称">
+                            <el-radio-group v-model="categoryform.typeName">
+                                <el-radio v-for='(t,index) in typeData'  :label="t.typeName" :key="index">{{t.typeName}}</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmitByCategory">提交</el-button>
+                            <el-button @click="handleDelete"> 取消</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-card>
+            </div></el-col>
+             </el-row>
+    </div>
+
+    <div v-else-if="ct==2">
+        <el-row :gutter='20'>
+            <el-col :span="16"><div class="grid-content bg-purple">
+                <el-table
+                        :data="itemData"
+                        height="600"
+                        border
+                        style="width: 95%">
+                    <el-table-column
+                            prop="itemOrder"
+                            label="序号"
+                            width="80">
+                    </el-table-column>
+                    <el-table-column
+                            prop="typeName"
+                            label="所属根类"
+                            width="80">
+                    </el-table-column>
+                    <el-table-column
+                            prop="categoryName"
+                            label="所属一类"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="itemName"
+                            label="二类名称"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    @click="handleEditByItem(scope.$index, scope.row)">编辑</el-button>
+                            <el-button
+                                    size="mini"
+                                    type="danger"
+                                    @click="handleDeleteByItem(scope.$index, scope.row)">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div></el-col>
+            <el-col :span="8"><div class="grid-content bg-purple">
+                <el-card class="box-card" style="height: 600px">
+                    <h5 align="center" v-if='itemform.id==null'> 新建二级分类</h5>
+                    <h5 align="center" v-else='' > 修改二级分类</h5>
+                    <el-form ref="form" :model="itemform" label-width="80px">
+                        <el-form-item label="二类序号">
+                            <el-input v-model="itemform.itemOrder"></el-input>
+                        </el-form-item>
+                        <el-form-item label="根类名称">
+                            <el-radio-group v-model="itemform.typeId" @change="findcategory">
+                                <el-radio v-for='(t,i) in typeData' :label="t.id"  :key='i' >{{t.typeName}}</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="一类名称">
+                            <el-radio-group v-model="itemform.categoryId"  >
+                                <el-radio v-for='(c,j) in categoryData' :label="c.id"  :key='j'>{{c.categoryName}}</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="二类名称">
+                            <el-input v-model="itemform.itemName"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmitByItem">提交</el-button>
+                            <el-button @click="handleDelete">取消</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-card>
+            </div></el-col>
+        </el-row>
+    </div>
+
+</div>
+
+</body>
+
+<script>
+    var commType=new Vue({
+        el: '#tapp',
+        data: {
+            ct:0,
+            typeData: [],
+            categoryData: [],
+            itemData:[],
+            typeform:{},
+            categoryform:{},
+            itemform:{}
+        },
+        methods: {
+            handleDelete:function(){
+                if(this.ct==0){
+                    this.showTypeList();
+                }else if(this.ct==1){
+                    this.showCategoryList()
+                }else if(this.ct==2){
+                    this.showItemList()
+                }
+            },
+            //根类属性
+            showTypeList:function(){
+                var _this = this;
+                //获取根类列表
+                $.get("/commType/typeList", function (data0) {
+                    _this.typeData = data0;
+                });
+                _this.typeform={
+                    id:'',
+                    typeOrder: '',
+                    typeName: ''
+                }
+            },
+            handleEditByType:function(index, row) {
+                this.typeform=row;
+            },
+            handleDeleteByType:function(index, row) {
+                var _this=this;
+                $.get("/commType/typedel/"+row.id,function (data0) {
+                    if(data0=='ok'){
+                        _this.showTypeList();
+                    }
+                });
+            },
+            onSubmitByType:function(){
+                var _this=this;
+                $.post("/commType/typeAdd",this.typeform,function (data) {
+                    if(data=='ok'){
+                        _this.showTypeList();
+                    }
+                });
+            },
+            //一级属性
+            showCategoryList:function(){
+                var _this=this;
+                $.get("/commType/categoryList",function (data0) {
+                    _this.categoryData=data0 ;
+                    _this.categoryform={
+                        id:'',
+                        categoryName: '',
+                        typeId:'',
+                        categoryOrder:'',
+                        typeName:''
+                    }
+                });
+            },
+            handleEditByCategory:function(index, row){
+                this.categoryform=row;
+            },
+            handleDeleteByCategory:function(index, row){
+                var _this=this;
+                $.get("/commType/categorydel/"+row.id,function (data0) {
+                    if(data0=='ok'){
+                        _this.showCategoryList();
+                    }
+                });
+            },
+            onSubmitByCategory:function() {
+                var _this=this;
+                $.post("/commType/categoryAdd",this.categoryform,function (data) {
+                    if(data=='ok'){
+                        _this.showCategoryList();
+                    }
+                });
+            },
+            //二级品类方法
+            showItemList:function(){
+                var _this = this;
+                $.get("/commType/itemList", function (data0) {
+                    _this.itemData = data0;
+                });
+                _this.itemform={
+                    id: '',
+                    itemOrder: '',
+                    itemName: '',
+                    typeId: '',
+                    categoryId: ''
+                }
+            },
+            handleEditByItem:function(index, row) {
+                this.itemform=row;
+            },
+            handleDeleteByItem:function(index, row) {
+                var _this=this;
+                $.get("/commType/delItem/"+row.id,function (data0) {
+                    if(data0=='ok'){
+                        _this.showItemList();
+                    }
+                });
+            },
+            findcategory:function(data) {
+                var _this = this;
+                $.get("/commType/categoryListByType/" + data, function (data0) {
+                    _this.categoryData = data0;
+                });
+            },
+            onSubmitByItem:function () {
+                var _this=this;
+                $.post("/commType/itemAdd",this.itemform,function (data) {
+                    if(data=='ok'){
+                        _this.showItemList();
+                    }
+                });
+
+            }
+        },
+        created(){
+            let typeid=parent.commMain.typeId;
+            this.ct=typeid;
+            this.showTypeList();
+            //获取一级类列表
+            this.showCategoryList();
+            this.showItemList();
+
+
+
+
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>闪购商城</title>
+    <script th:src="@{/js/jQuery.js}"></script>
+    <script th:src="@{/vue/vue.js}"></script>
+    <link rel="shortcut icon" th:href="@{/img/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/element/element-index.css}">
+    <script  th:src="@{/element/element-index.js}"  ></script>
+
+</head>
+<body>
+<div id="capp"  style="height: 1200px">
+<div v-if="Listshow" >
+    <el-row :gutter='20'  >
+        <el-col :span="24">
+            <div class="grid-content bg-purple">
+                <el-table
+                        :data="tableData"  ref="filterTable"
+                        height="750px" :stripe="true"
+                        border
+                        style="width: 100%" >
+                    <el-table-column
+                            prop="id"
+                            label="编号"
+                            width="50">
+                    </el-table-column>
+                    <el-table-column
+                            prop="waresName"
+                            label="商品名"
+                            width="320">
+                    </el-table-column>
+                    <el-table-column
+                            prop="waresImg"
+                            label="商品图片"
+                            width="80">
+                        <template slot-scope="scope"  v-if='scope.row.waresImg!=null&scope.row.waresImg!=""' >
+                            <el-image style="width: 40px; height: 40px"
+                                      :src="imgPath+scope.row.waresImg.split(',')[0]"
+                            fit="cover"  ></el-image>  </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="waresTagprice"
+                            label="吊牌价格"
+                            width="80">
+                    </el-table-column>
+                    <!--<el-table-column-->
+                            <!--prop="waresOffprice"-->
+                            <!--label="官网价格"-->
+                            <!--width="80">-->
+                    <!--</el-table-column>-->
+                    <!--<el-table-column-->
+                            <!--prop="offiState"-->
+                            <!--label="显示官价"-->
+                            <!--width="80">-->
+                        <!--<template slot-scope="scope">-->
+                            <!--<el-select v-model="scope.row.offiState">-->
+                                <!--<el-option  v-for="(f,i) in status_show"  :label="f.text" :value="f.value" :key="i"></el-option>-->
+                            <!--</el-select>-->
+                        <!--</template>-->
+                    <!--</el-table-column>-->
+                    <el-table-column
+                            prop="waresPrice"
+                            label="销售价格"
+                            width="120" visEdit="true">
+                        <template slot-scope="scope">
+                        <el-input   v-model="scope.row.waresPrice"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="waresState"
+                            label="商品状态"
+                            width="120">
+                        <template slot-scope="scope">
+                        <el-select v-model="scope.row.waresState">
+                            <el-option  v-for="(s,i) in status_arr"  :label="s.text" :value="s.value" :key="i"></el-option>
+                        </el-select>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    @click="handleSave(scope.$index, scope.row)">快速保存</el-button>
+                            <el-button
+                                    size="mini"
+                                    @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                            <el-button
+                                    size="mini"
+                                    type="danger"
+                                    @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div></el-col>
+    </el-row>
+</div>
+<div v-if="!Listshow">
+    <el-row :gutter='20'>
+        <el-col :span="24"><div class="grid-content bg-purple">
+            <el-card class="box-card" style="height:1150px">
+                <h5 align="center" v-if="form.id>0"> 修改商品</h5>
+                <h5 align="center" v-else=""> 新建商品</h5>
+                <el-form ref="form" :model="form" label-width="80px">
+                    <el-form-item label="商品名称">
+                        <el-input v-model="form.waresName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="吊牌价格">
+                        <el-input v-model="form.waresTagprice"></el-input>
+                    </el-form-item>
+                    <el-form-item label="官网价格">
+                        <el-input v-model="form.waresOffprice"></el-input>
+                    </el-form-item>
+                    <el-form-item  label="显示官价">
+                        <template >
+                            <el-select  v-model="form.offiState">
+                                <el-option  v-for="(s,i) in status_show"  :label="s.text" :value="s.value" :key="i"></el-option>
+                            </el-select>
+                        </template>
+                    </el-form-item>
+                    <el-form-item label="销售价格">
+                        <el-input v-model="form.waresPrice"></el-input>
+                    </el-form-item>
+                    <el-form-item label="商品状态">
+                        <template >
+                            <el-select  v-model="form.waresState">
+                                <el-option  v-for="(s,i) in status_arr"  :label="s.text" :value="s.value" :key="i"></el-option>
+                            </el-select>
+                        </template>
+                    </el-form-item>
+                    <el-form-item label="商品根类">
+                        <el-radio-group v-model="form.typeId" @change='findcategory'>
+                            <el-radio v-for='(t,index) in type' :label="t.id" :key='index'>{{t.typeName}}</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="一类名称">
+                        <el-radio-group v-model="form.categoryId" @change='finditem'>
+                            <el-radio v-for='(c,index) in category ' :label="c.id" :key='index'>{{c.categoryName}}</el-radio>
+
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="二类名称">
+                        <el-radio-group v-model="form.itemId" @change='takeitem'>
+                            <el-radio v-for='(i,index ) in item' :label="i.id" :key='index'>{{i.itemName}}</el-radio>
+
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="概图上传">
+                        <el-upload   v-if='form.id>0'   action="/img/uplode"    list-type="picture-card" :on-success="handleAvatarSuccessUpdate"
+                                     :auto-upload="false"  :multiple=true     :file-list="fileList"
+                            ref="upload0"    :limit='9' accept=".jpg,.jpeg,.png,.gif,.bmp,.JPG,.JPEG,.GIF,.BMP" :on-change="handleChange"     >
+                            <i slot="default" class="el-icon-plus"></i>
+                            <div slot="file" slot-scope="{file}">
+                              <img   class="el-upload-list__item-thumbnail"  :src="file.url" alt=""  >
+                              <span class="el-upload-list__item-actions">
+                                  <span class="el-upload-list__item-preview"     @click="handlePictureCardPreview(file)" >
+                                  <i class="el-icon-zoom-in"></i>
+                                  </span>
+                                  <span  v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)" >
+                                    <i class="el-icon-delete"></i>
+                                  </span>
+                              </span>
+                            </div>
+                        </el-upload>
+                        <el-upload   v-else=''   action="/img/uplode" list-type="picture-card"
+                          :auto-upload="false" :multiple=true  ref="upload0"   :limit='9'
+                          accept=".jpg,.jpeg,.png,.gif,.bmp,.JPG,.JPEG,.GIF,.BMP"
+                          :on-change="handleChange"  :on-success="handleAvatarSuccess"  >
+                            <i slot="default" class="el-icon-plus"></i>
+                            <div slot="file" slot-scope="{file}">
+                                <img   class="el-upload-list__item-thumbnail"  :src="file.url" alt=""  >
+                                <span class="el-upload-list__item-actions">
+                                  <span class="el-upload-list__item-preview"     @click="handlePictureCardPreview(file)" >
+                                  <i class="el-icon-zoom-in"></i>
+                                  </span>
+                                  <span  v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)" >
+                                    <i class="el-icon-delete"></i>
+                                  </span>
+                              </span>
+                            </div>
+                        </el-upload>
+
+                        <el-dialog :visible.sync="dialogVisible">
+                            <img width="100%" :src="dialogImageUrl" alt="">
+                        </el-dialog>
+                    </el-form-item>
+                    <el-form-item label="商品备注">
+                        <el-input type="textarea"  v-model="form.waresRemarks"></el-input>
+                    </el-form-item>
+
+                    <el-form-item>
+                        <el-button v-if="form.id>0" type="primary" @click="onSubmitUpdate()">确定修改</el-button>
+                        <el-button v-else="" type="primary" @click="onSubmit()">立即创建</el-button>
+                        <el-button v-if="form.id>0"  @click="onCancelUpdate()">取消修改</el-button>
+                        <el-button v-else="" @click='onCancel()' >取消</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </div></el-col>
+    </el-row>
+
+
+</div>
+
+</div>
+</body>
+
+<script>
+    // vue 可以直接通过对象.的方式直接调用属性：data，computed；但是el,data也是属性，叫实例属性
+    var comm=new Vue({
+        el: '#capp',
+        data: {
+            Listshow:true,
+            tableData:[],
+            item:[],
+            category:[],
+            type:[],
+            imgPath:'/images/upload/',
+            form:{},
+            // 单选按钮数据
+            status_arr: [
+                {text: "活动",value: -1},
+                {text: "不上架",value: 0},
+                {text: "热销",value: 1},
+                {text: "无货",value: 2},
+            ],
+            status_show: [
+                {text: "显示",value: 0},
+                {text: "不显示",value: 1}
+            ],
+            fileLIst: [],
+            fileList: [],
+            dialogImageUrl: '',
+            dialogVisible: false,
+            disabled: false,
+            fileName:'',
+            //判断添加几个图片
+            imgNew:0,
+            imgNum:0,
+            token0:""
+
+        },
+        methods: {
+            //商品列表
+        showCommList:function () {
+            var _this = this;
+            $.get("/comm/commList",function (data) {
+                _this.tableData=data;
+            })
+        },
+        handleSave:function (index, row) {
+            var _this=this;
+            $.post("/comm/getToken",function (val) {
+                var formData = row;
+                formData.token=val;
+                $.post("/comm/addComm",formData,function (data) {
+                    if(data=='ok'){
+                        _this.$message({
+                            message: '修改完成！',
+                            type: 'success'
+                        });
+                    }else{
+                        this.$message.error("数据提交异常");
+                    }
+                })
+            })
+        },
+        handleDelete:function (index, row) {
+            var _this=this;
+            $.post("/comm/delComm",row,function (val) {
+                if (val=="ok") {
+                    _this.$message({
+                        message: '删除成功！',
+                        type: 'success'
+                    });
+                   _this.showCommList();
+                }
+            })
+        },
+        handleEdit:function (index, row) {
+            this.Listshow=false;
+            this.form=row;
+        },
+        //添加或修改
+        findcategory:function(val){
+            var _this=this;
+            $.get("/commType/categoryListByType/"+val, function (data0) {
+                _this.category = data0;
+
+                if(data0.length==0){
+                    _this.form.categoryId='';
+                    _this.item=[];
+                }
+            });
+            this.form.typeId=val;
+        },
+        finditem:function(val){
+            var _this=this;
+            $.get("/commType/itemListByCategory/"+val, function (data0) {
+                _this.item = data0;
+                if(data0.length==0){
+                    _this.form.itemId='';
+                    _this.item=[];
+                }
+            });
+            this.form.categoryId=val;
+        },
+        takeitem:function(val){
+            for(var i=0;i<this.item.length;i++){
+                if(this.item[i].id==val){
+                    this.form.itemId=val;
+                }
+            }
+
+        },
+        onCancel:function () {
+            this.form={
+                waresName:'',
+                waresPrice: '',
+                typeId:'',
+                categoryId:'',
+                itemId:'',
+                waresState:'',
+                waresRemarks:'',
+                waresImg:''
+            };
+            this.$refs.upload0.clearFiles();
+            var _this=this;
+            $.post("/comm/getToken",function (val) {
+                _this.token0=val;
+            })
+        },
+        handleChange:function (file, fileList) {
+            this.fileLIst=fileList;
+            this.fileList=fileList;
+        },
+        //图片删除
+        handleRemove:function(file){
+            this.fileLIst.remove(file);
+            this.fileList.remove(file);
+        },
+        //图片放大镜
+        handlePictureCardPreview:function(file) {
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = true;
+        },
+        onSubmit:function() {
+            this.$refs.upload0.submit();
+        },
+        onSubmitUpdate:function() {
+            var imgnemes="";
+            var imgs=this.form.waresImg.split(",");
+            for(var i=0;i<imgs.length;i++){
+                for(var j=0;j<this.fileList.length;j++){
+                    console.log(this.fileList[j])
+                    if(imgs[i]==this.fileList[j].name){
+                        imgnemes+=this.fileList[j].name+",";
+                        this.fileList.remove(this.fileList[j]);
+                    }
+                }
+            }
+            this.imgNew=  this.fileList.length;
+            if( this.imgNew>0){
+                this.$refs.upload0.submit();
+            }else{
+                var _this=this;
+                var formData = this.form;
+                formData.token=this.token0;
+                formData.waresImg=imgnemes;
+                $.post("/comm/addComm",formData,function (data) {
+                    if(data=='ok'){
+                        _this.onCancelUpdate();
+                    }
+                })
+            }
+        },
+        handleAvatarSuccess:function(response, file, fileList) {
+            var _this=this;
+            if(response!='') {
+                this.form.waresImg += response+",";
+                if(this.form.waresImg.split(",").length-1==this.fileLIst.length){
+                    this.form.waresImg="";
+                    for( let i in this.fileLIst){
+                        if(i<=this.fileLIst.length) {
+                            this.form.waresImg += this.fileLIst[i].response + ",";
+                        }
+                    }
+                    var formData = this.form;
+                    formData.token=this.token0;
+                    $.post("/comm/addComm",formData,function (data) {
+                        if(data=='ok'){
+                            _this.$message({
+                                message: '创建完成！',
+                                type: 'success'
+                            });
+                            _this.onCancel();
+                        }else{
+                            this.$message.error("数据提交异常");
+                        }
+                    })
+                }
+            }
+        },
+        handleAvatarSuccessUpdate:function (response, file, fileList) {
+            var _this=this;
+            this.imgNum+=1;
+            console.log(this.imgNum)
+            if(response!='') {
+                this.form.waresImg += response+",";
+                if(this.imgNum==this.fileList.length){
+                    var formData = this.form;
+                    formData.token=this.token0;
+                    $.post("/comm/addComm",formData,function (data) {
+                        if(data=='ok'){
+                            _this.$message({
+                                message: '修改完成！',
+                                type: 'success'
+                            });
+                            _this.onCancelUpdate();
+                        }else{
+                            this.$message.error("数据提交异常");
+                        }
+                    })
+                }
+            }
+            _this.dialogFormVisible = false
+        },
+        onCancelUpdate:function () {
+            this.$refs.upload0.clearFiles();
+            this.Listshow=true;
+            this.fileList=[];
+            this.imgNew=0;
+            this.imgNum=0;
+        }
+        },
+        watch: {//监控属性；监控参数
+            Listshow:function (newValue,oldValue) {
+                if(!newValue){
+                    if(!this.form.id>0){
+                        this.onCancel();
+                    }else {
+                        var val=this.form;
+                        var imgPath = "http://" + location.host + "/images/upload/";
+                        var imgnames = val.waresImg.split(",");
+                        for (var i = 0; i < imgnames.length; i++) {
+                            if (imgnames[i] != "") {
+                                var img = {};
+                                img.name = imgnames[i];
+                                img.url = imgPath + imgnames[i];//+"?version="+Math.random() * 1000;
+                                this.fileList[i] = img;
+                            }
+                        }
+                    }
+                    var _this=this;
+                    $.get("/commType/itemList", function (data0) {
+                        _this.item = data0;
+                    });
+                    $.get("/commType/categoryList", function (data0) {
+                        _this.category = data0;
+                    });
+                    $.get("/commType/typeList", function (data0) {
+                        _this.type = data0;
+                    });
+                    $.post("/comm/getToken",function (val) {
+                        _this.token0=val;
+                    })
+                }else{
+                    this.showCommList();
+                }
+            }
+        },
+        created(){
+            this.Listshow=parent.commMain.commList;
+            this.showCommList();
+        }
+    });
+
+
+
+    //定义方法，，数组删除特定元素   -->用于图片删除功能
+    Array.prototype.remove = function(val) {
+        var index = this.indexOf(val);
+        if (index > -1) {
+            this.splice(index, 1);
+        }
+    };
+</script>
+</html>
